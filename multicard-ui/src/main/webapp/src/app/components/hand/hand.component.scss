@@ -1,0 +1,39 @@
+@import "src/styles/mixins";
+
+:host {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+
+  .card-wrapper {
+    overflow: hidden;
+  }
+
+  .card-wrapper:last-child, .card-wrapper:hover {
+    overflow: visible;
+  }
+
+  .card {
+    max-width: 200px;
+    max-height: 278px;
+    padding: 2px;
+
+    @include small-size {
+      min-width: 38px;
+      min-height: 50px;
+    }
+
+    @include normal-size {
+      min-width: 75px;
+      min-height: 100px;
+    }
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+    }
+  }
+}

@@ -1,0 +1,8 @@
+<div class="stack">
+  <div *ngFor="let card of cards; let i = index" class="card"
+       [@flyOut]="{value: '', params: {translateExpression: getFlyOutTranslateExpression(i)}}" (click)="onStackClick()">
+    <img [style.marginTop.px]="get3DMargin(i)" [style.marginLeft.px]="get3DMargin(i)"
+         src="../../../assets/cards/BLUE_BACK.svg"
+         alt="card cover">
+  </div>
+</div>

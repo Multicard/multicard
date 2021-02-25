@@ -1,0 +1,79 @@
+@import "src/styles/mixins";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-image: url("/assets/table-background.jpg");
+  background-size: cover;
+  background-color: saddlebrown;
+
+  .table-top {
+    flex: 1 1 10%;
+    margin: 8px 4px;
+
+    .player-top {
+      transform: rotate(180deg);
+    }
+  }
+
+  @include small-size {
+    .table-center {
+      flex: 1 1 60%;
+      display: flex;
+      flex-direction: column;
+
+      .table-left {
+        order: 1;
+        margin: 0 4px;
+      }
+
+      .table-right {
+        order: 2;
+        margin: 8px 4px;
+      }
+
+      .table-carpet {
+        order: 3;
+        flex: 1 1;
+      }
+
+      .player-left, .player-right {
+        height: 100%;
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  @include normal-size {
+    .table-center {
+      flex: 1 1 60%;
+      display: flex;
+
+      .table-left, .table-right {
+        display: flex;
+        min-width: 50px;
+        overflow: hidden;
+      }
+
+      .table-left .player-left {
+        min-width: 50px;
+        transform: rotate(90deg);
+      }
+
+      .table-carpet {
+        flex: 1 1;
+      }
+
+      .table-right .player-right {
+        min-width: 50px;
+        transform: rotate(-90deg);
+      }
+    }
+  }
+
+  .table-bottom {
+    flex: 1 1 30%;
+    padding: 2px;
+  }
+}

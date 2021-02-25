@@ -1,0 +1,7 @@
+<div class="card-wrapper">
+  <div [style.transform]="'rotate(' + getRotation(i) + 'deg) translateX(' + getTranslateX(i) + 'px)'" class="card"
+       *ngFor="let item of [].constructor(numberOfCards); let i = index">
+    <img src="../../../assets/cards/BLUE_BACK.svg" alt="card cover">
+  </div>
+</div>
+<div class="player-name" [ngClass]="{'turn-around': turnNameAround}">{{name}}</div>
