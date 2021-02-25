@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {PlayerConfiguration} from '../../model/game.model';
 
 const rotationPerCardInDegrees = 5;
 const translationXPerCardInPixels = 7;
@@ -11,7 +12,7 @@ const translationXPerCardInPixels = 7;
 export class PlayerComponent implements OnInit {
 
   @Input()
-  public name = '';
+  public player!: PlayerConfiguration;
 
   @Input()
   public turnNameAround = false;

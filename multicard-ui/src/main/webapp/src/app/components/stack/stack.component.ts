@@ -1,5 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {animate, style, transition, trigger} from '@angular/animations';
+import {Card, Stack} from '../../model/game.model';
 
 @Component({
   selector: 'mc-stack',
@@ -15,12 +16,21 @@ import {animate, style, transition, trigger} from '@angular/animations';
 })
 export class StackComponent implements OnInit {
 
-  public cards = new Array(20).fill({}).map(() => ({}));
+  @Input()
+  public stack!: Stack;
+
+  public cards: Card[] = [];
 
   constructor() {
   }
 
   ngOnInit(): void {
+    this.cards = new Array(this.stack.numberOfCards).fill(new Card());
+    if (this.stack.isFaceUp) {
+      const topCard = this.cards[this.stack.numberOfCards - 1];
+      topCard.isFaceUp = true;
+      topCard.card = this.stack.topCard;
+    }
   }
 
   public get3DMargin(i: number): number {
