@@ -1,28 +1,27 @@
 package ch.cas.html5.multicardgame.entity;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.util.UUID;
 
 @Entity
 @Table(name="card")
 public class Card {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long id;
+    @Column(unique = true, name = "id", nullable = false)
+    private String id = UUID.randomUUID().toString().toUpperCase();
 
     @Column(name="card_name")
     private String name;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -15,30 +15,30 @@ public class CardServiceImpl implements CardService {
     @Autowired
     private ch.cas.html5.multicardgame.repository.CardRepository CardRepository;
 
-    public void setCardRepository(CardRepository CardRepository) {
-        this.CardRepository = CardRepository;
+    public void setCardRepository(CardRepository cardRepository) {
+        this.CardRepository = cardRepository;
     }
 
     public List<Card> retrieveCards() {
-        List<Card> Cards = CardRepository.findAll();
-        return Cards;
+        List<Card> cards = CardRepository.findAll();
+        return cards;
     }
 
-    public Card getCard(Long CardId) {
-        Optional<Card> optEmp = CardRepository.findById(CardId);
+    public Card getCard(String cardId) {
+        Optional<Card> optEmp = CardRepository.findById(cardId);
         return optEmp.get();
     }
 
-    public void saveCard(Card Card){
-        CardRepository.save(Card);
+    public Card saveCard(Card card){
+        return CardRepository.save(card);
     }
 
-    public void deleteCard(Long CardId){
-        CardRepository.deleteById(CardId);
+    public void deleteCard(String cardId){
+        CardRepository.deleteById(cardId);
     }
 
-    public void updateCard(Card Card) {
-        CardRepository.save(Card);
+    public void updateCard(Card card) {
+        CardRepository.save(card);
     }
 
 }

@@ -9,11 +9,11 @@ public interface CardService {
 
     public List<Card> retrieveCards();
 
-    public Card getCard(Long CardId);
+    public Card getCard(String cardId);
 
-    public void saveCard(Card Card);
+    public Card saveCard(Card card);
 
-    public void deleteCard(Long CardId);
+    public void deleteCard(String cardId);
 
-    public void updateCard(Card Card);
+    public void updateCard(Card card);
 }

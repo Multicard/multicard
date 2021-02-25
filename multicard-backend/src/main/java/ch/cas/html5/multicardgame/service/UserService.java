@@ -9,9 +9,9 @@ public interface UserService {
 
     public List<User> retrieveUsers();
 
-    public User getUser(Long UserId);
+    public User getUser(String userId);
 
-    public User saveUser(User User);
+    public User saveUser(User user);
 
-    public void deleteUser(Long UserId);
+    public void deleteUser(String userId);
 }
