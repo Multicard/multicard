@@ -4,30 +4,34 @@ package ch.cas.html5.multicardgame.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
-@Table(name="user")
+@Table(name = "user")
 public class User {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long id;
+    @Column(unique = true, name = "id", nullable = false)
+    private String id = UUID.randomUUID().toString().toUpperCase();
 
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
-    @Column(name="isAdmin")
+    @Column(name = "isAdmin")
     private Boolean isAdmin;
+
+    @Column(name = "position")
+    private Integer position;
 
     @JsonIgnoreProperties("players")
     @ManyToOne(optional = true)
     //@JoinColumn(name = "playground_id")
     private Playground playground;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -54,4 +58,8 @@ public class User {
     public void setAdmin(Boolean admin) {
         isAdmin = admin;
     }
+
+    public Integer getPosition() {return position;}
+
+    public void setPosition(Integer position) {this.position = position;}
 }

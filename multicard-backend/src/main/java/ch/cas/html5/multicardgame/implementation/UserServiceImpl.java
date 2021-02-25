@@ -20,24 +20,24 @@ public class UserServiceImpl implements UserService {
     }
 
     public List<User> retrieveUsers() {
-        List<User> Users = UserRepository.findAll();
-        return Users;
+        List<User> users = UserRepository.findAll();
+        return users;
     }
 
-    public User getUser(Long UserId) {
-        Optional<User> optUser = UserRepository.findById(UserId);
+    public User getUser(String userId) {
+        Optional<User> optUser = UserRepository.findById(userId);
         if (optUser.isPresent()){
             return optUser.get();
         }
         return null;
     }
 
-    public User saveUser(User User){
-        return UserRepository.save(User);
+    public User saveUser(User user){
+        return UserRepository.save(user);
     }
 
-    public void deleteUser(Long UserId){
-        UserRepository.deleteById(UserId);
+    public void deleteUser(String userId){
+        UserRepository.deleteById(userId);
     }
 
 

@@ -1,46 +1,43 @@
 package ch.cas.html5.multicardgame.implementation;
 
 
-import ch.cas.html5.multicardgame.entity.Playground;
-import ch.cas.html5.multicardgame.entity.User;
-import ch.cas.html5.multicardgame.repository.PlaygroundRepository;
-import ch.cas.html5.multicardgame.repository.UserRepository;
 import ch.cas.html5.multicardgame.service.PlaygroundService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ch.cas.html5.multicardgame.entity.*;
+import ch.cas.html5.multicardgame.repository.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class PLaygroundServiceImpl implements PlaygroundService {
     @Autowired
-    private PlaygroundRepository PlaygroundRepository;
+    private ch.cas.html5.multicardgame.repository.PlaygroundRepository playgroundRepository;
 
-    public void setPlaygroundRepository(PlaygroundRepository PlaygroundRepository) {
-        this.PlaygroundRepository = PlaygroundRepository;
+    public void setPlaygroundRepository(PlaygroundRepository playgroundRepository) {
+        this.playgroundRepository = playgroundRepository;
     }
 
     public List<Playground> retrievePlaygrounds() {
-        List<Playground> Playgrounds = PlaygroundRepository.findAll();
-        return Playgrounds;
+        List<Playground> playgrounds = playgroundRepository.findAll();
+        return playgrounds;
     }
 
-    public Playground getPlayground(String PlaygroundId) {
-        Optional<Playground> optPlayground = PlaygroundRepository.findById(PlaygroundId);
+    public Playground getPlayground(String playgroundId) {
+        Optional<Playground> optPlayground = playgroundRepository.findById(playgroundId);
         if (optPlayground.isPresent()) {
             return optPlayground.get();
         }
         return null;
     }
 
-    public Playground savePlayground(Playground Playground){
-        return PlaygroundRepository.save(Playground);
+    public Playground savePlayground(Playground playground){
+        return playgroundRepository.save(playground);
     }
 
-    public void deletePlayground(String PlaygroundId){
-        PlaygroundRepository.deleteById(PlaygroundId);
+    public void deletePlayground(String playgroundId){
+        playgroundRepository.deleteById(playgroundId);
     }
 
 }

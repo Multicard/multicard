@@ -9,9 +9,9 @@ public interface PlaygroundService {
 
     public List<Playground> retrievePlaygrounds();
 
-    public Playground getPlayground(String PlaygroundId);
+    public Playground getPlayground(String playgroundId);
 
-    public Playground savePlayground(Playground Playground);
+    public Playground savePlayground(Playground playground);
 
-    public void deletePlayground(String PlaygroundId);
+    public void deletePlayground(String playgroundId);
 }
