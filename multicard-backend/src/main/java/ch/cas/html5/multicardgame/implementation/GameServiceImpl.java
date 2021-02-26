@@ -39,6 +39,7 @@ public class GameServiceImpl implements GameService {
         return games;
     }
 
+
     public Game getGame(String gameId) {
         Optional<Game> optEmp = gameRepository.findById(gameId);
         return optEmp.get();
