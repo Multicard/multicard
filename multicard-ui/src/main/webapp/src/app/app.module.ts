@@ -4,7 +4,7 @@ import {NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {TableComponent} from './components/table/table.component';
-import {HandComponent} from './components/hand/hand.component';
+import {UserPlayerComponent} from './components/hand/user-player.component';
 import {GameComponent} from './components/game/game.component';
 import {CarpetComponent} from './components/carpet/carpet.component';
 import {StackComponent} from './components/stack/stack.component';
@@ -15,7 +15,7 @@ import {PlayerComponent} from './components/player/player.component';
   declarations: [
     AppComponent,
     TableComponent,
-    HandComponent,
+    UserPlayerComponent,
     GameComponent,
     CarpetComponent,
     StackComponent,

@@ -5,8 +5,7 @@
       <div class="carpet-left">
       </div>
       <div class="carpet-middle">
-        <mc-stack></mc-stack>
-        <mc-stack></mc-stack>
+        <mc-stack *ngFor="let s of stacks" [stack]="s"></mc-stack>
       </div>
       <div class="carpet-right">
       </div>

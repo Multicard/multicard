@@ -1,4 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {Stack} from '../../model/game.model';
 
 @Component({
   selector: 'mc-carpet',
@@ -6,6 +7,9 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./carpet.component.scss']
 })
 export class CarpetComponent implements OnInit {
+
+  @Input()
+  public stacks!: Stack[];
 
   constructor() {
   }
