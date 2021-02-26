@@ -13,19 +13,19 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    private ch.cas.html5.multicardgame.repository.UserRepository UserRepository;
+    private ch.cas.html5.multicardgame.repository.UserRepository userRepository;
 
-    public void setUserRepository(UserRepository UserRepository) {
-        this.UserRepository = UserRepository;
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     public List<User> retrieveUsers() {
-        List<User> users = UserRepository.findAll();
+        List<User> users = userRepository.findAll();
         return users;
     }
 
     public User getUser(String userId) {
-        Optional<User> optUser = UserRepository.findById(userId);
+        Optional<User> optUser = userRepository.findById(userId);
         if (optUser.isPresent()){
             return optUser.get();
         }
@@ -33,11 +33,16 @@ public class UserServiceImpl implements UserService {
     }
 
     public User saveUser(User user){
-        return UserRepository.save(user);
+        return userRepository.save(user);
     }
 
     public void deleteUser(String userId){
-        UserRepository.deleteById(userId);
+        userRepository.deleteById(userId);
+    }
+
+    public List<User> getUsesersByPlayground(String playgroundId){
+        List<User> users = userRepository.getUserByPlayground(playgroundId);
+        return users;
     }
 
 

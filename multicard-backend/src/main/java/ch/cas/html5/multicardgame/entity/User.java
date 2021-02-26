@@ -4,6 +4,8 @@ package ch.cas.html5.multicardgame.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -26,6 +28,12 @@ public class User {
     @ManyToOne(optional = true)
     //@JoinColumn(name = "playground_id")
     private Playground playground;
+
+    @JsonIgnoreProperties("user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Game> games = new ArrayList<>();
+
+
 
     public String getId() {
         return id;
@@ -62,4 +70,19 @@ public class User {
     public Integer getPosition() {return position;}
 
     public void setPosition(Integer position) {this.position = position;}
+
+    public List<Game> getGames() {
+        return games;
+    }
+
+    public void setGames(List<Game> games) {
+        this.games = games;
+    }
+
+    public void addGame(Game game) {
+        games.add(game);
+        game.setUser(this);
+    }
+
+
 }

@@ -1,9 +1,10 @@
 package ch.cas.html5.multicardgame.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -16,6 +17,10 @@ public class Card {
 
     @Column(name="card_name")
     private String name;
+
+    @JsonIgnoreProperties("card")
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Game> games = new ArrayList<>();
 
     public String getId() {
         return id;

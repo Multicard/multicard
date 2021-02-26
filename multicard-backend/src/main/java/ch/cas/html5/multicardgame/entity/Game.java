@@ -1,9 +1,8 @@
 package ch.cas.html5.multicardgame.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
@@ -13,10 +12,12 @@ public class Game {
     @Column(unique = true, name = "id", nullable = false)
     private String id = UUID.randomUUID().toString().toUpperCase();
 
-    private Playground playground;
-
+    @JsonIgnoreProperties("games")
+    @ManyToOne(optional = false)
     private User user;
 
+    @JsonIgnoreProperties("cards")
+    @ManyToOne(optional = false)
     private Card card;
 
     public String getId() {
@@ -25,14 +26,6 @@ public class Game {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public ch.cas.html5.multicardgame.entity.Playground getPlayground() {
-        return playground;
-    }
-
-    public void setPlayground(ch.cas.html5.multicardgame.entity.Playground playground) {
-        this.playground = playground;
     }
 
     public User getUser() {

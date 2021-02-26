@@ -15,4 +15,6 @@ public interface GameService {
     public void deleteGame(String gameId);
 
     public void updateGame(Game game);
+
+    public void startGame(String playgroundId);
 }

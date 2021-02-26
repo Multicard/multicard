@@ -14,21 +14,21 @@ public class PlaygroundRestController {
     @Autowired
     private ch.cas.html5.multicardgame.service.PlaygroundService PlaygroundService;
     @Autowired
-    private ch.cas.html5.multicardgame.service.UserService UserService;
+    private ch.cas.html5.multicardgame.service.UserService userService;
 
-    public void setPlaygroundService(PlaygroundService PlaygroundService) {
-        this.PlaygroundService = PlaygroundService;
+    public void setPlaygroundService(PlaygroundService playgroundService) {
+        this.PlaygroundService = playgroundService;
     }
 
     @GetMapping("/api/Playgrounds")
     public List<Playground> getPlaygrounds() {
-        List<Playground> Playgrounds = PlaygroundService.retrievePlaygrounds();
-        return Playgrounds;
+        List<Playground> playgrounds = PlaygroundService.retrievePlaygrounds();
+        return playgrounds;
     }
 
     @GetMapping("/api/Playgrounds/{PlaygroundId}")
-    public Playground getPlayground(@PathVariable(name="PlaygroundId")String PlaygroundId) {
-        return PlaygroundService.getPlayground(PlaygroundId);
+    public Playground getPlayground(@PathVariable(name="PlaygroundId")String playgroundId) {
+        return PlaygroundService.getPlayground(playgroundId);
     }
 
     @PostMapping(path = "/api/Playgrounds", consumes = "application/json", produces = "application/json")
@@ -37,9 +37,8 @@ public class PlaygroundRestController {
     }
 
     @DeleteMapping("/api/Playgrounds/{PlaygroundId}")
-    public void deletePlayground(@PathVariable(name="PlaygroundId")String PlaygroundId){
-        PlaygroundService.deletePlayground(PlaygroundId);
-        System.out.println("Playground Deleted Successfully");
+    public void deletePlayground(@PathVariable(name="PlaygroundId")String playgroundId){
+        PlaygroundService.deletePlayground(playgroundId);
     }
 
     @PutMapping("/api/Playgrounds/{PlaygroundId}")
