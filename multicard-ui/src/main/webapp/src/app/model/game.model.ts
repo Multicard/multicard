@@ -1,18 +1,16 @@
-export interface GameConfiguration {
+export interface Game {
   id: string;
   title: string;
   playerIdOfCurrentUser: string;
-  players: PlayerConfiguration[];
+  players: Player[];
+  stacks: Stack[];
 }
 
-export interface PlayerConfiguration {
+export interface Player {
   id: string;
   name: string;
   isOrganizer: boolean;
-}
-
-export interface GameState {
-  players: Player[];
+  hand: Hand;
   stacks: Stack[];
 }
 
@@ -23,12 +21,6 @@ export interface Stack {
   topCard?: string;
 }
 
-export interface Player {
-  id: string;
-  hand: Hand;
-  stacks: Stack[];
-}
-
 export interface Hand {
   cards?: string[];
   numberOfCards: number;
@@ -37,5 +29,22 @@ export interface Hand {
 export class Card {
   isFaceUp = false;
   card?: string;
-  back = 'BLUE_BACK.svg';
+}
+
+export interface StackAction {
+  action: ActionType;
+  direction: DirectionType;
+  numberOfCards: number;
+}
+
+export enum ActionType {
+  drawCard = 'drawCard',
+  playCard = 'playCard'
+}
+
+export enum DirectionType {
+  left = 'left',
+  up = 'up',
+  right = 'right',
+  down = 'down'
 }

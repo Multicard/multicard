@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {GameService} from '../../services/game.service';
-import {GameState, GameConfiguration} from '../../model/game.model';
+import {Game} from '../../model/game.model';
 
 @Component({
   selector: 'mc-game',
@@ -8,15 +8,12 @@ import {GameState, GameConfiguration} from '../../model/game.model';
   styleUrls: ['./game.component.scss']
 })
 export class GameComponent implements OnInit {
-  gameConfiguration!: GameConfiguration;
-  gameState!: GameState;
+  gameState!: Game;
 
   constructor(private gameService: GameService) {
   }
 
   ngOnInit(): void {
-    this.gameConfiguration = this.gameService.getGameConfiguration();
-    this.gameState = this.gameService.getGameState();
+    this.gameState = this.gameService.loadGameState();
   }
-
 }

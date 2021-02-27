@@ -1,6 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {animate, style, transition, trigger} from '@angular/animations';
-import {Card, Stack} from '../../model/game.model';
+import {ActionType, Card, DirectionType, Stack, StackAction} from '../../model/game.model';
+import {Subject} from 'rxjs';
+import {GameService} from '../../services/game.service';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'mc-stack',
@@ -14,14 +17,18 @@ import {Card, Stack} from '../../model/game.model';
     ])
   ]
 })
-export class StackComponent implements OnInit {
+export class StackComponent implements OnInit, OnDestroy {
 
   @Input()
   public stack!: Stack;
 
   public cards: Card[] = [];
 
-  constructor() {
+  translateExpression = '';
+
+  private unsubscribe = new Subject();
+
+  constructor(private gameService: GameService) {
   }
 
   ngOnInit(): void {
@@ -31,30 +38,47 @@ export class StackComponent implements OnInit {
       topCard.isFaceUp = true;
       topCard.card = this.stack.topCard;
     }
+
+    this.gameService.registerStackObserver()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((action) => this.triggerAction(action));
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
   }
 
   public get3DMargin(i: number): number {
     return 2 * Math.round(i / 4);
   }
 
-  public onStackClick(): void {
-    if (this.cards.length > 0) {
-      this.cards.pop();
-    }
+  public getCardImage() {
+    return 'assets/cards/' + (this.stack.isFaceUp ? this.stack.topCard : 'BLUE_BACK.svg');
   }
 
-  public getFlyOutTranslateExpression(i: number) {
-    // TODO remove dummy code
-    switch (i % 4) {
-      case 0:
-        return 'translatey(50vh) rotate(180deg)';
-      case 1:
-        return 'translatex(-50vh) rotate(90deg)';
-      case 2:
-        return 'translatey(-30vh) rotate(180deg)';
-      case 3:
-      default:
-        return 'translatex(50vh) rotate(90deg)';
+  private triggerAction(action: StackAction) {
+    if (action.action === ActionType.drawCard) {
+      switch (action.direction) {
+        case DirectionType.down:
+          this.translateExpression = 'translatey(50vh) rotate(180deg)';
+          break;
+        case DirectionType.left:
+          this.translateExpression = 'translatex(-40vw) rotate(90deg)';
+          break;
+        case DirectionType.up:
+          this.translateExpression = 'translatey(-30vh) rotate(180deg)';
+          break;
+        case DirectionType.right:
+        default:
+          this.translateExpression = 'translatex(40vw) rotate(90deg)';
+      }
+      for (let i = 0; i < action.numberOfCards; i++) {
+        setTimeout(() => {
+          if (this.cards.length > 0) {
+            this.cards.pop();
+          }
+        }, i * 20);
+      }
     }
   }
 }

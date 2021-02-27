@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {PlayerConfiguration} from '../../model/game.model';
+import {Player} from '../../model/game.model';
 
 @Component({
   selector: 'mc-user-player',
@@ -9,14 +9,20 @@ import {PlayerConfiguration} from '../../model/game.model';
 export class UserPlayerComponent implements OnInit {
 
   @Input()
-  public player!: PlayerConfiguration;
-
-  public cards = ['AS', '3C', '10H', 'JC', '7D', 'QD', 'KS', 'AH', '5C', '9D'];
+  public player!: Player;
 
   constructor() {
   }
 
   ngOnInit(): void {
+  }
+
+  getCards() {
+    if (this.player?.hand?.cards !== undefined) {
+      return this.player?.hand?.cards;
+    } else {
+      return new Array(this.player?.hand?.numberOfCards).fill('BLUE_BACK');
+    }
   }
 
 }

@@ -4,12 +4,12 @@ import {NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {TableComponent} from './components/table/table.component';
-import {UserPlayerComponent} from './components/hand/user-player.component';
 import {GameComponent} from './components/game/game.component';
 import {CarpetComponent} from './components/carpet/carpet.component';
 import {StackComponent} from './components/stack/stack.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {PlayerComponent} from './components/player/player.component';
+import {UserPlayerComponent} from './components/user-player/user-player.component';
 
 @NgModule({
   declarations: [

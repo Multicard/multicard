@@ -1,19 +1,19 @@
 <div class="table-top">
-  <mc-player class="player-top" [player]="gameConfiguration.players[2]" [turnNameAround]="true"></mc-player>
+  <mc-player class="player-top" [player]="gameState.players[2]" [turnNameAround]="true"></mc-player>
 </div>
 
 <div class="table-center">
   <div class="table-left">
-    <mc-player class="player-left" [player]="gameConfiguration.players[1]"></mc-player>
+    <mc-player class="player-left" [player]="gameState.players[1]"></mc-player>
   </div>
   <div class="table-carpet">
     <mc-carpet [stacks]="gameState.stacks"></mc-carpet>
   </div>
   <div class="table-right">
-    <mc-player class="player-right" [player]="gameConfiguration.players[3]"></mc-player>
+    <mc-player class="player-right" [player]="gameState.players[3]"></mc-player>
   </div>
 </div>
 
 <div class="table-bottom">
-  <mc-user-player [player]="gameConfiguration.players[0]"></mc-user-player>
+  <mc-user-player [player]="gameState.players[0]"></mc-user-player>
 </div>

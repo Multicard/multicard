@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {GameConfiguration, GameState} from '../../model/game.model';
+import {Game} from '../../model/game.model';
 
 @Component({
   selector: 'mc-table',
@@ -9,10 +9,7 @@ import {GameConfiguration, GameState} from '../../model/game.model';
 export class TableComponent implements OnInit {
 
   @Input()
-  gameConfiguration!: GameConfiguration;
-
-  @Input()
-  gameState!: GameState;
+  gameState!: Game;
 
   constructor() {
   }

@@ -1,4 +1,4 @@
-<div class="card-wrapper" *ngFor="let card of cards">
+<div class="card-wrapper" *ngFor="let card of getCards()">
   <div class="card">
     <img [src]="'assets/cards/' + card + '.svg'" alt="'assets/cards/' + card + '.svg'">
   </div>

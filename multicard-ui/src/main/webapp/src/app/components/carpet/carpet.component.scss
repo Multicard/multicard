@@ -14,7 +14,7 @@
     }
 
     @include normal-size {
-      width: 60vmin;
+      width: 50vmin;
     }
 
     background-image: url("/assets/carpet-background.svg");
@@ -38,7 +38,7 @@
     flex-direction: column;
 
     .carpet-top, .carpet-bottom {
-      flex: 1 1 30%;
+      flex: 1 1 40%;
     }
 
     .carpet-center {
@@ -46,11 +46,11 @@
       display: flex;
 
       .carpet-left, .carpet-right {
-        flex: 1 1 30%
+        flex: 1 1 40%
       }
 
       .carpet-middle {
-        flex: 1 1 40%;
+        flex: 1 1 20%;
         display: flex;
         justify-content: center;
         align-items: center;

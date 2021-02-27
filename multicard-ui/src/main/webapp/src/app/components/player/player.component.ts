@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {PlayerConfiguration} from '../../model/game.model';
+import {Player} from '../../model/game.model';
 
 const rotationPerCardInDegrees = 5;
 const translationXPerCardInPixels = 7;
@@ -12,12 +12,10 @@ const translationXPerCardInPixels = 7;
 export class PlayerComponent implements OnInit {
 
   @Input()
-  public player!: PlayerConfiguration;
+  public player!: Player;
 
   @Input()
   public turnNameAround = false;
-
-  public numberOfCards = 10;
 
   constructor() {
   }
@@ -25,11 +23,19 @@ export class PlayerComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  getCards() {
+    return new Array(this.getNumberOfCards());
+  }
+
   getRotation(i: number): number {
-    return 0 - (Math.max(this.numberOfCards - 1, 0) * rotationPerCardInDegrees / 2) + i * rotationPerCardInDegrees;
+    return 0 - (Math.max(this.getNumberOfCards() - 1, 0) * rotationPerCardInDegrees / 2) + i * rotationPerCardInDegrees;
   }
 
   getTranslateX(i: number): number {
-    return 0 - (Math.max(this.numberOfCards - 1, 0) * translationXPerCardInPixels / 2) + i * translationXPerCardInPixels;
+    return 0 - (Math.max(this.getNumberOfCards() - 1, 0) * translationXPerCardInPixels / 2) + i * translationXPerCardInPixels;
+  }
+
+  private getNumberOfCards() {
+    return this.player?.hand?.numberOfCards;
   }
 }
