@@ -3,6 +3,8 @@ package ch.cas.html5.multicardgame.implementation;
 import ch.cas.html5.multicardgame.entity.Card;
 import ch.cas.html5.multicardgame.entity.Game;
 import ch.cas.html5.multicardgame.entity.User;
+import ch.cas.html5.multicardgame.messaging.Message;
+import ch.cas.html5.multicardgame.messaging.WebSocketController;
 import ch.cas.html5.multicardgame.repository.CardRepository;
 import ch.cas.html5.multicardgame.repository.UserRepository;
 import ch.cas.html5.multicardgame.service.GameService;
@@ -34,6 +36,14 @@ public class GameServiceImpl implements GameService {
         this.cardRepository = cardRepository;
     }
 
+    @Autowired
+    private WebSocketController webSocketController;
+    public void setWebSocketController(WebSocketController webSocketController) {
+        this.webSocketController = webSocketController;
+    }
+
+
+
     public List<Game> retrieveGames() {
         List<Game> games = gameRepository.findAll();
         return games;
@@ -60,6 +70,7 @@ public class GameServiceImpl implements GameService {
     public void startGame(String playgroundId) {
         List<User> users = deleteGameByPlayground(playgroundId);
         handOutCards(playgroundId, users);
+        //webSocketController.sendToUser("933F4FB5-5144-4932-AF0A-C2098E24D184", "103F5A8A-7A5B-49F9-89E2-81D58183ED2E");
     }
 
     private List<User> deleteGameByPlayground(String playgroundId) {
@@ -86,6 +97,11 @@ public class GameServiceImpl implements GameService {
             game.setUser(users.get(indexUser.get(0)));
             System.out.println("Save Game " + card.getName() + " - " + game.getUser().getId());
             gameRepository.save(game);
+            Message msg = new Message();
+            msg.setFrom("Server");
+            msg.setText("Karte: " + card.getName());
+            webSocketController.sendToUser(playgroundId, users.get(indexUser.get(0)).getId(), msg);
+
         }
 
     }
