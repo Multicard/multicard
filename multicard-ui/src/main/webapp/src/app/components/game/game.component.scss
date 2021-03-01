@@ -1,4 +1,22 @@
 :host {
   display: block;
   height: 100%;
+  background-image: url("/assets/table-background.jpg");
+  background-size: cover;
+  background-color: saddlebrown;
+
+  .toolbar {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+
+    .start-button {
+      height: 80%;
+    }
+  }
+
+  .table {
+    height: calc(100% - 40px);
+  }
 }

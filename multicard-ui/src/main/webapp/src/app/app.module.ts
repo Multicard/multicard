@@ -10,6 +10,8 @@ import {StackComponent} from './components/stack/stack.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {PlayerComponent} from './components/player/player.component';
 import {UserPlayerComponent} from './components/user-player/user-player.component';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import {UserPlayerComponent} from './components/user-player/user-player.componen
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MatButtonModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]

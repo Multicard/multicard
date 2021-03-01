@@ -1,9 +1,17 @@
 export interface Game {
   id: string;
   title: string;
+  state: GameState;
   playerIdOfCurrentUser: string;
   players: Player[];
   stacks: Stack[];
+}
+
+export enum GameState {
+  initial = 'initial',
+  readyToStart = 'readyToStart',
+  started = 'started',
+  ended = 'ended'
 }
 
 export interface Player {

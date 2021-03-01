@@ -43,10 +43,13 @@
 
   .player-name {
     padding-top: 4px;
+    width: 100px;
+    text-align: center;
     white-space: nowrap;
     font-weight: bold;
     margin-top: 20px;
     z-index: 1;
+    background-color: #B2CFF5;
   }
 
   @include normal-size {

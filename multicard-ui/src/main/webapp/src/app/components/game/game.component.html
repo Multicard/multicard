@@ -1,1 +1,4 @@
-<mc-table [gameState]="gameState"></mc-table>
+<div class="toolbar">
+  <button *ngIf="isGameStateReadyToStart()" class="start-button" color="primary" mat-raised-button (click)="startGame()"><mat-icon>play_arrow</mat-icon> Spiel starten</button>
+</div>
+<mc-table class="table" [gameState]="gameState"></mc-table>

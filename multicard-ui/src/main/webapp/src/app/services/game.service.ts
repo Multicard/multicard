@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {ActionType, DirectionType, Game, StackAction} from '../model/game.model';
+import {ActionType, DirectionType, Game, GameState, StackAction} from '../model/game.model';
 import {Observable, Subject} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
@@ -14,6 +14,7 @@ export class GameService {
       const gc: Game = {
         id: '123456',
         title: 'fröhliche Schieberrunde',
+        state: GameState.readyToStart,
         playerIdOfCurrentUser: 'player1',
         players: [
           {
@@ -59,8 +60,6 @@ export class GameService {
       // sortiere die Players so, dass der erste PLayer in der Liste dem current User entspricht
       this.gameState.players = [...this.gameState.players.slice(indexCurrUser),
         ...this.gameState.players.slice(0, indexCurrUser)];
-
-      setTimeout(() => this.startGame(9, 3), 2000);
     }
 
     return this.gameState;
@@ -70,8 +69,9 @@ export class GameService {
     return this.stackSubject.asObservable();
   }
 
-  public startGame(numberOfTotalCardsPerPlayer: number, numberOfPLayerCardPerTurn: number) {
-    this.giveCards(0, numberOfTotalCardsPerPlayer, numberOfPLayerCardPerTurn, this.gameState.players.length);
+  public startGame() {
+    this.gameState.state = GameState.started;
+    this.giveCards(0, 9, 3, this.gameState.players.length);
   }
 
   private giveCards(i: number = 0, numberOfTotalCardsPerPlayer: number, numberOfPLayerCardsPerTurn: number, numberOfPLayers: number) {
