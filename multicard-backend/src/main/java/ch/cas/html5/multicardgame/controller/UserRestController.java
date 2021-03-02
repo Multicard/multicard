@@ -1,7 +1,8 @@
 package ch.cas.html5.multicardgame.controller;
 
-import ch.cas.html5.multicardgame.entity.User;
-import ch.cas.html5.multicardgame.service.UserService;
+import ch.cas.html5.multicardgame.entity.Player;
+import ch.cas.html5.multicardgame.implementation.GameServiceImpl;
+import ch.cas.html5.multicardgame.implementation.PlayerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,42 +12,42 @@ import java.util.List;
 @CrossOrigin("*")
 public class UserRestController {
     @Autowired
-    private ch.cas.html5.multicardgame.service.UserService userService;
+    private PlayerServiceImpl playerService;
     @Autowired
-    private ch.cas.html5.multicardgame.service.PlaygroundService playgroundService;
+    private GameServiceImpl gameService;
 
-    public void setUserService(UserService userService) {
-        this.userService = userService;
+    public void setUserService(PlayerServiceImpl playerService) {
+        this.playerService = playerService;
     }
 
-    public void setPlaygroundService(ch.cas.html5.multicardgame.service.PlaygroundService playgroundService) {
-        this.playgroundService = playgroundService;
+    public void setGameService(GameServiceImpl gameService) {
+        this.gameService = gameService;
     }
 
     @GetMapping("/api/Users")
-    public List<User> getUsers() {
-        List<User> users = userService.retrieveUsers();
-        return users;
+    public List<Player> getUsers() {
+        List<Player> players = playerService.retrieveUsers();
+        return players;
     }
 
     @GetMapping("/api/Users/{UserId}")
-    public User getUser(@PathVariable(name="UserId")String userId) {
-        return userService.getUser(userId);
+    public Player getUser(@PathVariable(name="UserId")String userId) {
+        return playerService.getUser(userId);
     }
 
     @PostMapping(path = "/api/Users", consumes = "application/json", produces = "application/json")
-    public User saveUser(@RequestBody User user){
-        return userService.saveUser(user);
+    public Player saveUser(@RequestBody Player player){
+        return playerService.saveUser(player);
     }
 
     @DeleteMapping("/api/Users/{UserId}")
     public void deleteUser(@PathVariable(name="UserId")String userId){
-        userService.deleteUser(userId);
+        playerService.deleteUser(userId);
     }
 
     @PutMapping("/api/Users/{UserId}")
-    public User updateUser(@RequestBody User user,
-                               @PathVariable(name="UserId")String userId){
+    public Player updateUser(@RequestBody Player player,
+                             @PathVariable(name="UserId")String userId){
 
 /*
         Playground p = PlaygroundService.getPlayground(user.getPlayground().getId());
@@ -54,12 +55,12 @@ public class UserRestController {
         PlaygroundService.savePlayground(p);
 */
 
-        User source = userService.getUser(userId);
-        source.setPlayground(user.getPlayground());
+        Player source = playerService.getUser(userId);
+        source.setGame(player.getGame());
         if(source != null){
-            userService.saveUser(user);
+            playerService.saveUser(player);
         }
-        return user;
+        return player;
     }
 
 }

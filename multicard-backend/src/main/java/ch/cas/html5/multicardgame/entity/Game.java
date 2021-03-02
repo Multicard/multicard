@@ -3,22 +3,32 @@ package ch.cas.html5.multicardgame.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name="game")
 public class Game {
+
     @Id
     @Column(unique = true, name = "id", nullable = false)
     private String id = UUID.randomUUID().toString().toUpperCase();
 
-    @JsonIgnoreProperties("games")
-    @ManyToOne(optional = false)
-    private User user;
+    @Column(name="title")
+    private String title;
 
-    @JsonIgnoreProperties("cards")
-    @ManyToOne(optional = false)
-    private Card card;
+    //https://stackoverflow.com/questions/49130173/how-to-fix-spring-boot-one-to-many-bidirectional-infinity-loop
+    @JsonIgnoreProperties("game")
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Player> players = new ArrayList<>();
+
+    @Column(name = "state")
+    private Enum<Gamestate> state;
+
+    @JsonIgnoreProperties("game")
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Stack> stacks = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -28,19 +38,36 @@ public class Game {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public String getTitle() {
+        return title;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public Card getCard() {
-        return card;
+    public List<Player> getPlayers() {
+        return players;
     }
 
-    public void setCard(Card card) {
-        this.card = card;
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+
+    public void addPlayer(Player player) {
+        players.add(player);
+        player.setGame(this);
+    }
+
+    public Enum<Gamestate> getState() { return state; }
+
+    public void setState(Enum<Gamestate> state) {this.state = state;  }
+
+    public List<Stack> getGameStacks() {
+        return stacks;
+    }
+
+    public void setGameStacks(List<Stack> stacks) {
+        this.stacks = stacks;
     }
 }
