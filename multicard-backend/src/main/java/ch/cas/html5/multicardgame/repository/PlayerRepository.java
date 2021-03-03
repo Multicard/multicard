@@ -12,7 +12,7 @@ import java.util.List;
 public interface PlayerRepository extends JpaRepository<Player,String> {
 
     @Query("SELECT u FROM Player u WHERE u.game.id = ?1")
-    List<Player> getUserByGame(String gameId);
+    List<Player> getPlayersByGame(String gameId);
 
 }
 

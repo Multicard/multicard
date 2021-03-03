@@ -73,7 +73,7 @@ public class HandServiceImpl {
 //    }
 
     private List<Player> deleteHandByGame(String gameId) {
-        List<Player> players = playerRepository.getUserByGame(gameId);
+        List<Player> players = playerRepository.getPlayersByGame(gameId);
         for (Player player : players) {
             handRepository.deleteGameByPLayer(player.getId());
         }

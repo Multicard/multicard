@@ -14,33 +14,33 @@ public class PlayerServiceImpl {
     @Autowired
     private ch.cas.html5.multicardgame.repository.PlayerRepository playerRepository;
 
-    public void setUserRepository(PlayerRepository playerRepository) {
+    public void setPlayerRepository(PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;
     }
 
-    public List<Player> retrieveUsers() {
+    public List<Player> retrievePlayers() {
         List<Player> players = playerRepository.findAll();
         return players;
     }
 
-    public Player getUser(String userId) {
-        Optional<Player> optUser = playerRepository.findById(userId);
-        if (optUser.isPresent()){
-            return optUser.get();
+    public Player getPlayer(String userId) {
+        Optional<Player> optPlayer = playerRepository.findById(userId);
+        if (optPlayer.isPresent()){
+            return optPlayer.get();
         }
         return null;
     }
 
-    public Player saveUser(Player player){
+    public Player savePlayer(Player player){
         return playerRepository.save(player);
     }
 
-    public void deleteUser(String userId){
+    public void deletePlayer(String userId){
         playerRepository.deleteById(userId);
     }
 
     public List<Player> getUsesersByPlayground(String playgroundId){
-        List<Player> players = playerRepository.getUserByGame(playgroundId);
+        List<Player> players = playerRepository.getPlayersByGame(playgroundId);
         return players;
     }
 
