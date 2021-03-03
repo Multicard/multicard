@@ -20,6 +20,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         //https://stackoverflow.com/questions/26500954/sockjs-not-passing-credential-information-when-on-a-different-domaincors
         //registry.addEndpoint("/ws-endpoint").setAllowedOrigins("*").withSockJS();
-        registry.addEndpoint("/ws-endpoint").setAllowedOriginPatterns("http://localhost:*").withSockJS();
+        registry.addEndpoint("/ws-endpoint").setAllowedOriginPatterns("http://localhost:*");
     }
 }

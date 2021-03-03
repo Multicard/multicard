@@ -12,6 +12,8 @@ import {PlayerComponent} from './components/player/player.component';
 import {UserPlayerComponent} from './components/user-player/user-player.component';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from '@stomp/ng2-stompjs';
+import {rxStompConfig} from './rx-stomp.config';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,17 @@ import {MatIconModule} from '@angular/material/icon';
     MatButtonModule,
     MatIconModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: InjectableRxStompConfig,
+      useValue: rxStompConfig,
+    },
+    {
+      provide: RxStompService,
+      useFactory: rxStompServiceFactory,
+      deps: [InjectableRxStompConfig],
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
