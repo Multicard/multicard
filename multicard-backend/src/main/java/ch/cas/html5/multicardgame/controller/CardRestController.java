@@ -1,7 +1,7 @@
 package ch.cas.html5.multicardgame.controller;
 
 import ch.cas.html5.multicardgame.entity.Card;
-import ch.cas.html5.multicardgame.implementation.CardServiceImpl;
+import ch.cas.html5.multicardgame.services.CardServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

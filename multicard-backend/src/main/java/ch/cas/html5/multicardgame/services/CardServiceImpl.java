@@ -1,4 +1,4 @@
-package ch.cas.html5.multicardgame.implementation;
+package ch.cas.html5.multicardgame.services;
 
 import ch.cas.html5.multicardgame.entity.Card;
 import ch.cas.html5.multicardgame.repository.CardRepository;

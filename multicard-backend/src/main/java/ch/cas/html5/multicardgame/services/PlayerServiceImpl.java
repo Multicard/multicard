@@ -1,4 +1,4 @@
-package ch.cas.html5.multicardgame.implementation;
+package ch.cas.html5.multicardgame.services;
 
 import ch.cas.html5.multicardgame.entity.Game;
 import ch.cas.html5.multicardgame.entity.Player;
@@ -47,6 +47,7 @@ public class PlayerServiceImpl {
             player.setName(name);
             player.setIsOrganizer(isOrganizer);
             player.setPosition(position);
+            playerRepository.save(player);
             game.addPlayer(player);
             return player;
         }

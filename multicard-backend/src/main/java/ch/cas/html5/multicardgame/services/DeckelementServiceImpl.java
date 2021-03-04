@@ -1,4 +1,4 @@
-package ch.cas.html5.multicardgame.implementation;
+package ch.cas.html5.multicardgame.services;
 
 import ch.cas.html5.multicardgame.entity.Deckelement;
 import ch.cas.html5.multicardgame.repository.DeckelementRepository;
@@ -36,6 +36,11 @@ public class DeckelementServiceImpl {
 
     public void deleteDeckelement(String deckelementId){
         deckelementRepository.deleteById(deckelementId);
+    }
+
+    public List<Deckelement> getDeckelementsByDeck(String deckId) {
+        List<Deckelement> deckelements = deckelementRepository.getDeckelementsByDeck(deckId);
+        return deckelements;
     }
 
 

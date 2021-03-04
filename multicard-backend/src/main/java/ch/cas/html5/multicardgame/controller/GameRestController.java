@@ -1,7 +1,8 @@
 package ch.cas.html5.multicardgame.controller;
 
 import ch.cas.html5.multicardgame.entity.Game;
-import ch.cas.html5.multicardgame.implementation.GameServiceImpl;
+import ch.cas.html5.multicardgame.control.GameControlService;
+import ch.cas.html5.multicardgame.services.GameServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,11 @@ public class GameRestController {
         this.gameService = gameService;
     }
 
+    @Autowired
+    private GameControlService gameControlService;
+    public void setGameControlService(GameControlService gameControlService) {
+        this.gameControlService = gameControlService;
+    }
 
     @GetMapping("/api/Games")
     public List<Game> getGames() {
@@ -36,6 +42,11 @@ public class GameRestController {
     @DeleteMapping("/api/Games/{GameId}")
     public void deleteGame(@PathVariable(name="GameId")String gameId){
         gameService.deleteGame(gameId);
+    }
+
+    @PutMapping("/api/Games/{GameId}")
+    public void gameReady(@PathVariable(name="GameId")String gameId){
+        gameControlService.setGameReady(gameId);
     }
 
 }
