@@ -2,8 +2,8 @@ package ch.cas.html5.multicardgame.controller;
 
 import ch.cas.html5.multicardgame.entity.Deck;
 import ch.cas.html5.multicardgame.entity.Deckelement;
-import ch.cas.html5.multicardgame.implementation.DeckServiceImpl;
-import ch.cas.html5.multicardgame.implementation.DeckelementServiceImpl;
+import ch.cas.html5.multicardgame.services.DeckServiceImpl;
+import ch.cas.html5.multicardgame.services.DeckelementServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -27,7 +27,7 @@ public class Stack {
     private Game game;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "card_id", referencedColumnName = "id")
+    @JoinColumn(name = "topcard", referencedColumnName = "id")
     private Card topCard;
 
     public String getId() {return id; }

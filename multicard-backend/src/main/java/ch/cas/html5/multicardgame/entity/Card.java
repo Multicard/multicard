@@ -16,6 +16,9 @@ public class Card {
     @Column(name="card_name")
     private String name;
 
+    @Column(name="sort")
+    private int sort;
+
     @JsonIgnoreProperties("cards")
     @ManyToOne(optional = true)
     private Stack stack;
@@ -24,8 +27,8 @@ public class Card {
     @ManyToOne(optional = true)
     private Hand hand;
 
-    @OneToOne(mappedBy = "topCard")
-    private Stack stackTopCard;
+//    @OneToOne(mappedBy = "topCard")
+//    private Stack stackTopCard;
 
     public String getId() {
         return id;
@@ -58,4 +61,14 @@ public class Card {
     public void setHand(Hand hand) {
         this.hand = hand;
     }
+
+    public int getSort() { return sort; }
+
+    public void setSort(int sort) { this.sort = sort; }
+
+//    public Stack getStackTopCard() { return stackTopCard; }
+//
+//    public void setStackTopCard(Stack stackTopCard) {
+//        this.stackTopCard = stackTopCard;
+//    }
 }

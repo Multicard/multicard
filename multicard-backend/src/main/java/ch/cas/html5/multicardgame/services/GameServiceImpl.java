@@ -1,8 +1,8 @@
-package ch.cas.html5.multicardgame.implementation;
+package ch.cas.html5.multicardgame.services;
 
 
-import ch.cas.html5.multicardgame.entity.Game;
-import ch.cas.html5.multicardgame.entity.Gamestate;
+import ch.cas.html5.multicardgame.entity.*;
+import ch.cas.html5.multicardgame.control.GameControlService;
 import ch.cas.html5.multicardgame.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,9 +14,14 @@ import java.util.Optional;
 public class GameServiceImpl {
     @Autowired
     private GameRepository gameRepository;
-
     public void setGameRepository(GameRepository gameRepository) {
         this.gameRepository = gameRepository;
+    }
+
+    @Autowired
+    private GameControlService gameControlService;
+    public void setGameControlService(GameControlService gameControlService) {
+        this.gameControlService = gameControlService;
     }
 
     public List<Game> retrieveGames() {
@@ -42,5 +47,6 @@ public class GameServiceImpl {
     public void deleteGame(String gameId){
         gameRepository.deleteById(gameId);
     }
+
 
 }

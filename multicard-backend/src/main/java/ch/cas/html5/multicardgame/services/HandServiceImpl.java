@@ -1,4 +1,4 @@
-package ch.cas.html5.multicardgame.implementation;
+package ch.cas.html5.multicardgame.services;
 
 import ch.cas.html5.multicardgame.entity.Hand;
 import ch.cas.html5.multicardgame.entity.Player;
