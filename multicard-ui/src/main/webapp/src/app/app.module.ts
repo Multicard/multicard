@@ -14,6 +14,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from '@stomp/ng2-stompjs';
 import {rxStompConfig} from './rx-stomp.config';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import {rxStompConfig} from './rx-stomp.config';
     BrowserAnimationsModule,
     AppRoutingModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    DragDropModule
   ],
   providers: [
     {
