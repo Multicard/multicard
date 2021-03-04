@@ -1,5 +1,7 @@
-<div class="card-wrapper" *ngFor="let card of getCards()">
-  <div class="card">
-    <img [src]="'assets/cards/' + card + '.svg'" alt="'assets/cards/' + card + '.svg'">
+<div class="user-player" cdkDropList cdkDropListConnectedTo="carpet-bottom">
+  <div class="card-wrapper" *ngFor="let card of getCards()">
+    <div class="card" cdkDrag>
+      <img [src]="'assets/cards/' + card + '.svg'" alt="'assets/cards/' + card + '.svg'">
+    </div>
   </div>
 </div>

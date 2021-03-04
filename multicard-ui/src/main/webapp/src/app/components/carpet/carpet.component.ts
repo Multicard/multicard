@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Stack} from '../../model/game.model';
+import {CdkDragDrop} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'mc-carpet',
@@ -17,4 +18,7 @@ export class CarpetComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  cardDroppedBottom(event: CdkDragDrop<string[]>) {
+    console.log('card dropped onto carpet in bottom area');
+  }
 }

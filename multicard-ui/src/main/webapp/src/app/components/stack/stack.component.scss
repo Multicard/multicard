@@ -1,3 +1,5 @@
+@import "src/styles/mixins";
+
 :host {
   display: block;
 
@@ -9,15 +11,12 @@
 
     .card {
       grid-area: 1 / 1 / 2 / 2;
-      min-width: 60px;
-      max-width: 200px;
-      min-height: 80px;
-      max-height: 278px;
 
+      @include table-card;
       img {
-        max-width: 100%;
+        object-fit: cover;
+        height: 100%;
         max-height: 100%;
-        display: block;
       }
     }
   }
