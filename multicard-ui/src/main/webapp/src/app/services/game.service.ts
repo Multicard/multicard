@@ -1,13 +1,17 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {ActionType, DirectionType, Game, GameState, StackAction} from '../model/game.model';
-import {Observable, Subject} from 'rxjs';
+import {Observable, Subject, Subscription} from 'rxjs';
+import {RxStompService} from '@stomp/ng2-stompjs';
 
 @Injectable({providedIn: 'root'})
-export class GameService {
+export class GameService implements OnDestroy {
 
+  private stompQueueSubscription!: Subscription;
   private gameState!: Game;
-
   private stackSubject: Subject<StackAction> = new Subject();
+
+  constructor(private rxStompService: RxStompService) {
+  }
 
   loadGameState(): Game {
     if (this.gameState === undefined) {
@@ -60,6 +64,8 @@ export class GameService {
       // sortiere die Players so, dass der erste PLayer in der Liste dem current User entspricht
       this.gameState.players = [...this.gameState.players.slice(indexCurrUser),
         ...this.gameState.players.slice(0, indexCurrUser)];
+
+      this.subscribeToTopic();
     }
 
     return this.gameState;
@@ -69,9 +75,26 @@ export class GameService {
     return this.stackSubject.asObservable();
   }
 
-  public startGame() {
+  startGame() {
     this.gameState.state = GameState.started;
     this.giveCards(0, 9, 3, this.gameState.players.length);
+  }
+
+  ngOnDestroy(): void {
+    if (this.stompQueueSubscription !== undefined) {
+      this.stompQueueSubscription.unsubscribe();
+    }
+  }
+
+  private subscribeToTopic() {
+    // TODO: Spiel ID und Player ID setzen
+    const gameId = '933F4FB5-5144-4932-AF0A-C2098E24D184';
+    const playerId = '103F5A8A-7A5B-49F9-89E2-81D58183ED2E';
+    this.stompQueueSubscription = this.rxStompService
+      .watch(`/queue/$gameId/$playerId`)
+      .subscribe((message: any) => {
+        console.log(message);
+      });
   }
 
   private giveCards(i: number = 0, numberOfTotalCardsPerPlayer: number, numberOfPLayerCardsPerTurn: number, numberOfPLayers: number) {
