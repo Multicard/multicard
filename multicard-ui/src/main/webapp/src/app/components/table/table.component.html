@@ -7,7 +7,7 @@
     <mc-player class="player-left" [player]="gameState.players[1]"></mc-player>
   </div>
   <div class="table-carpet">
-    <mc-carpet [stacks]="gameState.stacks"></mc-carpet>
+    <mc-carpet [stacks]="gameState.stacks" [playedCards]="gameState.playedCards" [playerIds]="playerIdList"></mc-carpet>
   </div>
   <div class="table-right">
     <mc-player class="player-right" [player]="gameState.players[3]"></mc-player>

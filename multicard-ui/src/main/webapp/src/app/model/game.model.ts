@@ -5,6 +5,7 @@ export interface Game {
   playerIdOfCurrentUser: string;
   players: Player[];
   stacks: Stack[];
+  playedCards?: PlayedCards;
 }
 
 export enum GameState {
@@ -27,6 +28,12 @@ export interface Stack {
   isFaceUp: boolean;
   numberOfCards: number;
   topCard?: string;
+}
+
+export interface PlayedCards {
+  onSameStack: boolean;
+  idOfStartingPlayer: string;
+  cards: Card[];
 }
 
 export interface Hand {

@@ -53,7 +53,7 @@ export class StackComponent implements OnInit, OnDestroy {
   }
 
   public getCardImage() {
-    return 'assets/cards/' + (this.stack.isFaceUp ? this.stack.topCard : 'BLUE_BACK.svg');
+    return 'assets/cards/' + (this.stack.isFaceUp ? this.stack.topCard : 'BLUE_BACK') + '.svg';
   }
 
   private triggerAction(action: StackAction) {

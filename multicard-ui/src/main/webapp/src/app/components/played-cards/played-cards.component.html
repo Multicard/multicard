@@ -1,0 +1,19 @@
+<div class="played-cards">
+  <div class="played-cards-area-top"></div>
+  <div class="played-cards-area-center">
+    <div class="played-cards-area-left">
+    </div>
+    <div class="played-cards-area-middle">
+      <div *ngIf="playedCards?.onSameStack" class="played-cards-target" cdkDropList id="played-cards-target" (cdkDropListDropped)="cardDroppedBottom($event)">
+        <mc-card-pile [cards]="playedCards?.cards"></mc-card-pile>
+      </div>
+      <ng-content></ng-content>
+    </div>
+    <div class="played-cards-area-right">
+    </div>
+  </div>
+  <div class="played-cards-area-bottom">
+    <div *ngIf="!playedCards?.onSameStack" class="played-cards-target" cdkDropList id="played-cards-target" (cdkDropListDropped)="cardDroppedBottom($event)">
+    </div>
+  </div>
+</div>

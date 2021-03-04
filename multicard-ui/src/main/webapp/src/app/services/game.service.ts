@@ -110,7 +110,14 @@ export class GameService implements OnDestroy {
         this.gameState.players[i % numberOfPLayers].hand.numberOfCards += numberOfPLayerCardsPerTurn;
       }, 200);
     } else {
-      setTimeout(() => this.gameState.players[0].hand.cards = ['AS', '3C', '10H', 'JC', '7D', 'QD', 'KS', 'AH', '5C'], 1000);
+      setTimeout(() => {
+        this.gameState.players[0].hand.cards = ['AS', '3C', '10H', 'JC', '7D', 'QD', 'KS', 'AH', '5C'];
+        this.gameState.playedCards = {
+          idOfStartingPlayer: 'player4',
+          onSameStack: true,
+          cards: [{isFaceUp: true, card: '10H'}, {isFaceUp: true, card: 'AC'}]
+        };
+      }, 1000);
     }
   }
 }

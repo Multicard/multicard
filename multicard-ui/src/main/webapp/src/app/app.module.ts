@@ -15,6 +15,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from '@stomp/ng2-stompjs';
 import {rxStompConfig} from './rx-stomp.config';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import { PlayedCardsComponent } from './components/played-cards/played-cards.component';
+import { CardPileComponent } from './components/card-pile/card-pile.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     GameComponent,
     CarpetComponent,
     StackComponent,
-    PlayerComponent
+    PlayerComponent,
+    PlayedCardsComponent,
+    CardPileComponent
   ],
   imports: [
     BrowserModule,
