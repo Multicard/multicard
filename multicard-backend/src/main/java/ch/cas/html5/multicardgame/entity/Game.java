@@ -23,8 +23,10 @@ public class Game {
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Player> players = new ArrayList<>();
 
+    @Basic
     @Column(name = "state")
-    private Enum<Gamestate> state;
+    @Enumerated(EnumType.STRING)
+    private Gamestate state;
 
     @JsonIgnoreProperties("game")
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -59,9 +61,9 @@ public class Game {
         player.setGame(this);
     }
 
-    public Enum<Gamestate> getState() { return state; }
+    public Gamestate getState() { return state; }
 
-    public void setState(Enum<Gamestate> state) {this.state = state;  }
+    public void setState(Gamestate state) {this.state = state;  }
 
     public List<Stack> getGameStacks() {
         return stacks;

@@ -2,11 +2,9 @@ package ch.cas.html5.multicardgame.controller;
 
 import ch.cas.html5.multicardgame.entity.Game;
 import ch.cas.html5.multicardgame.implementation.GameServiceImpl;
-import ch.cas.html5.multicardgame.implementation.PlayerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -14,12 +12,10 @@ import java.util.List;
 public class GameRestController {
     @Autowired
     private GameServiceImpl gameService;
-    @Autowired
-    private PlayerServiceImpl playerService;
-
     public void setGameService(GameServiceImpl gameService) {
         this.gameService = gameService;
     }
+
 
     @GetMapping("/api/Games")
     public List<Game> getGames() {
@@ -33,27 +29,13 @@ public class GameRestController {
     }
 
     @PostMapping(path = "/api/Games", consumes = "application/json", produces = "application/json")
-    public Game saveGame(@RequestBody Game game){
-        return gameService.saveGame(game);
+    public Game saveGame(@RequestBody String title){
+        return gameService.saveGame(title);
     }
 
     @DeleteMapping("/api/Games/{GameId}")
     public void deleteGame(@PathVariable(name="GameId")String gameId){
         gameService.deleteGame(gameId);
-    }
-
-    @PutMapping("/api/Games/{GameId}")
-    public Game updateGame(@RequestBody Game game,
-                               @PathVariable(name="GameId")String gameId){
-        Game updateGame = gameService.getGame(gameId);
-        if (updateGame != null){
-            if (updateGame.getPlayers() == null){
-                updateGame.setPlayers(new ArrayList<>());
-            }
-            updateGame.addPlayer(game.getPlayers().get(0));
-            gameService.saveGame(updateGame);
-        }
-        return updateGame;
     }
 
 }

@@ -1,10 +1,11 @@
 package ch.cas.html5.multicardgame.implementation;
 
 
+import ch.cas.html5.multicardgame.entity.Game;
+import ch.cas.html5.multicardgame.entity.Gamestate;
+import ch.cas.html5.multicardgame.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ch.cas.html5.multicardgame.entity.*;
-import ch.cas.html5.multicardgame.repository.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +32,10 @@ public class GameServiceImpl {
         return null;
     }
 
-    public Game saveGame(Game game){
+    public Game saveGame(String title){
+        Game game = new Game();
+        game.setTitle(title);
+        game.setState(Gamestate.INITIAL);
         return gameRepository.save(game);
     }
 

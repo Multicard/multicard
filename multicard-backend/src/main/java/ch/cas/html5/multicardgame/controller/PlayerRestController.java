@@ -1,7 +1,6 @@
 package ch.cas.html5.multicardgame.controller;
 
 import ch.cas.html5.multicardgame.entity.Player;
-import ch.cas.html5.multicardgame.implementation.GameServiceImpl;
 import ch.cas.html5.multicardgame.implementation.PlayerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,15 +12,8 @@ import java.util.List;
 public class PlayerRestController {
     @Autowired
     private PlayerServiceImpl playerService;
-    @Autowired
-    private GameServiceImpl gameService;
-
     public void setPlayerService(PlayerServiceImpl playerService) {
         this.playerService = playerService;
-    }
-
-    public void setPlaygroundService(GameServiceImpl gameService) {
-        this.gameService = gameService;
     }
 
     @GetMapping("/api/Players")
@@ -36,9 +28,14 @@ public class PlayerRestController {
     }
 
     @PostMapping(path = "/api/Players", consumes = "application/json", produces = "application/json")
-    public Player savePlayer(@RequestBody Player player){
-        return playerService.savePlayer(player);
+    public Player savePlayer(@RequestBody String gameId, String name, Boolean isOrganizer, int position){
+        return playerService.savePlayer(gameId, name, isOrganizer, position);
     }
+
+//    @PostMapping(path = "/api/Players", consumes = "application/json", produces = "application/json")
+//    public Player savePlayer(@RequestBody Player player){
+//        return playerService.savePlayer(player);
+//    }
 
     @DeleteMapping("/api/Players/{PlayerId}")
     public void deletePlayer(@PathVariable(name="PlayerId")String playerId){
@@ -46,21 +43,9 @@ public class PlayerRestController {
     }
 
     @PutMapping("/api/Players/{PlayerId}")
-    public Player updatePlayer(@RequestBody Player player,
+    public Player updatePlayer(@RequestBody String name, Boolean isOrganizer, int position,
                              @PathVariable(name="PlayerId")String playerId){
-
-/*
-        Playground p = PlaygroundService.getPlayground(player.getPlayground().getId());
-        p.addPlayer(player);
-        PlaygroundService.savePlayground(p);
-*/
-
-        Player source = playerService.getPlayer(playerId);
-        source.setGame(player.getGame());
-        if(source != null){
-            playerService.savePlayer(player);
-        }
-        return player;
+        return playerService.updatePlayer(playerId, name, isOrganizer, position);
     }
 
 }

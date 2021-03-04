@@ -80,14 +80,6 @@ public class Player {
         this.hand = hand;
     }
 
-    public Boolean getOrganizer() {
-        return isOrganizer;
-    }
-
-    public void setOrganizer(Boolean organizer) {
-        isOrganizer = organizer;
-    }
-
     public List<Stack> getStacks() {
         return stacks;
     }

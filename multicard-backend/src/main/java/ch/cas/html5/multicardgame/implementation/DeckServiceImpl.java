@@ -1,6 +1,7 @@
 package ch.cas.html5.multicardgame.implementation;
 
 import ch.cas.html5.multicardgame.entity.Deck;
+import ch.cas.html5.multicardgame.entity.Deckelement;
 import ch.cas.html5.multicardgame.repository.DeckRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,14 @@ public class DeckServiceImpl {
 
     public void deleteDeck(String deckId){
         deckRepository.deleteById(deckId);
+    }
+
+    public void addDeckelement(String deckId, Deckelement deckelement){
+        Optional<Deck> optDeck = deckRepository.findById(deckId);
+        if (optDeck.isPresent()) {
+            optDeck.get().getDeckelements().add(deckelement);
+        }
+
     }
 
 
