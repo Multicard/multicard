@@ -114,8 +114,11 @@ export class GameService implements OnDestroy {
         this.gameState.players[0].hand.cards = ['AS', '3C', '10H', 'JC', '7D', 'QD', 'KS', 'AH', '5C'];
         this.gameState.playedCards = {
           idOfStartingPlayer: 'player4',
-          onSameStack: true,
-          cards: [{isFaceUp: true, card: '10H'}, {isFaceUp: true, card: 'AC'}]
+          onSameStack: false,
+          cards: [{isFaceUp: true, card: '10H'}, {isFaceUp: true, card: 'AC'}, {
+            isFaceUp: true,
+            card: '6D'
+          }, {isFaceUp: true, card: '7S'}, {isFaceUp: true, card: 'JH'}, {isFaceUp: true, card: 'QD'}]
         };
       }, 1000);
     }
