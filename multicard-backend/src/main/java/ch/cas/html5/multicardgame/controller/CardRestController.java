@@ -1,7 +1,7 @@
 package ch.cas.html5.multicardgame.controller;
 
 import ch.cas.html5.multicardgame.entity.Card;
-import ch.cas.html5.multicardgame.service.CardService;
+import ch.cas.html5.multicardgame.implementation.CardServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,10 +11,10 @@ import java.util.List;
 @CrossOrigin("*")
 public class CardRestController {
     @Autowired
-    private CardService cardService;
+    private CardServiceImpl cardService;
 
-    public void setCardService(CardService CardService) {
-        this.cardService = CardService;
+    public void setCardService(CardServiceImpl cardService) {
+        this.cardService = cardService;
     }
 
     @GetMapping("/api/Cards")

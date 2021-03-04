@@ -8,20 +8,19 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name="playground")
-public class Playground {
+@Table(name="deck")
+public class Deck {
 
     @Id
     @Column(unique = true, name = "id", nullable = false)
     private String id = UUID.randomUUID().toString().toUpperCase();
 
-    @Column(name="name")
+    @Column(name = "deck_name")
     private String name;
 
-    //https://stackoverflow.com/questions/49130173/how-to-fix-spring-boot-one-to-many-bidirectional-infinity-loop
-    @JsonIgnoreProperties("playground")
-    @OneToMany(mappedBy = "playground", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<User> players = new ArrayList<>();
+    @JsonIgnoreProperties("deck")
+    @OneToMany(mappedBy = "deck", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Deckelement> deckelements = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -39,16 +38,11 @@ public class Playground {
         this.name = name;
     }
 
-    public List<User> getPlayers() {
-        return players;
+    public List<Deckelement> getDeckelements() {
+        return deckelements;
     }
 
-    public void setPlayers(List<User> players) {
-        this.players = players;
-    }
-
-    public void addPlayer(User user) {
-        players.add(user);
-        user.setPlayground(this);
+    public void setDeckelements(List<Deckelement> deckelements) {
+        this.deckelements = deckelements;
     }
 }

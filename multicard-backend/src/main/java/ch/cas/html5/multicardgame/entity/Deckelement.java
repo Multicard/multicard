@@ -6,26 +6,22 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name="card")
-public class Card {
+@Table(name="deckelement")
+public class Deckelement {
 
     @Id
     @Column(unique = true, name = "id", nullable = false)
     private String id = UUID.randomUUID().toString().toUpperCase();
 
-    @Column(name="card_name")
+    @Column(name = "name")
     private String name;
 
-    @JsonIgnoreProperties("cards")
-    @ManyToOne(optional = true)
-    private Stack stack;
+    @Column(name = "sort")
+    private int sort;
 
-    @JsonIgnoreProperties("cards")
+    @JsonIgnoreProperties("deckelements")
     @ManyToOne(optional = true)
-    private Hand hand;
-
-    @OneToOne(mappedBy = "topCard")
-    private Stack stackTopCard;
+    private Deck deck;
 
     public String getId() {
         return id;
@@ -43,19 +39,20 @@ public class Card {
         this.name = name;
     }
 
-    public Stack getStack() {
-        return stack;
+    public int getSort() {
+        return sort;
     }
 
-    public void setStack(Stack stack) {
-        this.stack = stack;
+    public void setSort(int sort) {
+        this.sort = sort;
     }
 
-    public Hand getHand() {
-        return hand;
+    public Deck getDeck() {
+        return deck;
     }
 
-    public void setHand(Hand hand) {
-        this.hand = hand;
+    public void setDeck(Deck deck) {
+        this.deck = deck;
     }
 }
+

@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user")
-public class User {
+@Table(name = "player")
+public class Player {
     @Id
     @Column(unique = true, name = "id", nullable = false)
     private String id = UUID.randomUUID().toString().toUpperCase();
@@ -18,22 +18,23 @@ public class User {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "isAdmin")
-    private Boolean isAdmin;
+    @Column(name = "isOrganizer")
+    private Boolean isOrganizer;
 
     @Column(name = "position")
     private Integer position;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "hand_id", referencedColumnName = "id")
+    private Hand hand;
+
     @JsonIgnoreProperties("players")
     @ManyToOne(optional = true)
-    //@JoinColumn(name = "playground_id")
-    private Playground playground;
+    private Game game;
 
-    @JsonIgnoreProperties("user")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Game> games = new ArrayList<>();
-
-
+    @JsonIgnoreProperties("player")
+    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Stack> stacks = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -51,38 +52,39 @@ public class User {
         this.name = name;
     }
 
-    public Playground getPlayground() {
-        return playground;
+    public Game getGame() {
+        return game;
     }
 
-    public void setPlayground(Playground playground) {
-        this.playground = playground;
+    public void setGame(Game game) {
+        this.game = game;
     }
 
-    public Boolean getAdmin() {
-        return isAdmin;
+    public Boolean getIsOrganizer() {
+        return isOrganizer;
     }
 
-    public void setAdmin(Boolean admin) {
-        isAdmin = admin;
+    public void setIsOrganizer(Boolean admin) {
+        isOrganizer = admin;
     }
 
     public Integer getPosition() {return position;}
 
     public void setPosition(Integer position) {this.position = position;}
 
-    public List<Game> getGames() {
-        return games;
+    public Hand getHand() {
+        return hand;
     }
 
-    public void setGames(List<Game> games) {
-        this.games = games;
+    public void setHand(Hand hand) {
+        this.hand = hand;
     }
 
-    public void addGame(Game game) {
-        games.add(game);
-        game.setUser(this);
+    public List<Stack> getStacks() {
+        return stacks;
     }
 
-
+    public void setStacks(List<Stack> stacks) {
+        this.stacks = stacks;
+    }
 }
