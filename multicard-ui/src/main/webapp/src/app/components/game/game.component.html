@@ -1,4 +1,15 @@
-<div class="toolbar">
-  <button *ngIf="isGameStateReadyToStart()" class="start-button" color="primary" mat-raised-button (click)="startGame()"><mat-icon>play_arrow</mat-icon> Spiel starten</button>
+<div *ngIf="gameState$ | async as gameState; else loading">
+  <div class="toolbar">
+    <button *ngIf="isGameStateReadyToStart(gameState)" class="start-button" color="primary" mat-raised-button
+            (click)="startGame()">
+      <mat-icon>play_arrow</mat-icon>
+      Spiel starten
+    </button>
+  </div>
+  <mc-table class="table" [gameState]="gameState"></mc-table>
 </div>
-<mc-table class="table" [gameState]="gameState"></mc-table>
+<ng-template #loading>
+  <div class="loading-spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-template>

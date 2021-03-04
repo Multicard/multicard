@@ -21,4 +21,11 @@
   .table {
     height: calc(100% - #{$toolbar-height});
   }
+
+  .loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
 }
