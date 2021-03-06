@@ -18,6 +18,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import { PlayedCardsComponent } from './components/played-cards/played-cards.component';
 import { CardPileComponent } from './components/card-pile/card-pile.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    HttpClientModule,
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,

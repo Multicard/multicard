@@ -2,6 +2,10 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {ActionType, DirectionType, Game, GameState, StackAction} from '../model/game.model';
 import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
 import {RxStompService} from '@stomp/ng2-stompjs';
+import {HttpClient} from '@angular/common/http';
+import {take} from 'rxjs/operators';
+
+const restApiUrl = '/api/Games';
 
 @Injectable({providedIn: 'root'})
 export class GameService implements OnDestroy {
@@ -10,11 +14,18 @@ export class GameService implements OnDestroy {
   private gameSubject!: BehaviorSubject<Game>;
   private stackSubject: Subject<StackAction> = new Subject();
 
-  constructor(private rxStompService: RxStompService) {
+  constructor(private http: HttpClient, private rxStompService: RxStompService) {
   }
 
   loadGameState(): Observable<Game> {
     if (this.gameSubject === undefined) {
+      this.subscribeToTopic();
+      this.rxStompService.connected$
+        .pipe(take(1))
+        .subscribe(() => {
+          this.initGame();
+      });
+
       const gameState: Game = {
         id: '123456',
         title: 'fröhliche Schieberrunde',
@@ -64,8 +75,6 @@ export class GameService implements OnDestroy {
       gameState.players = [...gameState.players.slice(indexCurrUser),
         ...gameState.players.slice(0, indexCurrUser)];
 
-      this.subscribeToTopic();
-
       this.gameSubject = new BehaviorSubject<Game>(gameState);
     }
 
@@ -87,12 +96,17 @@ export class GameService implements OnDestroy {
     }
   }
 
+  private initGame() {
+    // TODO gameId dynamisch setzen
+    this.http.put<string>(restApiUrl + '/EA9CA14C-AA81-4A62-8536-E68099975130', '').subscribe();
+  }
+
   private subscribeToTopic() {
     // TODO: Spiel ID und Player ID setzen
-    const gameId = '933F4FB5-5144-4932-AF0A-C2098E24D184';
-    const playerId = '103F5A8A-7A5B-49F9-89E2-81D58183ED2E';
+    const gameId = 'EA9CA14C-AA81-4A62-8536-E68099975130';
+    const playerId = '45BC9F58-51D0-44D4-9E66-DD40C8C2B2BD';
     this.stompQueueSubscription = this.rxStompService
-      .watch(`/queue/$gameId/$playerId`)
+      .watch(`/queue/${gameId}/${playerId}`)
       .subscribe((message: any) => {
         console.log(message);
       });
