@@ -1,21 +1,21 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {ActionType, DirectionType, Game, GameState, StackAction} from '../model/game.model';
-import {Observable, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
 import {RxStompService} from '@stomp/ng2-stompjs';
 
 @Injectable({providedIn: 'root'})
 export class GameService implements OnDestroy {
 
   private stompQueueSubscription!: Subscription;
-  private gameState!: Game;
+  private gameSubject!: BehaviorSubject<Game>;
   private stackSubject: Subject<StackAction> = new Subject();
 
   constructor(private rxStompService: RxStompService) {
   }
 
-  loadGameState(): Game {
-    if (this.gameState === undefined) {
-      const gc: Game = {
+  loadGameState(): Observable<Game> {
+    if (this.gameSubject === undefined) {
+      const gameState: Game = {
         id: '123456',
         title: 'fröhliche Schieberrunde',
         state: GameState.readyToStart,
@@ -59,16 +59,17 @@ export class GameService implements OnDestroy {
         ]
       };
 
-      this.gameState = gc;
-      const indexCurrUser = this.gameState.players.findIndex(p => p.id === gc.playerIdOfCurrentUser);
+      const indexCurrUser = gameState.players.findIndex(p => p.id === gameState.playerIdOfCurrentUser);
       // sortiere die Players so, dass der erste PLayer in der Liste dem current User entspricht
-      this.gameState.players = [...this.gameState.players.slice(indexCurrUser),
-        ...this.gameState.players.slice(0, indexCurrUser)];
+      gameState.players = [...gameState.players.slice(indexCurrUser),
+        ...gameState.players.slice(0, indexCurrUser)];
 
       this.subscribeToTopic();
+
+      this.gameSubject = new BehaviorSubject<Game>(gameState);
     }
 
-    return this.gameState;
+    return this.gameSubject.asObservable();
   }
 
   registerStackObserver(): Observable<StackAction> {
@@ -76,8 +77,8 @@ export class GameService implements OnDestroy {
   }
 
   startGame() {
-    this.gameState.state = GameState.started;
-    this.giveCards(0, 9, 3, this.gameState.players.length);
+    this.gameSubject.getValue().state = GameState.started;
+    this.giveCards(0, 9, 3, this.gameSubject.getValue().players.length);
   }
 
   ngOnDestroy(): void {
@@ -107,10 +108,25 @@ export class GameService implements OnDestroy {
       });
       setTimeout(() => {
         this.giveCards(++i, numberOfTotalCardsPerPlayer, numberOfPLayerCardsPerTurn, numberOfPLayers);
-        this.gameState.players[i % numberOfPLayers].hand.numberOfCards += numberOfPLayerCardsPerTurn;
+        this.gameSubject.getValue().players[i % numberOfPLayers].hand.numberOfCards += numberOfPLayerCardsPerTurn;
       }, 200);
     } else {
-      setTimeout(() => this.gameState.players[0].hand.cards = ['AS', '3C', '10H', 'JC', '7D', 'QD', 'KS', 'AH', '5C'], 1000);
+      setTimeout(() => {
+        const gameState = this.gameSubject.getValue();
+        gameState.players[0].hand.cards = ['AS', '3C', '10H', 'JC', '7D', 'QD', 'KS', 'AH', '5C'];
+        gameState.players[0].stacks = [{id: '1232', numberOfCards: 8, isFaceUp: false}];
+        gameState.players[2].stacks = [{id: '1275', numberOfCards: 4, isFaceUp: false}];
+        gameState.playedCards = {
+          idOfStartingPlayer: 'player4',
+          onSameStack: false,
+          cards: [{isFaceUp: true, card: '10H'}, {isFaceUp: true, card: 'AC'}, {
+            isFaceUp: true,
+            card: '6D'
+          }, {isFaceUp: true, card: '7S'}, {isFaceUp: true, card: 'JH'}, {isFaceUp: true, card: 'QD'}]
+        };
+        gameState.players = [{...gameState.players[0]}, gameState.players[1], {...gameState.players[2]}, gameState.players[3]];
+        this.gameSubject.next({...gameState});
+      }, 1000);
     }
   }
 }

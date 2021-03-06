@@ -1,0 +1,51 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  .played-cards {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .played-cards-target {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .cdk-drop-list-receiving {
+      border-color: red;
+      border-style: solid;
+      border-width: 4px;
+    }
+
+    .played-cards-area-top, .played-cards-area-bottom {
+      flex: 1 1 30%;
+    }
+
+    .played-cards-area-center {
+      flex: 1 1 40%;
+      display: flex;
+
+      .played-cards-area-left, .played-cards-area-right {
+        flex: 1 1 30%
+      }
+
+      .played-cards-area-middle {
+        flex: 1 1 20%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    .played-cards-area-left, .played-cards-area-top, .played-cards-area-right, .played-cards-area-bottom {
+      display: flex;
+      justify-content: center;
+    }
+  }
+}

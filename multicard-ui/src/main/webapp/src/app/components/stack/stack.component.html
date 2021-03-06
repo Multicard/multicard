@@ -1,4 +1,4 @@
-<div class="stack">
+<div *ngIf="stack.numberOfCards > 0" class="stack">
   <div *ngFor="let card of cards; let i = index" class="card"
        [@flyOut]="{value: '', params: {translateExpression: translateExpression}}">
     <img [style.marginTop.px]="get3DMargin(i)" [style.marginLeft.px]="get3DMargin(i)"

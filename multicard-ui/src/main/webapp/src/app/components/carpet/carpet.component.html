@@ -1,16 +1,7 @@
 <div class="carpet">
   <div class="carpet-content">
-    <div class="carpet-top"></div>
-    <div class="carpet-center">
-      <div class="carpet-left">
-      </div>
-      <div class="carpet-middle">
+    <mc-played-cards [playedCards]="playedCards" [playerIds]="playerIds">
         <mc-stack *ngFor="let s of stacks" [stack]="s"></mc-stack>
-      </div>
-      <div class="carpet-right">
-      </div>
-    </div>
-    <div class="carpet-bottom" cdkDropList id="carpet-bottom" (cdkDropListDropped)="cardDroppedBottom($event)">
-    </div>
+    </mc-played-cards>
   </div>
 </div>

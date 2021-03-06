@@ -4,6 +4,7 @@ import {ActionType, Card, DirectionType, Stack, StackAction} from '../../model/g
 import {Subject} from 'rxjs';
 import {GameService} from '../../services/game.service';
 import {takeUntil} from 'rxjs/operators';
+import {createCardsForStack} from '../../model/cardHelper';
 
 @Component({
   selector: 'mc-stack',
@@ -32,12 +33,7 @@ export class StackComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.cards = new Array(this.stack.numberOfCards).fill(new Card());
-    if (this.stack.isFaceUp) {
-      const topCard = this.cards[this.stack.numberOfCards - 1];
-      topCard.isFaceUp = true;
-      topCard.card = this.stack.topCard;
-    }
+    this.cards = createCardsForStack(this.stack);
 
     this.gameService.registerStackObserver()
       .pipe(takeUntil(this.unsubscribe))
@@ -53,7 +49,7 @@ export class StackComponent implements OnInit, OnDestroy {
   }
 
   public getCardImage() {
-    return 'assets/cards/' + (this.stack.isFaceUp ? this.stack.topCard : 'BLUE_BACK.svg');
+    return 'assets/cards/' + (this.stack.isFaceUp ? this.stack.topCard : 'BLUE_BACK') + '.svg';
   }
 
   private triggerAction(action: StackAction) {
