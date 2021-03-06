@@ -3,9 +3,7 @@ package ch.cas.html5.multicardgame.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name="game")
@@ -20,7 +18,7 @@ public class Game {
 
     //https://stackoverflow.com/questions/49130173/how-to-fix-spring-boot-one-to-many-bidirectional-infinity-loop
     @JsonIgnoreProperties("game")
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "game", cascade = CascadeType.ALL)
     private List<Player> players = new ArrayList<>();
 
     @Basic
@@ -29,8 +27,8 @@ public class Game {
     private Gamestate state;
 
     @JsonIgnoreProperties("game")
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Stack> stacks = new ArrayList<>();
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "game", cascade = CascadeType.ALL)
+    private Set<Stack> stacks = new HashSet<>();
 
     public String getId() {
         return id;
@@ -65,11 +63,11 @@ public class Game {
 
     public void setState(Gamestate state) {this.state = state;  }
 
-    public List<Stack> getGameStacks() {
+    public Set<Stack> getGameStacks() {
         return stacks;
     }
 
-    public void setGameStacks(List<Stack> stacks) {
+    public void setGameStacks(Set<Stack> stacks) {
         this.stacks = stacks;
     }
 }

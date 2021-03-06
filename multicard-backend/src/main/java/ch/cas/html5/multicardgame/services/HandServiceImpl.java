@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 @Service
 public class HandServiceImpl {
@@ -66,12 +65,6 @@ public class HandServiceImpl {
         handRepository.save(hand);
     }
 
-//    public void startGame(String gameId) {
-//        List<Player> players = deleteGameByPlayground(gameId);
-//        handOutCards(gameId, players);
-//        //webSocketController.sendToUser("933F4FB5-5144-4932-AF0A-C2098E24D184", "103F5A8A-7A5B-49F9-89E2-81D58183ED2E");
-//    }
-
     private List<Player> deleteHandByGame(String gameId) {
         List<Player> players = playerRepository.getPlayersByGame(gameId);
         for (Player player : players) {
@@ -80,33 +73,4 @@ public class HandServiceImpl {
         return players;
     }
 
-//    private void handOutCards(String playgroundId, List<Player> players) {
-//        final List<Card> cards = cardRepository.findAll();
-//        final List<Integer> indexUser = Arrays.asList(0, 1, 2, 3);
-//        int cnt = 36; //random 0 included bound exclusive
-//        for (int i = 0; i <= 35; i = i + 1) {
-//            int random = generateRandomInt(cnt);
-//            Card card = cards.get(random);
-//            //System.out.println(i+1 + " - zufällige Karte: " + card.getName());
-//            cards.remove(random);
-//            cnt = cnt - 1;
-//            Collections.rotate(indexUser, 1);
-//            Hand hand = new Hand();
-//            hand.setCard(card);
-//            hand.setPlayer(players.get(indexUser.get(0)));
-//            System.out.println("Save Game " + card.getName() + " - " + hand.getPlayer().getId());
-//            handRepository.save(hand);
-//            Message msg = new Message();
-//            msg.setFrom("Server");
-//            msg.setText("Karte: " + card.getName());
-//            webSocketController.sendToUser(playgroundId, players.get(indexUser.get(0)).getId(), msg);
-//
-//        }
-//
-//    }
-
-    private Integer generateRandomInt(int bound) {
-        Random random = new Random();
-        return random.nextInt(bound);
-    }
 }

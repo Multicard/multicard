@@ -44,6 +44,10 @@ public class GameServiceImpl {
         return gameRepository.save(game);
     }
 
+    public Game updateGame(Game game){
+        return gameRepository.save(game);
+    }
+
     public void deleteGame(String gameId){
         gameRepository.deleteById(gameId);
     }

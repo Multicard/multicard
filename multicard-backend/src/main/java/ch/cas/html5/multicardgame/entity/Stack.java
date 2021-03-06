@@ -3,8 +3,8 @@ package ch.cas.html5.multicardgame.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -15,8 +15,8 @@ public class Stack {
     private String id = UUID.randomUUID().toString().toUpperCase();
 
     @JsonIgnoreProperties("stack")
-    @OneToMany(mappedBy = "stack", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Card> cards = new ArrayList<>();
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "stack", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Card> cards = new HashSet<>();
 
     @JsonIgnoreProperties("stacks")
     @ManyToOne(optional = true)
@@ -44,11 +44,11 @@ public class Stack {
         this.player = player;
     }
 
-    public List<Card> getCards() {
+    public Set<Card> getCards() {
         return cards;
     }
 
-    public void setCards(List<Card> cards) {
+    public void setCards(Set<Card> cards) {
         this.cards = cards;
     }
 
