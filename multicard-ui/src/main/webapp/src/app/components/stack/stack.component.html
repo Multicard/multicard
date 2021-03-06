@@ -1,5 +1,5 @@
 <div *ngIf="stack.numberOfCards > 0" class="stack">
-  <div *ngFor="let card of cards; let i = index" class="card"
+  <div *ngFor="let card of cards; let i = index" class="stack-card table-card"
        [@flyOut]="{value: '', params: {translateExpression: translateExpression}}">
     <img [style.marginTop.px]="get3DMargin(i)" [style.marginLeft.px]="get3DMargin(i)"
          [src]="getCardImage()" [alt]="stack.isFaceUp ? stack.topCard : 'card cover'">

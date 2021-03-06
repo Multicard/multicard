@@ -11,6 +11,9 @@ export class CardPileComponent implements OnInit {
   @Input()
   public cards?: Card[] = [];
 
+  @Input()
+  public cardCssClass = '';
+
   constructor() {
   }
 

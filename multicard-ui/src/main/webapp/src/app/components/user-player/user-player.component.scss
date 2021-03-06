@@ -16,25 +16,7 @@
   }
 }
 
-.card {
-  max-width: 150px;
-  max-height: 209px;
-  padding: 2px;
-
-  @include small-size {
-    min-width: 38px;
-    min-height: 50px;
-  }
-
-  @include normal-size {
-    min-width: 75px;
-    min-height: 100px;
-  }
-
-  @include card-image;
-}
-
-.card.cdk-drag-placeholder {
+.user-player-card.cdk-drag-placeholder {
   @include table-card;
   position: absolute;
 }

@@ -1,10 +1,10 @@
 <div class="user-player" cdkDropList cdkDropListConnectedTo="played-cards-target">
   <div class="card-wrapper" *ngFor="let card of getCards()">
-    <div class="card" cdkDrag>
+    <div class="user-player-card" cdkDrag>
       <img [src]="'assets/cards/' + card + '.svg'" alt="'assets/cards/' + card + '.svg'">
     </div>
   </div>
   <div class="stack">
-    <mc-card-pile [cards]="cards"></mc-card-pile>
+    <mc-card-pile [cards]="cards" cardCssClass="user-player-card"></mc-card-pile>
   </div>
 </div>
