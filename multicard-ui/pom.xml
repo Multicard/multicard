@@ -23,6 +23,7 @@
                     <plugin>
                         <groupId>cz.habarta.typescript-generator</groupId>
                         <artifactId>typescript-generator-maven-plugin</artifactId>
+                        <version>2.29.814</version>
                         <executions>
                             <execution>
                                 <id>multicard-api-types</id>
@@ -38,6 +39,7 @@
                                         <class>ch.cas.html5.multicardgame.dto.HandDTO</class>
                                         <class>ch.cas.html5.multicardgame.dto.PlayerDTO</class>
                                         <class>ch.cas.html5.multicardgame.dto.StackDTO</class>
+                                        <class>ch.cas.html5.multicardgame.dto.GameAction</class>
                                     </classes>
                                     <outputFile>${app.basedir}/src/app-gen/generated-model/index.ts</outputFile>
                                     <outputKind>module</outputKind>

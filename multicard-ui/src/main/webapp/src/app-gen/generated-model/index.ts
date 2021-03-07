@@ -34,3 +34,12 @@ export interface StackDTO {
     topcard: string;
     cards: CardDTO[];
 }
+
+export interface GameAction {
+    command: Action;
+    text: string;
+}
+
+export enum Action {
+    START_GAME = "START_GAME",
+}

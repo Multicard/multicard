@@ -11,71 +11,21 @@ const restApiUrl = '/api/Games';
 export class GameService implements OnDestroy {
 
   private stompQueueSubscription!: Subscription;
-  private gameSubject!: BehaviorSubject<Game>;
+  // @ts-ignore
+  private gameSubject: BehaviorSubject<Game> = new BehaviorSubject<Game>(null);
   private stackSubject: Subject<StackAction> = new Subject();
 
   constructor(private http: HttpClient, private rxStompService: RxStompService) {
   }
 
   loadGameState(): Observable<Game> {
-    if (this.gameSubject === undefined) {
+    if (this.gameSubject.getValue() === null) {
       this.subscribeToTopic();
       this.rxStompService.connected$
         .pipe(take(1))
         .subscribe(() => {
           this.initGame();
       });
-
-      const gameState: Game = {
-        id: '123456',
-        title: 'fröhliche Schieberrunde',
-        state: GameState.readyToStart,
-        playerIdOfCurrentUser: 'player1',
-        players: [
-          {
-            id: 'player3',
-            name: 'Miriam',
-            isOrganizer: false,
-            hand: {numberOfCards: 0},
-            stacks: []
-          },
-          {
-            id: 'player4',
-            name: 'Housi',
-            isOrganizer: false,
-            hand: {numberOfCards: 0},
-            stacks: []
-          },
-          {
-            id: 'player1',
-            name: 'Cartman',
-            isOrganizer: true,
-            hand: {numberOfCards: 0},
-            stacks: []
-          },
-          {
-            id: 'player2',
-            name: 'Tina',
-            isOrganizer: false,
-            hand: {numberOfCards: 0},
-            stacks: []
-          }
-        ],
-        stacks: [
-          {
-            id: 'stack1',
-            isFaceUp: false,
-            numberOfCards: 36
-          }
-        ]
-      };
-
-      const indexCurrUser = gameState.players.findIndex(p => p.id === gameState.playerIdOfCurrentUser);
-      // sortiere die Players so, dass der erste PLayer in der Liste dem current User entspricht
-      gameState.players = [...gameState.players.slice(indexCurrUser),
-        ...gameState.players.slice(0, indexCurrUser)];
-
-      this.gameSubject = new BehaviorSubject<Game>(gameState);
     }
 
     return this.gameSubject.asObservable();
@@ -86,6 +36,11 @@ export class GameService implements OnDestroy {
   }
 
   startGame() {
+    // TODO: Spiel ID und Player ID setzen
+    const gameId = 'EA9CA14C-AA81-4A62-8536-E68099975130';
+    const playerId = '45BC9F58-51D0-44D4-9E66-DD40C8C2B2BD';
+    this.rxStompService.publish({destination: `/app/${gameId}/${playerId}`, body: JSON.stringify({command: 'START_GAME', text: 'test'})});
+
     this.gameSubject.getValue().state = GameState.started;
     this.giveCards(0, 9, 3, this.gameSubject.getValue().players.length);
   }
@@ -99,6 +54,57 @@ export class GameService implements OnDestroy {
   private initGame() {
     // TODO gameId dynamisch setzen
     this.http.put<string>(restApiUrl + '/EA9CA14C-AA81-4A62-8536-E68099975130', '').subscribe();
+
+    const gameState: Game = {
+      id: '123456',
+      title: 'fröhliche Schieberrunde',
+      state: GameState.readyToStart,
+      playerIdOfCurrentUser: 'player1',
+      players: [
+        {
+          id: 'player3',
+          name: 'Miriam',
+          isOrganizer: false,
+          hand: {numberOfCards: 0},
+          stacks: []
+        },
+        {
+          id: 'player4',
+          name: 'Housi',
+          isOrganizer: false,
+          hand: {numberOfCards: 0},
+          stacks: []
+        },
+        {
+          id: 'player1',
+          name: 'Cartman',
+          isOrganizer: true,
+          hand: {numberOfCards: 0},
+          stacks: []
+        },
+        {
+          id: 'player2',
+          name: 'Tina',
+          isOrganizer: false,
+          hand: {numberOfCards: 0},
+          stacks: []
+        }
+      ],
+      stacks: [
+        {
+          id: 'stack1',
+          isFaceUp: false,
+          numberOfCards: 36
+        }
+      ]
+    };
+
+    const indexCurrUser = gameState.players.findIndex(p => p.id === gameState.playerIdOfCurrentUser);
+    // sortiere die Players so, dass der erste PLayer in der Liste dem current User entspricht
+    gameState.players = [...gameState.players.slice(indexCurrUser),
+      ...gameState.players.slice(0, indexCurrUser)];
+
+    this.gameSubject.next(gameState);
   }
 
   private subscribeToTopic() {

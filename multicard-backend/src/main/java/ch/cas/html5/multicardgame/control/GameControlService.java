@@ -1,11 +1,9 @@
 package ch.cas.html5.multicardgame.control;
 
-import ch.cas.html5.multicardgame.dto.GameDTO;
-import ch.cas.html5.multicardgame.dto.HandDTO;
-import ch.cas.html5.multicardgame.dto.PlayerDTO;
-import ch.cas.html5.multicardgame.dto.StackDTO;
+import ch.cas.html5.multicardgame.dto.*;
 import ch.cas.html5.multicardgame.entity.Stack;
 import ch.cas.html5.multicardgame.entity.*;
+import ch.cas.html5.multicardgame.enums.Action;
 import ch.cas.html5.multicardgame.messaging.WebSocketController;
 import ch.cas.html5.multicardgame.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,7 +160,7 @@ public class GameControlService {
             return;
         }
 
-        if (gameAction.getCommand().equals("StartGame")){
+        if (gameAction.getCommand() == Action.START_GAME){
             handOutCards(game);
             convertAndPublishGame(game);
         }
