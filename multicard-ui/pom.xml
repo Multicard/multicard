@@ -11,4 +11,62 @@
 
     <artifactId>multicard-ui</artifactId>
 
+    <properties>
+        <app.basedir>${project.basedir}/src/main/webapp</app.basedir>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>generate-typescript-model</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>cz.habarta.typescript-generator</groupId>
+                        <artifactId>typescript-generator-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>multicard-api-types</id>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                                <phase>generate-sources</phase>
+                                <configuration>
+                                    <jsonLibrary>jackson2</jsonLibrary>
+                                    <classes>
+                                        <class>ch.cas.html5.multicardgame.dto.CardDTO</class>
+                                        <class>ch.cas.html5.multicardgame.dto.GameDTO</class>
+                                        <class>ch.cas.html5.multicardgame.dto.HandDTO</class>
+                                        <class>ch.cas.html5.multicardgame.dto.PlayerDTO</class>
+                                        <class>ch.cas.html5.multicardgame.dto.StackDTO</class>
+                                    </classes>
+                                    <outputFile>${app.basedir}/src/app-gen/generated-model/index.ts</outputFile>
+                                    <outputKind>module</outputKind>
+                                    <outputFileType>implementationFile</outputFileType>
+                                    <generateSpringApplicationInterface>false</generateSpringApplicationInterface>
+                                    <generateSpringApplicationClient>false</generateSpringApplicationClient>
+                                    <generateNpmPackageJson>false</generateNpmPackageJson>
+                                    <noFileComment>true</noFileComment>
+                                    <mapEnum>asEnum</mapEnum>
+                                    <nonConstEnums>true</nonConstEnums>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>cz.habarta.typescript-generator</groupId>
+                                <artifactId>typescript-generator-spring</artifactId>
+                                <version>2.29.814</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>ch.cas.html5</groupId>
+                                <artifactId>multicard-api</artifactId>
+                                <version>${project.version}</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>
