@@ -16,7 +16,7 @@ public class HandServiceImpl {
     @Autowired
     private ch.cas.html5.multicardgame.repository.HandRepository handRepository;
 
-    public void setGameRepository(ch.cas.html5.multicardgame.repository.HandRepository handRepository) {
+    public void setHandRepository(ch.cas.html5.multicardgame.repository.HandRepository handRepository) {
         this.handRepository = handRepository;
     }
 
@@ -48,8 +48,8 @@ public class HandServiceImpl {
     }
 
 
-    public Hand getGame(String gameId) {
-        Optional<Hand> optEmp = handRepository.findById(gameId);
+    public Hand getHand(String handId) {
+        Optional<Hand> optEmp = handRepository.findById(handId);
         return optEmp.get();
     }
 
@@ -57,18 +57,18 @@ public class HandServiceImpl {
         return handRepository.save(hand);
     }
 
-    public void deleteGame(String gameId) {
-        handRepository.deleteById(gameId);
+    public void deleteHand(String handId) {
+        handRepository.deleteById(handId);
     }
 
     public void updateHand(Hand hand) {
         handRepository.save(hand);
     }
 
-    private List<Player> deleteHandByGame(String gameId) {
+    public List<Player> deleteHandByGame(String gameId) {
         List<Player> players = playerRepository.getPlayersByGame(gameId);
         for (Player player : players) {
-            handRepository.deleteGameByPLayer(player.getId());
+            handRepository.deleteHandByPLayer(player.getId());
         }
         return players;
     }

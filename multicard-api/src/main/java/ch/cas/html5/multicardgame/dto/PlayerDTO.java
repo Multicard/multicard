@@ -12,11 +12,12 @@ public class PlayerDTO {
     private HandDTO hand;
     private List<StackDTO> stacks = new ArrayList<>();
 
-    public PlayerDTO(String id, String name, Boolean isOrganizer, int position){
+    public PlayerDTO(String id, String name, Boolean isOrganizer, int position, Boolean isPlayerReady){
         this.id = id;
         this.name = name;
         this.isOrganizer = isOrganizer;
         this.position = position;
+        this.isPlayerReady = isPlayerReady;
     }
 
     public String getId() {
