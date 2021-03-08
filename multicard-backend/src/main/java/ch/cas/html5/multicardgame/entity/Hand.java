@@ -19,7 +19,6 @@ public class Hand {
 
     @JsonIgnoreProperties("hand")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "hand", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @OneToMany(cascade = CascadeType.ALL)
     private Set<Card> cards = new HashSet<>();
 
     public String getId() {return id; }

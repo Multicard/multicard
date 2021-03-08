@@ -21,6 +21,9 @@ public class Player {
     @Column(name = "isOrganizer")
     private Boolean isOrganizer;
 
+    @Column(name = "isPlayerReady")
+    private Boolean isPlayerReady = false;
+
     @Column(name = "position")
     private Integer position;
 
@@ -87,4 +90,8 @@ public class Player {
     public void setStacks(Set<Stack> stacks) {
         this.stacks = stacks;
     }
+
+    public Boolean getPlayerReady() {return isPlayerReady; }
+
+    public void setPlayerReady(Boolean playerReady) {isPlayerReady = playerReady; }
 }

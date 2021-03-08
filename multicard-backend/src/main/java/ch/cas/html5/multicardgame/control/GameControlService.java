@@ -63,6 +63,35 @@ public class GameControlService {
         this.stackService = stackService;
     }
 
+    private void resetGame(Game game){
+        System.out.println("Delete Gamestacks");
+        Set<Stack> stackList = game.getGameStacks();
+        game.setGameStacks(new HashSet<>());
+        for (Stack stack : stackList) {
+            stackService.deleteStack(stack.getId());
+        }
+        System.out.println("Delete Playerstacks");
+        Set<Stack> playerStacks = new HashSet<>();
+        for (Player player : game.getPlayers()){
+            for (Stack stack : player.getStacks()){
+                playerStacks.add(stack);
+                player.getStacks().remove(stack);
+            }
+            for (Stack stack : playerStacks){
+                stackService.deleteStack(stack.getId());
+            }
+
+            System.out.println("Delete all Handy by Game");
+            Hand toDelete = player.getHand();
+            if (toDelete != null){
+                player.setHand(null);
+                handService.deleteHand(toDelete.getId());
+            }
+            player.setPlayerReady(false);
+        }
+        System.out.println("reset finished");
+    }
+
     @Autowired
     private WebSocketController webController;
     public void setWebSocketController(WebSocketController webController) { this.webController = webController; }
@@ -73,13 +102,11 @@ public class GameControlService {
         if (game == null) {
             return;
         }
-        System.out.println("Set Game Ready: " + game.getTitle());
 
-        Set<Stack> stackList = game.getGameStacks();
-        game.setGameStacks(new HashSet<>());game.setState(Gamestate.READYTOSTART);
-        for (Stack stack : stackList) {
-            stackService.deleteStack(stack.getId());
-        }
+        resetGame(game);
+
+        System.out.println("Set Game Ready: " + game.getTitle());
+        game.setState(Gamestate.READYTOSTART);
 
         //ToDo - replace fix deck and cleanup stack
         String deckId = deckService.retrieveDecks().get(0).getId();
@@ -104,7 +131,7 @@ public class GameControlService {
         EntityToDtoConverter converter = new EntityToDtoConverter();
 
         // Convert Game
-        GameDTO gamedto = new GameDTO(game.getId(), game.getTitle());
+        GameDTO gamedto = new GameDTO(game.getId(), game.getTitle(), game.getState());
 
         //Convert Game.Stacks
         for (Stack stack : game.getGameStacks()) {
@@ -117,7 +144,7 @@ public class GameControlService {
         for (Player p1 : game.getPlayers()) {
             for (Player p2 : game.getPlayers()) {
 
-                PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition());
+                PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), p2.getPlayerReady());
 
                 //Convert Game.Player.Hand
                 if (p2.getHand() != null && p2.getHand().getCards() != null){
@@ -126,6 +153,7 @@ public class GameControlService {
                     if (p1.getId().equals(p2.getId())) {
                         //own hand - generate handcards
                         handdto.setCards(converter.convertCards(p2.getHand().getCards(), false));
+                        handdto.setCardCount(p2.getHand().getCards().size());
                     } else {
                         //foreign hand - only count handcards
                         handdto.setCardCount(p2.getHand().getCards().size());
@@ -150,30 +178,40 @@ public class GameControlService {
         }
     }
 
+    private void setPlayerReady(Game game, String playerId){
+        for (Player player : game.getPlayers()){
+            if (player.getId().equals(playerId)){
+                player.setPlayerReady(Boolean.TRUE);
+                playerService.savePlayer(player);
+            }
+        }
+    }
+
     private void publishGameToPlayers(String gameId, String playerId, GameDTO gamedto){
         webController.sendToUser(gameId, playerId, gamedto);
     }
 
     public void handleMessage(GameAction gameAction, String gameId, String playerId){
-        System.out.println("handle incoming message: " + gameAction.getCommand());
+        System.out.println("handle incoming message: " + gameAction.getCommand() + " - PlayerId: " + playerId);
         Game game = gameService.getGame(gameId);
-        if (!playerId.equals(getGameOrganizer(game).getId())){
-            return;
-        }
+//        if (!playerId.equals(getGameOrganizer(game).getId())){
+//            return;
+//        }
 
         if (gameAction.getCommand().equals(Action.START_GAME)){
+            game.setState(Gamestate.STARTED);
             handOutCards(game);
             convertAndPublishGame(game);
         }
-    }
 
-    Player getGameOrganizer(Game game){
-        for (Player player : game.getPlayers()){
-            if (player.getIsOrganizer()){
-                return player;
-            }
+        if (gameAction.getCommand().equals(Action.PLAYER_READY)){
+            setPlayerReady(game, playerId);
+            convertAndPublishGame(game);
         }
-        return null;
+        if (gameAction.getCommand().equals(Action.GAME_READY)){
+            resetGame(game);
+        }
+
     }
 
     private void handOutCards(Game game) {

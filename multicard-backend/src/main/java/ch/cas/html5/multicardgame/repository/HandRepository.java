@@ -14,7 +14,7 @@ public interface HandRepository extends JpaRepository<Hand,String> {
     @Transactional
     @Modifying
     @Query("Delete from Hand g WHERE g.player.id = ?1")
-    void deleteGameByPLayer(String playerId);
+    void deleteHandByPLayer(String playerId);
 
 
 }

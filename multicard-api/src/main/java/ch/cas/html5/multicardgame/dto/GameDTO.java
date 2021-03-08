@@ -12,9 +12,10 @@ public class GameDTO {
     private List<PlayerDTO> players = new ArrayList<>();
     private List<StackDTO> stacks = new ArrayList<>();
 
-    public GameDTO(String id, String title){
+    public GameDTO(String id, String title, Gamestate state){
         this.id = id;
         this.title = title;
+        this.state = state;
     }
 
     public String getId() {
