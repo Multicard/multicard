@@ -29,7 +29,7 @@ public class PlayerRestController {
 
     @PostMapping(path = "/api/Players", consumes = "application/json", produces = "application/json")
     public Player savePlayer(@RequestBody String gameId, String name, Boolean isOrganizer, int position){
-        return playerService.savePlayer(gameId, name, isOrganizer, position);
+        return playerService.addPlayerToGame(gameId, name, isOrganizer, position);
     }
 
 //    @PostMapping(path = "/api/Players", consumes = "application/json", produces = "application/json")
@@ -44,7 +44,7 @@ public class PlayerRestController {
 
     @PutMapping("/api/Players/{PlayerId}")
     public Player updatePlayer(@RequestBody String name, Boolean isOrganizer, int position,
-                             @PathVariable(name="PlayerId")String playerId){
+                               @PathVariable(name="PlayerId")String playerId){
         return playerService.updatePlayer(playerId, name, isOrganizer, position);
     }
 

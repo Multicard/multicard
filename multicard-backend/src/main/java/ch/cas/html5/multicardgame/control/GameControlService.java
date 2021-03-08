@@ -3,7 +3,6 @@ package ch.cas.html5.multicardgame.control;
 import ch.cas.html5.multicardgame.dto.*;
 import ch.cas.html5.multicardgame.entity.Stack;
 import ch.cas.html5.multicardgame.entity.*;
-import ch.cas.html5.multicardgame.enums.Action;
 import ch.cas.html5.multicardgame.messaging.WebSocketController;
 import ch.cas.html5.multicardgame.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -160,7 +159,7 @@ public class GameControlService {
             return;
         }
 
-        if (gameAction.getCommand() == Action.START_GAME){
+        if (gameAction.getCommand().equals("StartGame")){
             handOutCards(game);
             convertAndPublishGame(game);
         }
@@ -226,9 +225,9 @@ public class GameControlService {
         for (Player player : game.getPlayers()){
             if (player.getHand() == null){
                 Hand hand = new Hand();
-                hand.setPlayer(player);
                 player.setHand(hand);
-                handService.saveHand(hand);
+                hand.setPlayer(player);
+                playerService.savePlayer(player);
             }
         }
     }

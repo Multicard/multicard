@@ -38,7 +38,7 @@ public class PlayerServiceImpl {
         return null;
     }
 
-    public Player savePlayer(String gameId, String name, Boolean isOrganizer, int position){
+    public Player addPlayerToGame(String gameId, String name, Boolean isOrganizer, int position){
 
         Game game = gameService.getGame(gameId);
         if (game != null){
@@ -54,9 +54,9 @@ public class PlayerServiceImpl {
         return null;
     }
 
-//    public Player savePlayer(Player player){
-//        return playerRepository.save(player);
-//    }
+    public Player savePlayer(Player player){
+        return playerRepository.save(player);
+    }
 
     public void deletePlayer(String playerId){
         playerRepository.deleteById(playerId);
