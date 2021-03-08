@@ -4,6 +4,7 @@ import ch.cas.html5.multicardgame.dto.*;
 import ch.cas.html5.multicardgame.entity.Stack;
 import ch.cas.html5.multicardgame.entity.*;
 import ch.cas.html5.multicardgame.enums.Action;
+import ch.cas.html5.multicardgame.enums.Gamestate;
 import ch.cas.html5.multicardgame.messaging.WebSocketController;
 import ch.cas.html5.multicardgame.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,7 +108,7 @@ public class GameControlService {
 
         //Convert Game.Stacks
         for (Stack stack : game.getGameStacks()) {
-            StackDTO stackdto = new StackDTO(stack.getId(), (stack.getTopCard() == null ? "" : stack.getTopCard().getName()));
+            StackDTO stackdto = new StackDTO(stack.getId());
             stackdto.setCards(converter.convertCards(stack.getCards(), true));
             gamedto.getStacks().add(stackdto);
         }
@@ -134,7 +135,7 @@ public class GameControlService {
 
                 //Convert Game.Player.Stacks
                 for (Stack stack : p2.getStacks()) {
-                    StackDTO stackdto = new StackDTO(stack.getId(), (stack.getTopCard() == null ? "" : stack.getTopCard().getName()));
+                    StackDTO stackdto = new StackDTO(stack.getId());
                     stackdto.setCards(converter.convertCards(stack.getCards(), true));
                     playerdto.getStacks().add(stackdto);
                 }

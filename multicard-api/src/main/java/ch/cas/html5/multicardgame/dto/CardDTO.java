@@ -3,6 +3,7 @@ package ch.cas.html5.multicardgame.dto;
 public class CardDTO {
     private String id;
     private String name;
+    private Boolean isFaceUp = false;
     private int sort;
 
     public CardDTO(String id, String name, int sort){
@@ -33,5 +34,13 @@ public class CardDTO {
 
     public void setSort(int sort) {
         this.sort = sort;
+    }
+
+    public Boolean getFaceUp() {
+        return isFaceUp;
+    }
+
+    public void setFaceUp(Boolean faceUp) {
+        isFaceUp = faceUp;
     }
 }

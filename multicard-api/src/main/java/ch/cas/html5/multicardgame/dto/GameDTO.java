@@ -1,11 +1,14 @@
 package ch.cas.html5.multicardgame.dto;
 
+import ch.cas.html5.multicardgame.enums.Gamestate;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameDTO {
     private String id;
     private String title;
+    private Gamestate state;
     private List<PlayerDTO> players = new ArrayList<>();
     private List<StackDTO> stacks = new ArrayList<>();
 
@@ -44,5 +47,13 @@ public class GameDTO {
 
     public void setStacks(List<StackDTO> stacks) {
         this.stacks = stacks;
+    }
+
+    public Gamestate getState() {
+        return state;
+    }
+
+    public void setState(Gamestate state) {
+        this.state = state;
     }
 }

@@ -1,5 +1,6 @@
 package ch.cas.html5.multicardgame.entity;
 
+import ch.cas.html5.multicardgame.enums.Gamestate;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;

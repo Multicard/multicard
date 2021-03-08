@@ -3,6 +3,7 @@ package ch.cas.html5.multicardgame.services;
 
 import ch.cas.html5.multicardgame.entity.*;
 import ch.cas.html5.multicardgame.control.GameControlService;
+import ch.cas.html5.multicardgame.enums.Gamestate;
 import ch.cas.html5.multicardgame.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

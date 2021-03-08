@@ -1,4 +1,4 @@
-package ch.cas.html5.multicardgame.entity;
+package ch.cas.html5.multicardgame.enums;
 
 public enum Gamestate {
     INITIAL,

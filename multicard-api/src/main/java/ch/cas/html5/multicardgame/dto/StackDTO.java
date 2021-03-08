@@ -5,12 +5,10 @@ import java.util.List;
 
 public class StackDTO {
     private String id;
-    private String topcard;
     private List<CardDTO> cards = new ArrayList<>();
 
-    public StackDTO(String id, String topcard){
+    public StackDTO(String id){
         this.id = id;
-        this.topcard = topcard;
     }
 
     public String getId() {
@@ -19,14 +17,6 @@ public class StackDTO {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getTopcard() {
-        return topcard;
-    }
-
-    public void setTopcard(String topcard) {
-        this.topcard = topcard;
     }
 
     public List<CardDTO> getCards() {

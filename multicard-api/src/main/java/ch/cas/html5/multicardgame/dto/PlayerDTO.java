@@ -7,6 +7,7 @@ public class PlayerDTO {
     private String id;
     private String name;
     private Boolean isOrganizer;
+    private Boolean isPlayerReady;
     private int position;
     private HandDTO hand;
     private List<StackDTO> stacks = new ArrayList<>();
@@ -64,5 +65,13 @@ public class PlayerDTO {
 
     public void setStacks(List<StackDTO> stacks) {
         this.stacks = stacks;
+    }
+
+    public Boolean getPlayerReady() {
+        return isPlayerReady;
+    }
+
+    public void setPlayerReady(Boolean playerReady) {
+        isPlayerReady = playerReady;
     }
 }
