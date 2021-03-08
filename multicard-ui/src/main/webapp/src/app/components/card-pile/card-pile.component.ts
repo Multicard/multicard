@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Card} from '../../model/game.model';
+import {CardDTO} from '../../../app-gen/generated-model';
 
 @Component({
   selector: 'mc-card-pile',
@@ -9,7 +9,7 @@ import {Card} from '../../model/game.model';
 export class CardPileComponent implements OnInit {
 
   @Input()
-  public cards?: Card[] = [];
+  public cards?: CardDTO[] = [];
 
   @Input()
   public cardCssClass = '';
@@ -24,7 +24,7 @@ export class CardPileComponent implements OnInit {
     return 2 * i;
   }
 
-  public getCardImage(card: Card) {
-    return 'assets/cards/' + (card.isFaceUp ? card.card : 'BLUE_BACK') + '.svg';
+  public getCardImage(card: CardDTO) {
+    return 'assets/cards/' + (card.faceUp ? card.name : 'BLUE_BACK') + '.svg';
   }
 }

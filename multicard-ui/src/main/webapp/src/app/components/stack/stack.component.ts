@@ -1,10 +1,11 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {animate, style, transition, trigger} from '@angular/animations';
-import {ActionType, Card, DirectionType, Stack, StackAction} from '../../model/game.model';
 import {Subject} from 'rxjs';
 import {GameService} from '../../services/game.service';
 import {takeUntil} from 'rxjs/operators';
-import {createCardsForStack} from '../../model/cardHelper';
+import {CardDTO, StackDTO} from '../../../app-gen/generated-model';
+import {ActionType, DirectionType, StackAction} from '../../model/game.model';
+import {getCardImage} from '../../model/cardHelper';
 
 @Component({
   selector: 'mc-stack',
@@ -21,9 +22,7 @@ import {createCardsForStack} from '../../model/cardHelper';
 export class StackComponent implements OnInit, OnDestroy {
 
   @Input()
-  public stack!: Stack;
-
-  public cards: Card[] = [];
+  public stack!: StackDTO;
 
   translateExpression = '';
 
@@ -33,8 +32,6 @@ export class StackComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.cards = createCardsForStack(this.stack);
-
     this.gameService.registerStackObserver()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((action) => this.triggerAction(action));
@@ -48,8 +45,8 @@ export class StackComponent implements OnInit, OnDestroy {
     return 2 * Math.round(i / 4);
   }
 
-  public getCardImage() {
-    return 'assets/cards/' + (this.stack.isFaceUp ? this.stack.topCard : 'BLUE_BACK') + '.svg';
+  public getCardImage(card: CardDTO) {
+    return getCardImage(card);
   }
 
   private triggerAction(action: StackAction) {
@@ -70,8 +67,8 @@ export class StackComponent implements OnInit, OnDestroy {
       }
       for (let i = 0; i < action.numberOfCards; i++) {
         setTimeout(() => {
-          if (this.cards.length > 0) {
-            this.cards.pop();
+          if (this.stack.cards?.length > 0) {
+            this.stack.cards.pop();
           }
         }, i * 20);
       }

@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {Game} from '../../model/game.model';
+import {GameDTO} from '../../../app-gen/generated-model';
 
 @Component({
   selector: 'mc-table',
@@ -9,7 +9,7 @@ import {Game} from '../../model/game.model';
 export class TableComponent implements OnInit, OnChanges {
 
   @Input()
-  gameState!: Game;
+  gameState!: GameDTO;
 
   playerIdList!: string[];
 

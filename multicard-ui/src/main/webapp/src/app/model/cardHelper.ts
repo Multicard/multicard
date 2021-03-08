@@ -1,15 +1,15 @@
-import {Card, Stack} from './game.model';
+import {CardDTO, HandDTO} from '../../app-gen/generated-model';
 
-export const createCardsForStack = (stack: Stack) => {
-  if (stack === undefined) {
+export const getCardImage = (card: CardDTO) => 'assets/cards/' + (card.faceUp ? card.name : 'BLUE_BACK') + '.svg';
+
+export const createCardsForHand = (hand: HandDTO): CardDTO[] => {
+  if (hand === undefined) {
     return [];
   }
 
-  const cards = new Array(stack.numberOfCards).fill(new Card());
-  if (stack.isFaceUp) {
-    const topCard = cards[stack.numberOfCards - 1];
-    topCard.isFaceUp = true;
-    topCard.card = stack.topCard;
+  if (hand?.cards !== undefined && hand.cards.length > 0 ) {
+    return hand.cards;
+  } else {
+    return new Array(hand?.cardCount).fill({faceUp: false});
   }
-  return cards;
 };

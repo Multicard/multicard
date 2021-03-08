@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Player} from '../../model/game.model';
+import {PlayerDTO} from '../../../app-gen/generated-model';
 
 const rotationPerCardInDegrees = 5;
 const translationXPerCardInPixels = 7;
@@ -12,7 +12,7 @@ const translationXPerCardInPixels = 7;
 export class PlayerComponent implements OnInit {
 
   @Input()
-  public player!: Player;
+  public player!: PlayerDTO;
 
   @Input()
   public turnNameAround = false;
@@ -36,6 +36,6 @@ export class PlayerComponent implements OnInit {
   }
 
   private getNumberOfCards() {
-    return this.player?.hand?.numberOfCards;
+    return this.player?.hand?.cardCount;
   }
 }

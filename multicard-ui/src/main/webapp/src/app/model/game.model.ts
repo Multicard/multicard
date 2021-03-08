@@ -2,7 +2,6 @@ export interface Game {
   id: string;
   title: string;
   state: GameState;
-  playerIdOfCurrentUser: string;
   players: Player[];
   stacks: Stack[];
   playedCards?: PlayedCards;

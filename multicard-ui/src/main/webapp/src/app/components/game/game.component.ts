@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {GameService} from '../../services/game.service';
-import {Game, GameState} from '../../model/game.model';
 import {Observable} from 'rxjs';
+import {GameDTO, Gamestate} from '../../../app-gen/generated-model';
 
 @Component({
   selector: 'mc-game',
@@ -9,7 +9,7 @@ import {Observable} from 'rxjs';
   styleUrls: ['./game.component.scss']
 })
 export class GameComponent implements OnInit {
-  gameState$!: Observable<Game>;
+  gameState$!: Observable<GameDTO>;
 
   constructor(private gameService: GameService) {
   }
@@ -18,8 +18,8 @@ export class GameComponent implements OnInit {
     this.gameState$ = this.gameService.loadGameState();
   }
 
-  isGameStateReadyToStart(gameState: Game) {
-    return gameState.state === GameState.readyToStart;
+  isGameStateReadyToStart(gameState: GameDTO) {
+    return gameState.state === Gamestate.READYTOSTART;
   }
 
   startGame() {

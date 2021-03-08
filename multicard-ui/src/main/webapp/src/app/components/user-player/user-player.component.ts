@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {Card, Player} from '../../model/game.model';
-import {createCardsForStack} from '../../model/cardHelper';
+import {CardDTO, PlayerDTO} from '../../../app-gen/generated-model';
+import {createCardsForHand, getCardImage} from '../../model/cardHelper';
 
 @Component({
   selector: 'mc-user-player',
@@ -10,9 +10,9 @@ import {createCardsForStack} from '../../model/cardHelper';
 export class UserPlayerComponent implements OnInit, OnChanges {
 
   @Input()
-  public player!: Player;
+  public player!: PlayerDTO;
 
-  public cards: Card[] = [];
+  public handCards: CardDTO[] = [];
 
   constructor() {
   }
@@ -21,14 +21,10 @@ export class UserPlayerComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.cards = createCardsForStack(this.player?.stacks[0]);
+    this.handCards = createCardsForHand(this.player?.hand);
   }
 
-  getCards() {
-    if (this.player?.hand?.cards !== undefined) {
-      return this.player?.hand?.cards;
-    } else {
-      return new Array(this.player?.hand?.numberOfCards).fill('BLUE_BACK');
-    }
+  public getCardImage(card: CardDTO) {
+    return getCardImage(card);
   }
 }
