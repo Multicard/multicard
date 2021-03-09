@@ -15,11 +15,11 @@ export class GameComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.gameState$ = this.gameService.loadGameState();
+    this.gameState$ = this.gameService.initGame();
   }
 
-  isGameStateReadyToStart(gameState: GameDTO) {
-    return gameState.state === Gamestate.READYTOSTART;
+  isGameStarteable(gameState: GameDTO) {
+    return gameState.state === Gamestate.READYTOSTART && gameState.players[0]?.organizer;
   }
 
   startGame() {

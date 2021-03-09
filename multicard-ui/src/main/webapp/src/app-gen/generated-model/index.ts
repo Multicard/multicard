@@ -29,8 +29,8 @@ export interface PlayerDTO {
     position: number;
     hand: HandDTO;
     stacks: StackDTO[];
-    playerReady: boolean;
     organizer: boolean;
+    playerReady: boolean;
 }
 
 export interface StackDTO {
@@ -38,9 +38,9 @@ export interface StackDTO {
     cards: CardDTO[];
 }
 
-export interface GameAction {
+export interface GameMessage {
     command: Action;
-    text: string;
+    game: GameDTO;
 }
 
 export enum Gamestate {
@@ -51,7 +51,12 @@ export enum Gamestate {
 }
 
 export enum Action {
+    CLIENT_GAME_READY = "CLIENT_GAME_READY",
+    CLIENT_PLAYER_READY = "CLIENT_PLAYER_READY",
+    CLIENT_START_GAME = "CLIENT_START_GAME",
+    CLIENT_REQUEST_STATE = "CLIENT_REQUEST_STATE",
     START_GAME = "START_GAME",
+    GAME_STATE = "GAME_STATE",
 }
 
 export interface PlayedCards {
