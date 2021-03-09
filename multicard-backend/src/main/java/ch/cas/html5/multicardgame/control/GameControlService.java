@@ -191,24 +191,24 @@ public class GameControlService {
         webController.sendToUser(gameId, playerId, gamedto);
     }
 
-    public void handleMessage(GameAction gameAction, String gameId, String playerId){
-        System.out.println("handle incoming message: " + gameAction.getCommand() + " - PlayerId: " + playerId);
+    public void handleMessage(GameMessage gameMessage, String gameId, String playerId){
+        System.out.println("handle incoming message: " + gameMessage.getCommand() + " - PlayerId: " + playerId);
         Game game = gameService.getGame(gameId);
 //        if (!playerId.equals(getGameOrganizer(game).getId())){
 //            return;
 //        }
 
-        if (gameAction.getCommand().equals(Action.START_GAME)){
+        if (gameMessage.getCommand().equals(Action.CLIENT_START_GAME)){
             game.setState(Gamestate.STARTED);
             handOutCards(game);
             convertAndPublishGame(game);
         }
 
-        if (gameAction.getCommand().equals(Action.PLAYER_READY)){
+        if (gameMessage.getCommand().equals(Action.CLIENT_PLAYER_READY)){
             setPlayerReady(game, playerId);
             convertAndPublishGame(game);
         }
-        if (gameAction.getCommand().equals(Action.GAME_READY)){
+        if (gameMessage.getCommand().equals(Action.CLIENT_GAME_READY)){
             resetGame(game);
         }
 

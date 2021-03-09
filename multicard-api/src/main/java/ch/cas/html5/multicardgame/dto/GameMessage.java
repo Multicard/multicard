@@ -2,10 +2,10 @@ package ch.cas.html5.multicardgame.dto;
 
 import ch.cas.html5.multicardgame.enums.Action;
 
-public class GameAction {
+public class GameMessage {
     private Action command;
 
-    private String text;
+    private GameDTO game;
 
     public Action getCommand() {
         return command;
@@ -15,11 +15,11 @@ public class GameAction {
         this.command = command;
     }
 
-    public String getText() {
-        return text;
+    public GameDTO getGame() {
+        return game;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setGame(GameDTO game) {
+        this.game = game;
     }
 }
