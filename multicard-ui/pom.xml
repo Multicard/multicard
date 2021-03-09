@@ -39,7 +39,7 @@
                                         <class>ch.cas.html5.multicardgame.dto.HandDTO</class>
                                         <class>ch.cas.html5.multicardgame.dto.PlayerDTO</class>
                                         <class>ch.cas.html5.multicardgame.dto.StackDTO</class>
-                                        <class>ch.cas.html5.multicardgame.dto.GameAction</class>
+                                        <class>ch.cas.html5.multicardgame.dto.GameMessage</class>
                                     </classes>
                                     <outputFile>${app.basedir}/src/app-gen/generated-model/index.ts</outputFile>
                                     <outputKind>module</outputKind>

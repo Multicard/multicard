@@ -1,6 +1,6 @@
 package ch.cas.html5.multicardgame.messaging;
 
-import ch.cas.html5.multicardgame.dto.GameAction;
+import ch.cas.html5.multicardgame.dto.GameMessage;
 import ch.cas.html5.multicardgame.control.GameControlService;
 import ch.cas.html5.multicardgame.dto.GameDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +28,9 @@ public class WebSocketController {
     }
 
     @MessageMapping("/{gameId}/{playerId}")
-    public void handleMessage(@DestinationVariable String gameId, @DestinationVariable String playerId, @RequestBody GameAction gameAction) {
-        System.out.println("Message received: " + gameAction.getCommand() + " - from: " + gameId + "/" + playerId);
-        gameControlService.handleMessage(gameAction, gameId, playerId);
+    public void handleMessage(@DestinationVariable String gameId, @DestinationVariable String playerId, @RequestBody GameMessage gameMessage) {
+        System.out.println("Message received: " + gameMessage.getCommand() + " - from: " + gameId + "/" + playerId);
+        gameControlService.handleMessage(gameMessage, gameId, playerId);
     }
 
 }
