@@ -96,12 +96,15 @@ public class GameControlService {
     private WebSocketController webController;
     public void setWebSocketController(WebSocketController webController) { this.webController = webController; }
 
-    public void setGameReady(String gameId) {
-
+    public void getGameAndSetReady(String gameId) {
         Game game = gameService.getGame(gameId);
         if (game == null) {
             return;
         }
+        setGameReady(game);
+    }
+
+    public void setGameReady(Game game) {
 
         resetGame(game);
 
@@ -209,7 +212,7 @@ public class GameControlService {
             convertAndPublishGame(game);
         }
         if (gameMessage.getCommand().equals(Action.CLIENT_GAME_READY)){
-            resetGame(game);
+            setGameReady(game);
         }
 
     }

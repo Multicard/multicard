@@ -46,7 +46,7 @@ public class GameRestController {
 
     @PutMapping("/api/Games/{GameId}")
     public void gameReady(@PathVariable(name="GameId")String gameId){
-        gameControlService.setGameReady(gameId);
+        gameControlService.getGameAndSetReady(gameId);
     }
 
 }
