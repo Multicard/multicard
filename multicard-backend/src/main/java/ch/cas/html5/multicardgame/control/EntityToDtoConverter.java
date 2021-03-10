@@ -13,7 +13,7 @@ public final class EntityToDtoConverter {
 
         List<CardDTO> cardsdto = new ArrayList() ;
         for (Card card : cards){
-            cardsdto.add(new CardDTO(card.getId(), (anonymous ? "N/A" : card.getName()), card.getSort()));
+            cardsdto.add(new CardDTO(card.getId(), (anonymous ? "N/A" : card.getName()), card.getSort(), !anonymous));
         }
         return cardsdto;
     }

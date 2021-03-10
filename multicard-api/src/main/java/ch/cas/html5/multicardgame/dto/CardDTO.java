@@ -6,10 +6,11 @@ public class CardDTO {
     private Boolean isFaceUp = false;
     private int sort;
 
-    public CardDTO(String id, String name, int sort){
+    public CardDTO(String id, String name, int sort, Boolean isFaceUp){
         this.id = id;
         this.name = name;
         this.sort = sort;
+        this.setFaceUp(isFaceUp);
     }
 
     public String getId() {

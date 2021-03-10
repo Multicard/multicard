@@ -20,7 +20,7 @@ public class Game {
     //https://stackoverflow.com/questions/49130173/how-to-fix-spring-boot-one-to-many-bidirectional-infinity-loop
     @JsonIgnoreProperties("game")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "game", cascade = CascadeType.ALL)
-    private List<Player> players = new ArrayList<>();
+    private Set<Player> players = new HashSet<>();
 
     @Basic
     @Column(name = "state")
@@ -47,11 +47,11 @@ public class Game {
         this.title = title;
     }
 
-    public List<Player> getPlayers() {
+    public Set<Player> getPlayers() {
         return players;
     }
 
-    public void setPlayers(List<Player> players) {
+    public void setPlayers(Set<Player> players) {
         this.players = players;
     }
 

@@ -71,7 +71,7 @@ public class GameControlService {
     }
 
     private void resetGame(Game game) {
-        System.out.println("reset started: " + game.getPlayers().size());
+        System.out.println("reset started");
         game.setState(Gamestate.READYTOSTART);
 
         Set<Stack> stackList = game.getGameStacks();
@@ -103,7 +103,7 @@ public class GameControlService {
             player.setPlayerReady(false);
             playerService.savePlayer(player);
         }
-        System.out.println("reset finished: " + game.getPlayers().size());
+        System.out.println("reset finished");
     }
 
     public void getGameAndSetReady(String gameId) {
@@ -112,7 +112,7 @@ public class GameControlService {
             return;
         }
         setGameReady(game);
-        convertAndPublishGame(game);
+        convertAndPublishGame(game, null);
     }
 
     public void setGameReady(Game game) {
@@ -139,7 +139,7 @@ public class GameControlService {
         }
     }
 
-    private void convertAndPublishGame(Game game) {
+    private void convertAndPublishGame(Game game, String sendOnlyToSpecificUser) {
         EntityToDtoConverter converter = new EntityToDtoConverter();
 
         GameMessage gameMessage = new GameMessage();
@@ -158,7 +158,6 @@ public class GameControlService {
 
         //Convert Game.Players
         for (Player p1 : game.getPlayers()) {
-            System.out.println("Convert and Publish Game for Player: " + p1.getName() + " - Total Player: " + game.getPlayers().size());
             for (Player p2 : game.getPlayers()) {
 
                 PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), p2.getPlayerReady());
@@ -188,7 +187,13 @@ public class GameControlService {
             }
 
             //send to Player p1
-            publishGameToPlayer(gamedto.getId(), p1.getId(), gameMessage);
+            if (sendOnlyToSpecificUser == null){
+                System.out.println("Convert and Publish Game for Player: " + p1.getName());
+                publishGameToPlayer(gamedto.getId(), p1.getId(), gameMessage);
+            }else if(sendOnlyToSpecificUser != null && sendOnlyToSpecificUser.equals(p1.getId())){
+                System.out.println("Convert and Publish Game for Player: " + p1.getName());
+                publishGameToPlayer(gamedto.getId(), p1.getId(), gameMessage);
+            }
 
             //delete users and build them new
             gamedto.setPlayers(new ArrayList<>());
@@ -209,19 +214,17 @@ public class GameControlService {
     }
 
     public void handleMessage(GameMessage gameMessage, String gameId, String playerId) {
-        System.out.println("handle incoming message: " + gameMessage.getCommand() + " - PlayerId: " + playerId);
+        System.out.println("handle incoming message: " + gameMessage.getCommand());
         Game game = gameService.getGame(gameId);
-
-        System.out.println("Anz Players: " + game.getPlayers().size());
 
         if (gameMessage.getCommand().equals(Action.CLIENT_GAME_READY)) {
             setGameReady(game);
-            convertAndPublishGame(game);
+            convertAndPublishGame(game, null);
         }
 
         if (gameMessage.getCommand().equals(Action.CLIENT_PLAYER_READY)) {
             setPlayerReady(game, playerId);
-            convertAndPublishGame(game);
+            convertAndPublishGame(game, null);
         }
 
         if (gameMessage.getCommand().equals(Action.CLIENT_START_GAME)) {
@@ -233,11 +236,11 @@ public class GameControlService {
             GameMessage response = new GameMessage();
             response.setCommand(Action.START_GAME);
             publishGameToPlayer(gameId, playerId, response);
-            System.out.println("Game started: " + game.getPlayers().size());
+            System.out.println("Game started");
         }
 
         if (gameMessage.getCommand().equals(Action.CLIENT_REQUEST_STATE)) {
-            convertAndPublishGame(game);
+            convertAndPublishGame(game, playerId);
         }
     }
 
@@ -246,7 +249,7 @@ public class GameControlService {
         Stack gameStack = getFirstGameStack(game);
         final Set<Card> cards = gameStack.getCards();
         createHandforAllPlayers(game);
-        final List<Integer> indexUser = Arrays.asList(0, 1, 2, 3);
+        final List<Integer> indexUser = Arrays.asList(1, 2, 3, 4);
         int cnt = 36; //random 0 included bound exclusive
         for (int i = 0; i <= 35; i = i + 1) {
             Card randomCard = generateRandomCard(cards, cnt);
@@ -258,13 +261,21 @@ public class GameControlService {
             cnt = cnt - 1;
             //rotate Player for handout
             Collections.rotate(indexUser, 1);
-            Player actualPlayer = game.getPlayers().get(indexUser.get(0));
+            Player actualPlayer = getPlayerByPosition(game, indexUser.get(0));
             actualPlayer.getHand().getCards().add(randomCard);
             randomCard.setHand(actualPlayer.getHand());
             randomCard.setStack(null);
             cardService.saveCard(randomCard);
         }
-        System.out.println("hand out cards to players finished: " + game.getPlayers().size());
+    }
+
+    private Player getPlayerByPosition(Game game, int position){
+        for (Player player : game.getPlayers()){
+            if (player.getPosition() == position){
+                return player;
+            }
+        }
+        return null;
     }
 
     private Stack getFirstGameStack(Game game){
