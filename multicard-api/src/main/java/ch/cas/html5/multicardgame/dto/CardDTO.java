@@ -1,6 +1,6 @@
 package ch.cas.html5.multicardgame.dto;
 
-public class CardDTO {
+public class CardDTO implements Comparable<CardDTO> {
     private String id;
     private String name;
     private Boolean isFaceUp = false;
@@ -43,5 +43,11 @@ public class CardDTO {
 
     public void setFaceUp(Boolean faceUp) {
         isFaceUp = faceUp;
+    }
+
+    @Override
+    public int compareTo(CardDTO o) {
+        return (this.getSort() < o.getSort() ? -1 :
+                (this.getSort() == o.getSort() ? 0 : 1));
     }
 }

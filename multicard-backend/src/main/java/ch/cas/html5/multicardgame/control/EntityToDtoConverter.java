@@ -1,9 +1,10 @@
 package ch.cas.html5.multicardgame.control;
 
+import ch.cas.html5.multicardgame.dto.CardDTO;
 import ch.cas.html5.multicardgame.entity.Card;
-import ch.cas.html5.multicardgame.dto.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -15,6 +16,7 @@ public final class EntityToDtoConverter {
         for (Card card : cards){
             cardsdto.add(new CardDTO(card.getId(), (anonymous ? "N/A" : card.getName()), card.getSort(), !anonymous));
         }
+        Collections.sort(cardsdto);
         return cardsdto;
     }
 }
