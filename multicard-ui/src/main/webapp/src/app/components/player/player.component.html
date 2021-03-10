@@ -1,6 +1,6 @@
 <div class="card-wrapper">
   <div [style.transform]="'rotate(' + getRotation(i) + 'deg) translateX(' + getTranslateX(i) + 'px)'" class="card"
-       *ngFor="let card of getCards(); let i = index">
+       *ngFor="let card of handCards; let i = index">
     <img src="assets/cards/BLUE_BACK.svg" alt="card cover">
   </div>
 </div>

@@ -1,5 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {PlayerDTO} from '../../../app-gen/generated-model';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {CardDTO, PlayerDTO} from '../../../app-gen/generated-model';
+import {createCardsForHand} from '../../model/cardHelper';
 
 const rotationPerCardInDegrees = 5;
 const translationXPerCardInPixels = 7;
@@ -9,7 +10,7 @@ const translationXPerCardInPixels = 7;
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.scss']
 })
-export class PlayerComponent implements OnInit {
+export class PlayerComponent implements OnInit, OnChanges {
 
   @Input()
   public player!: PlayerDTO;
@@ -17,14 +18,16 @@ export class PlayerComponent implements OnInit {
   @Input()
   public turnNameAround = false;
 
+  public handCards: CardDTO[] = [];
+
   constructor() {
   }
 
   ngOnInit(): void {
   }
 
-  getCards() {
-    return new Array(this.getNumberOfCards());
+  ngOnChanges(changes: SimpleChanges): void {
+    this.handCards = createCardsForHand(this.player?.hand);
   }
 
   getRotation(i: number): number {
@@ -36,6 +39,6 @@ export class PlayerComponent implements OnInit {
   }
 
   private getNumberOfCards() {
-    return this.player?.hand?.cardCount;
+    return this.handCards?.length;
   }
 }
