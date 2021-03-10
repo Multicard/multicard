@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export interface CardDTO {
+export interface CardDTO extends Comparable<CardDTO> {
     id: string;
     name: string;
     sort: number;
@@ -41,6 +41,9 @@ export interface StackDTO {
 export interface GameMessage {
     command: Action;
     game: GameDTO;
+}
+
+export interface Comparable<T> {
 }
 
 export enum Gamestate {
