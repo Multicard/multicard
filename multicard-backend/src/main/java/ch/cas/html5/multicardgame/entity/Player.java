@@ -27,7 +27,7 @@ public class Player {
     @Column(name = "position")
     private Integer position;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "hand_id", referencedColumnName = "id")
     private Hand hand;
 

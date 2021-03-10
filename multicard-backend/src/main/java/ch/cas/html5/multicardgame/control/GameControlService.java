@@ -63,38 +63,48 @@ public class GameControlService {
         this.stackService = stackService;
     }
 
-    private void resetGame(Game game){
-        System.out.println("Delete Gamestacks");
+    @Autowired
+    private WebSocketController webController;
+
+    public void setWebSocketController(WebSocketController webController) {
+        this.webController = webController;
+    }
+
+    private void resetGame(Game game) {
+        System.out.println("reset started: " + game.getPlayers().size());
+        game.setState(Gamestate.READYTOSTART);
+
         Set<Stack> stackList = game.getGameStacks();
-        game.setGameStacks(new HashSet<>());
+        //game.setGameStacks(new HashSet<>());
         for (Stack stack : stackList) {
-            stackService.deleteStack(stack.getId());
+            game.getGameStacks().remove(stack);
+            gameService.updateGame(game);
         }
-        System.out.println("Delete Playerstacks");
+
         Set<Stack> playerStacks = new HashSet<>();
-        for (Player player : game.getPlayers()){
-            for (Stack stack : player.getStacks()){
-                playerStacks.add(stack);
+        for (Player player : game.getPlayers()) {
+//            for (Stack stack : player.getStacks()) {
+//                playerStacks.add(stack);
+//                player.getStacks().remove(stack);
+//            }
+//            for (Stack stack : playerStacks) {
+//                stackService.deleteStack(stack.getId());
+//            }
+
+            for (Stack stack : player.getStacks()) {
                 player.getStacks().remove(stack);
-            }
-            for (Stack stack : playerStacks){
                 stackService.deleteStack(stack.getId());
             }
-
-            System.out.println("Delete all Handy by Game");
             Hand toDelete = player.getHand();
-            if (toDelete != null){
+            if (toDelete != null) {
                 player.setHand(null);
                 handService.deleteHand(toDelete.getId());
             }
             player.setPlayerReady(false);
+            playerService.savePlayer(player);
         }
-        System.out.println("reset finished");
+        System.out.println("reset finished: " + game.getPlayers().size());
     }
-
-    @Autowired
-    private WebSocketController webController;
-    public void setWebSocketController(WebSocketController webController) { this.webController = webController; }
 
     public void getGameAndSetReady(String gameId) {
         Game game = gameService.getGame(gameId);
@@ -102,14 +112,14 @@ public class GameControlService {
             return;
         }
         setGameReady(game);
+        convertAndPublishGame(game);
     }
 
     public void setGameReady(Game game) {
 
-        resetGame(game);
-
         System.out.println("Set Game Ready: " + game.getTitle());
-        game.setState(Gamestate.READYTOSTART);
+
+        resetGame(game);
 
         //ToDo - replace fix deck and cleanup stack
         String deckId = deckService.retrieveDecks().get(0).getId();
@@ -127,14 +137,17 @@ public class GameControlService {
             stack.getCards().add(card);
             stackService.saveStack(stack);
         }
-        convertAndPublishGame(game);
     }
 
     private void convertAndPublishGame(Game game) {
         EntityToDtoConverter converter = new EntityToDtoConverter();
 
+        GameMessage gameMessage = new GameMessage();
+        gameMessage.setCommand(Action.GAME_STATE);
+
         // Convert Game
         GameDTO gamedto = new GameDTO(game.getId(), game.getTitle(), game.getState());
+        gameMessage.setGame(gamedto);
 
         //Convert Game.Stacks
         for (Stack stack : game.getGameStacks()) {
@@ -145,12 +158,13 @@ public class GameControlService {
 
         //Convert Game.Players
         for (Player p1 : game.getPlayers()) {
+            System.out.println("Convert and Publish Game for Player: " + p1.getName() + " - Total Player: " + game.getPlayers().size());
             for (Player p2 : game.getPlayers()) {
 
                 PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), p2.getPlayerReady());
 
                 //Convert Game.Player.Hand
-                if (p2.getHand() != null && p2.getHand().getCards() != null){
+                if (p2.getHand() != null && p2.getHand().getCards() != null) {
                     HandDTO handdto = new HandDTO();
                     handdto.setId(p2.getHand().getId());
                     if (p1.getId().equals(p2.getId())) {
@@ -174,89 +188,108 @@ public class GameControlService {
             }
 
             //send to Player p1
-            publishGameToPlayers(gamedto.getId(), p1.getId(), gamedto);
+            publishGameToPlayer(gamedto.getId(), p1.getId(), gameMessage);
 
             //delete users and build them new
             gamedto.setPlayers(new ArrayList<>());
         }
     }
 
-    private void setPlayerReady(Game game, String playerId){
-        for (Player player : game.getPlayers()){
-            if (player.getId().equals(playerId)){
+    private void setPlayerReady(Game game, String playerId) {
+        for (Player player : game.getPlayers()) {
+            if (player.getId().equals(playerId)) {
                 player.setPlayerReady(Boolean.TRUE);
                 playerService.savePlayer(player);
             }
         }
     }
 
-    private void publishGameToPlayers(String gameId, String playerId, GameDTO gamedto){
-        webController.sendToUser(gameId, playerId, gamedto);
+    private void publishGameToPlayer(String gameId, String playerId, GameMessage gameMessage) {
+        webController.sendToUser(gameId, playerId, gameMessage);
     }
 
-    public void handleMessage(GameMessage gameMessage, String gameId, String playerId){
+    public void handleMessage(GameMessage gameMessage, String gameId, String playerId) {
         System.out.println("handle incoming message: " + gameMessage.getCommand() + " - PlayerId: " + playerId);
         Game game = gameService.getGame(gameId);
-//        if (!playerId.equals(getGameOrganizer(game).getId())){
-//            return;
-//        }
 
-        if (gameMessage.getCommand().equals(Action.CLIENT_START_GAME)){
-            game.setState(Gamestate.STARTED);
-            handOutCards(game);
+        System.out.println("Anz Players: " + game.getPlayers().size());
+
+        if (gameMessage.getCommand().equals(Action.CLIENT_GAME_READY)) {
+            setGameReady(game);
             convertAndPublishGame(game);
         }
 
-        if (gameMessage.getCommand().equals(Action.CLIENT_PLAYER_READY)){
+        if (gameMessage.getCommand().equals(Action.CLIENT_PLAYER_READY)) {
             setPlayerReady(game, playerId);
             convertAndPublishGame(game);
         }
-        if (gameMessage.getCommand().equals(Action.CLIENT_GAME_READY)){
-            setGameReady(game);
+
+        if (gameMessage.getCommand().equals(Action.CLIENT_START_GAME)) {
+            game.setState(Gamestate.STARTED);
+            gameService.updateGame(game);
+            if (getFirstGameStack(game).getCards().size() == 36){
+                handOutCards(game);
+            }
+            GameMessage response = new GameMessage();
+            response.setCommand(Action.START_GAME);
+            publishGameToPlayer(gameId, playerId, response);
+            System.out.println("Game started: " + game.getPlayers().size());
         }
 
+        if (gameMessage.getCommand().equals(Action.CLIENT_REQUEST_STATE)) {
+            convertAndPublishGame(game);
+        }
     }
 
     private void handOutCards(Game game) {
-        Optional<Stack> firstStack = game.getGameStacks().stream().findFirst();
-        final Set<Card> cards = firstStack.get().getCards();
+        System.out.println("hand out cards to players");
+        Stack gameStack = getFirstGameStack(game);
+        final Set<Card> cards = gameStack.getCards();
         createHandforAllPlayers(game);
         final List<Integer> indexUser = Arrays.asList(0, 1, 2, 3);
         int cnt = 36; //random 0 included bound exclusive
         for (int i = 0; i <= 35; i = i + 1) {
-            Card randomCard = generateRandomInt(cards, cnt);
+            Card randomCard = generateRandomCard(cards, cnt);
+
+            cards.remove(randomCard);
+            removeCardFromStack(randomCard, game);
+
             //get random card from stack
-            //System.out.println(i+1 + " - zufällige Karte: " + card.getName());
             cnt = cnt - 1;
             //rotate Player for handout
             Collections.rotate(indexUser, 1);
             Player actualPlayer = game.getPlayers().get(indexUser.get(0));
-            Hand hand = new Hand();
             actualPlayer.getHand().getCards().add(randomCard);
-
-            removeCardFromStack(randomCard, firstStack.get());
-            cards.remove(randomCard);
+            randomCard.setHand(actualPlayer.getHand());
+            randomCard.setStack(null);
+            cardService.saveCard(randomCard);
         }
+        System.out.println("hand out cards to players finished: " + game.getPlayers().size());
     }
 
-    private void removeCardFromStack(Card cardToRemove, Stack stack){
-        int i = 0;
-        for (Card stackCard : stack.getCards()){
-            if (stackCard.getId().equals(cardToRemove.getId())){
-                stack.getCards().remove(i);
+    private Stack getFirstGameStack(Game game){
+        Optional<Stack> firstGameStack = game.getGameStacks().stream().findFirst();
+        return firstGameStack.get();
+    }
+
+    private void removeCardFromStack(Card cardToRemove, Game game) {
+        Stack stack = getFirstGameStack(game);
+        for (Card stackCard : stack.getCards()) {
+            if (stackCard.getId().equals(cardToRemove.getId())) {
+                stack.getCards().remove(stackCard);
+                stackService.saveStack(stack);
                 return;
             }
-            i++;
         }
 
     }
 
-    private Card generateRandomInt(Set<Card> cards, int bound) {
+    private Card generateRandomCard(Set<Card> cards, int bound) {
         Random random = new Random();
-        Integer randomInt =  random.nextInt(bound);
+        Integer randomInt = random.nextInt(bound);
         int i = 0;
-        for (Card card : cards){
-            if (i == randomInt){
+        for (Card card : cards) {
+            if (i == randomInt) {
                 return card;
             }
             i++;
@@ -264,9 +297,9 @@ public class GameControlService {
         return null;
     }
 
-    private void createHandforAllPlayers(Game game){
-        for (Player player : game.getPlayers()){
-            if (player.getHand() == null){
+    private void createHandforAllPlayers(Game game) {
+        for (Player player : game.getPlayers()) {
+            if (player.getHand() == null) {
                 Hand hand = new Hand();
                 player.setHand(hand);
                 hand.setPlayer(player);

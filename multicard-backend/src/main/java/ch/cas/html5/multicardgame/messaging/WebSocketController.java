@@ -1,8 +1,7 @@
 package ch.cas.html5.multicardgame.messaging;
 
-import ch.cas.html5.multicardgame.dto.GameMessage;
 import ch.cas.html5.multicardgame.control.GameControlService;
-import ch.cas.html5.multicardgame.dto.GameDTO;
+import ch.cas.html5.multicardgame.dto.GameMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -21,7 +20,7 @@ public class WebSocketController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    public void sendToUser(String playgroundId, String userId, GameDTO msg) {
+    public void sendToUser(String playgroundId, String userId, GameMessage msg) {
         String dest = "/queue/" + playgroundId + "/" + userId;
         simpMessagingTemplate.convertAndSend(dest, msg);
         System.out.println("Message sent to: " + dest);

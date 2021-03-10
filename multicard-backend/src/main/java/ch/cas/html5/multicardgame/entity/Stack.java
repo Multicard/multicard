@@ -26,9 +26,18 @@ public class Stack {
     @ManyToOne(optional = true)
     private Game game;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "topcard", referencedColumnName = "id")
-    private Card topCard;
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "topcard", referencedColumnName = "id")
+//    private Card topCard;
+    private String topCard;
+
+    public String getTopCard() {
+        return topCard;
+    }
+
+    public void setTopCard(String topCard) {
+        this.topCard = topCard;
+    }
 
     public String getId() {return id; }
 
@@ -60,11 +69,11 @@ public class Stack {
         this.game = game;
     }
 
-    public Card getTopCard() {
-        return topCard;
-    }
-
-    public void setTopCard(Card topCard) {
-        this.topCard = topCard;
-    }
+//    public Card getTopCard() {
+//        return topCard;
+//    }
+//
+//    public void setTopCard(Card topCard) {
+//        this.topCard = topCard;
+//    }
 }

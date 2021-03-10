@@ -28,7 +28,7 @@ public class Game {
     private Gamestate state;
 
     @JsonIgnoreProperties("game")
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "game", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Stack> stacks = new HashSet<>();
 
     public String getId() {
