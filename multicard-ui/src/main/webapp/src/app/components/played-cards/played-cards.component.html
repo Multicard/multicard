@@ -45,10 +45,10 @@
         <mc-card-pile [cards]="cards[0]" cardCssClass="table-card" cdkDragHandle
                       [ngClass]="{'table-cards-draggeable': isDragAndDropOfCardsAllowed()}">
           <div *cdkDragPreview>
-            <mc-card-pile [cards]="playedCards.cards" cardCssClass="table-card" ></mc-card-pile>
+            <mc-card-pile [cards]="playedCards?.cards" cardCssClass="table-card" ></mc-card-pile>
           </div>
            <div *cdkDragPlaceholder>
-            <mc-card-pile class="drag-table-card-placeholder" [cards]="playedCards.cards" cardCssClass="table-card" ></mc-card-pile>
+            <mc-card-pile class="drag-table-card-placeholder" [cards]="playedCards?.cards" cardCssClass="table-card" ></mc-card-pile>
           </div>
         </mc-card-pile>
       </div>

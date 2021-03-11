@@ -1,5 +1,5 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import {ActionType, DirectionType, Game, StackAction} from '../model/game.model';
+import {ActionType, DirectionType, StackAction} from '../model/game.model';
 import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
 import {RxStompService} from '@stomp/ng2-stompjs';
 import {Message} from '@stomp/stompjs';
@@ -27,7 +27,7 @@ export class GameService implements OnDestroy {
 
   private stompQueueSubscription!: Subscription;
   // @ts-ignore
-  private gameSubject: BehaviorSubject<GameDTO> = new BehaviorSubject<Game>(null);
+  private gameSubject: BehaviorSubject<GameDTO> = new BehaviorSubject<GameDTO>(null);
   private stackSubject: Subject<StackAction> = new Subject();
   private gameStartedByThisClient = false;
 
@@ -109,6 +109,8 @@ export class GameService implements OnDestroy {
     if (game.players[0].stacks.length === 0) {
       game.players[0].stacks.push({id: '', cards: []});
     }
+
+    cards.forEach(c => c.faceUp = false);
 
     game.players[0].stacks[0].cards = [...game.players[0].stacks[0].cards, ...cards];
     game.playedCards.cards = [];
