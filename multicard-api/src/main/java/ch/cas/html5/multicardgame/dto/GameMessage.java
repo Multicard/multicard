@@ -7,6 +7,8 @@ public class GameMessage {
 
     private GameDTO game;
 
+    private CardDTO card;
+
     public Action getCommand() {
         return command;
     }
@@ -21,5 +23,13 @@ public class GameMessage {
 
     public void setGame(GameDTO game) {
         this.game = game;
+    }
+
+    public CardDTO getCard() {
+        return card;
+    }
+
+    public void setCard(CardDTO card) {
+        this.card = card;
     }
 }

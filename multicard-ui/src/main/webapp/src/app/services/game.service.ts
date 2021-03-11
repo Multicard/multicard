@@ -5,7 +5,7 @@ import {RxStompService} from '@stomp/ng2-stompjs';
 import {Message} from '@stomp/stompjs';
 import {HttpClient} from '@angular/common/http';
 import {take} from 'rxjs/operators';
-import {Action, GameDTO, GameMessage, Gamestate} from '../../app-gen/generated-model';
+import {Action, CardDTO, GameDTO, GameMessage, Gamestate} from '../../app-gen/generated-model';
 
 const restApiUrl = '/api/Games';
 
@@ -38,7 +38,7 @@ export class GameService implements OnDestroy {
       });
 
     // TODO remove Mockcall
-    this.initMockInitialWebsocketMessage();
+    //this.initMockInitialWebsocketMessage();
     return this.gameSubject.asObservable();
   }
 
@@ -65,11 +65,31 @@ export class GameService implements OnDestroy {
       this.sendWebsocketMessage(Action.CLIENT_START_GAME);
 
       // TODO remove Mockcall
-      this.initMockWebsocketGameStartMessages();
+      //this.initMockWebsocketGameStartMessages();
     }
 
 
     this.giveCards(0, 9, 3, game.players.length);
+  }
+
+  cardPlayed(card: CardDTO) {
+    let game = this.gameSubject.getValue();
+    if (!game.playedCards) {
+      game.playedCards = {onSameStack: false, cards: []};
+    }
+    if (!game.playedCards.cards) {
+      game.playedCards.cards = [];
+    }
+    game.playedCards.cards = [...game.playedCards.cards, {...card, playerId: PLAYER_ID}];
+
+    game.players[0].hand.cards = game.players[0].hand.cards.filter(c => c.id !== card.id);
+    game = {...game, players: [{...game.players[0]}, ...game.players.slice(1)]};
+    this.gameSubject.next(game);
+
+    this.sendWebsocketMessage(Action.CLIENT_CARD_PLAYED, card);
+
+    // TODO remove Mockcall
+    this.initMockWebsocketGameCardAddedMessage(card);
   }
 
   ngOnDestroy(): void {
@@ -82,7 +102,6 @@ export class GameService implements OnDestroy {
     this.stompQueueSubscription = this.rxStompService
       .watch(`/queue/${GAME_ID}/${PLAYER_ID}`)
       .subscribe((message: Message) => {
-        console.log(message);
         this.handleWebsocketMessage(JSON.parse(message.body));
       });
   }
@@ -130,7 +149,7 @@ export class GameService implements OnDestroy {
       this.sendWebsocketMessage(Action.CLIENT_REQUEST_STATE);
 
       // TODO remove Mockcall
-      this.initMockWebsocketGameStartedMessages();
+      //this.initMockWebsocketGameStartedMessages();
     }
   }
 
@@ -138,10 +157,10 @@ export class GameService implements OnDestroy {
     return game?.players[0]?.organizer;
   }
 
-  private sendWebsocketMessage(command: Action) {
+  private sendWebsocketMessage(command: Action, card: CardDTO | undefined = undefined) {
     this.rxStompService.publish({
       destination: `/app/${GAME_ID}/${PLAYER_ID}`,
-      body: JSON.stringify({command})
+      body: JSON.stringify({command, card})
     });
   }
 
@@ -549,5 +568,15 @@ export class GameService implements OnDestroy {
           ]
         }
       } as any as GameMessage), 3000);
+  }
+
+  private initMockWebsocketGameCardAddedMessage(card: CardDTO) {
+    const game = {...this.gameSubject.getValue()};
+    game.playedCards = {cards: [{...card, playerId: PLAYER_ID}], onSameStack: false};
+    setTimeout(
+      () => this.handleWebsocketMessage({
+        command: Action.GAME_STATE,
+        game
+      } as any as GameMessage), 1000);
   }
 }

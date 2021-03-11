@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="played-cards-area-middle">
-      <div *ngIf="playedCards?.onSameStack">
+      <div *ngIf="playedCards?.onSameStack" class="played-cards-target" cdkDropList [id]="'played-cards-target'" (cdkDropListDropped)="cardDroppedMiddle($event)">
         <mc-card-pile [cards]="playedCards?.cards" cardCssClass="table-card"></mc-card-pile>
       </div>
       <ng-content></ng-content>
@@ -23,7 +23,7 @@
     </div>
   </div>
   <div class="played-cards-area-bottom">
-    <div *ngIf="!playedCards?.onSameStack" class="played-cards-target" cdkDropList id="played-cards-target" (cdkDropListDropped)="cardDropped($event)">
+    <div *ngIf="!playedCards?.onSameStack" class="played-cards-target" cdkDropList [id]="'played-cards-target'" (cdkDropListDropped)="cardDroppedBottom($event)">
       <mc-card-pile [cards]="cards[0]" cardCssClass="table-card"></mc-card-pile>
     </div>
   </div>

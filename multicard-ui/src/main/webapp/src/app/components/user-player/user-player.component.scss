@@ -9,6 +9,7 @@
 
   .card-wrapper {
     overflow: hidden;
+    cursor: grab;
   }
 
   .card-wrapper:last-child, .card-wrapper:hover {
@@ -19,5 +20,11 @@
 .user-player-card.cdk-drag-placeholder {
   @include table-card;
   position: absolute;
+
+  img {
+    border-color: red;
+    border-style: solid;
+    border-width: 2px;
+  }
 }
 

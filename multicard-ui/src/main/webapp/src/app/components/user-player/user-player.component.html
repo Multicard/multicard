@@ -1,6 +1,6 @@
 <div class="user-player" cdkDropList cdkDropListConnectedTo="played-cards-target">
   <div class="card-wrapper" *ngFor="let card of handCards">
-    <div class="user-player-card" cdkDrag>
+    <div class="user-player-card" [cdkDragData]="card" cdkDrag (dblclick)="handOutCard(card)">
       <img [src]="getCardImage(card)">
     </div>
   </div>

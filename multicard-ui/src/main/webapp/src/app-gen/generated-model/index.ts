@@ -41,6 +41,7 @@ export interface StackDTO {
 export interface GameMessage {
     command: Action;
     game: GameDTO;
+    card: CardDTO;
 }
 
 export interface Comparable<T> {
@@ -58,13 +59,17 @@ export enum Action {
     CLIENT_PLAYER_READY = "CLIENT_PLAYER_READY",
     CLIENT_START_GAME = "CLIENT_START_GAME",
     CLIENT_REQUEST_STATE = "CLIENT_REQUEST_STATE",
+    CLIENT_CARD_PLAYED = "CLIENT_CARD_PLAYED",
     START_GAME = "START_GAME",
     GAME_STATE = "GAME_STATE",
 }
 
 export interface PlayedCards {
   onSameStack: boolean;
-  idOfStartingPlayer: string;
-  cards: CardDTO[];
+  cards: PlayedCard[];
+}
+
+export interface PlayedCard extends CardDTO {
+  playerId: string;
 }
 

@@ -1,6 +1,7 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
-import {CardDTO, PlayedCards} from '../../../app-gen/generated-model';
+import {PlayedCard, PlayedCards} from '../../../app-gen/generated-model';
+import {GameService} from '../../services/game.service';
 
 @Component({
   selector: 'mc-played-cards',
@@ -15,26 +16,31 @@ export class PlayedCardsComponent implements OnInit, OnChanges {
   @Input()
   public playerIds!: string[];
 
-  cards: CardDTO[][] = new Array(4);
+  cards: PlayedCard[][] = new Array(4);
 
-  constructor() {
-  }
+  constructor(
+    private gameService: GameService
+  ) {}
 
   ngOnInit(): void {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.cards = new Array(4).fill([]).map(() => new Array<CardDTO>());
+    this.cards = new Array(4).fill([]).map(() => new Array<PlayedCard>());
     if (this.playedCards?.cards !== undefined) {
-      let playerIndex = this.playerIds.indexOf(this.playedCards.idOfStartingPlayer);
       this.playedCards.cards.forEach((c) => {
-        this.cards[playerIndex].push(c);
-        playerIndex = (playerIndex + 1) % this.playerIds.length;
+        this.cards[this.playerIds.findIndex(pId => pId === c.playerId)].push(c);
       });
     }
   }
 
-  cardDropped(event: CdkDragDrop<string[]>) {
-    console.log('card dropped onto carpet');
+  cardDroppedMiddle(event: CdkDragDrop<string[]>) {
+    console.log('card dropped onto carpet', event);
+    this.gameService.cardPlayed(event.item.data);
+  }
+
+  cardDroppedBottom(event: CdkDragDrop<string[]>) {
+    console.log('card dropped onto carpet', event);
+    this.gameService.cardPlayed(event.item.data);
   }
 }

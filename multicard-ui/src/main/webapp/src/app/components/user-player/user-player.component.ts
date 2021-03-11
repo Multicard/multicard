@@ -1,6 +1,7 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {CardDTO, PlayerDTO} from '../../../app-gen/generated-model';
 import {createCardsForHand, getCardImage} from '../../model/cardHelper';
+import {GameService} from '../../services/game.service';
 
 @Component({
   selector: 'mc-user-player',
@@ -14,7 +15,9 @@ export class UserPlayerComponent implements OnInit, OnChanges {
 
   public handCards: CardDTO[] = [];
 
-  constructor() {
+  constructor(
+    private gameService: GameService
+  ) {
   }
 
   ngOnInit(): void {
@@ -24,7 +27,11 @@ export class UserPlayerComponent implements OnInit, OnChanges {
     this.handCards = createCardsForHand(this.player?.hand);
   }
 
-  public getCardImage(card: CardDTO) {
+  getCardImage(card: CardDTO) {
     return getCardImage(card);
+  }
+
+  handOutCard(card: CardDTO) {
+    this.gameService.cardPlayed(card);
   }
 }
