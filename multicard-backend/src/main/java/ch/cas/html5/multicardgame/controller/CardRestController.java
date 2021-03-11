@@ -33,11 +33,6 @@ public class CardRestController {
         cardService.saveCard(card);
     }
 
-    @DeleteMapping("/api/Cards/{CardId}")
-    public void deleteCard(@PathVariable(name="CardId")String cardId){
-        cardService.deleteCard(cardId);
-    }
-
     @PutMapping("/api/Cards/{CardId}")
     public void updateCard(@RequestBody Card card,
                                @PathVariable(name="CardId")String cardId){

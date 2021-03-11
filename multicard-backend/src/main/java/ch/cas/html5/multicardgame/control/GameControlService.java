@@ -1,9 +1,6 @@
 package ch.cas.html5.multicardgame.control;
 
-import ch.cas.html5.multicardgame.dto.GameDTO;
-import ch.cas.html5.multicardgame.dto.HandDTO;
-import ch.cas.html5.multicardgame.dto.PlayerDTO;
-import ch.cas.html5.multicardgame.dto.StackDTO;
+import ch.cas.html5.multicardgame.dto.*;
 import ch.cas.html5.multicardgame.entity.Stack;
 import ch.cas.html5.multicardgame.entity.*;
 import ch.cas.html5.multicardgame.enums.Action;
@@ -62,10 +59,31 @@ public class GameControlService {
     }
 
     @Autowired
+    private ActionServiceImpl actionService;
+
+    public void setActionService(ActionServiceImpl actionService) {
+        this.actionService = actionService;
+    }
+
+    @Autowired
+    private PLayedCardsServiceImpl playedCardsService;
+
+    public void setPlayedCardsService(PLayedCardsServiceImpl playedCardsService) {
+        this.playedCardsService = playedCardsService;
+    }
+
+    @Autowired
     private StackServiceImpl stackService;
 
     public void setStackService(StackServiceImpl stackService) {
         this.stackService = stackService;
+    }
+
+    @Autowired
+    private GameResetService gameReset;
+
+    public void setGameResetService(GameResetService gameReset) {
+        this.gameReset = gameReset;
     }
 
     @Autowired
@@ -75,41 +93,6 @@ public class GameControlService {
         this.webController = webController;
     }
 
-    private void resetGame(Game game) {
-        System.out.println("reset started");
-        game.setState(Gamestate.READYTOSTART);
-
-        Set<Stack> stackList = game.getGameStacks();
-        //game.setGameStacks(new HashSet<>());
-        for (Stack stack : stackList) {
-            game.getGameStacks().remove(stack);
-            gameService.updateGame(game);
-        }
-
-        Set<Stack> playerStacks = new HashSet<>();
-        for (Player player : game.getPlayers()) {
-//            for (Stack stack : player.getStacks()) {
-//                playerStacks.add(stack);
-//                player.getStacks().remove(stack);
-//            }
-//            for (Stack stack : playerStacks) {
-//                stackService.deleteStack(stack.getId());
-//            }
-
-            for (Stack stack : player.getStacks()) {
-                player.getStacks().remove(stack);
-                stackService.deleteStack(stack.getId());
-            }
-            Hand toDelete = player.getHand();
-            if (toDelete != null) {
-                player.setHand(null);
-                handService.deleteHand(toDelete.getId());
-            }
-            player.setPlayerReady(false);
-            playerService.savePlayer(player);
-        }
-        System.out.println("reset finished");
-    }
 
     public void getGameAndSetReady(String gameId) {
         Game game = gameService.getGame(gameId);
@@ -124,7 +107,7 @@ public class GameControlService {
 
         System.out.println("Set Game Ready: " + game.getTitle());
 
-        resetGame(game);
+        gameReset.resetGame(game);
 
         //ToDo - replace fix deck and cleanup stack
         String deckId = deckService.retrieveDecks().get(0).getId();
@@ -159,6 +142,12 @@ public class GameControlService {
             StackDTO stackdto = new StackDTO(stack.getId());
             stackdto.setCards(converter.convertCards(stack.getCards(), true));
             gamedto.getStacks().add(stackdto);
+        }
+
+        //Convert Game.PlayedCards
+        if (game.getPlayedcards() != null){
+            gamedto.setPlayedCards(new PlayedCardsDTO());
+            gamedto.getPlayedCards().setCards(converter.convertPlayedCards(game.getPlayedcards().getPlayedcards()));
         }
 
         //Convert Game.Players
@@ -247,7 +236,50 @@ public class GameControlService {
         if (gameMessage.getCommand().equals(Action.CLIENT_REQUEST_STATE)) {
             convertAndPublishGame(game, playerId);
         }
+
+        if (gameMessage.getCommand().equals(Action.CLIENT_CARD_PLAYED)) {
+
+            //todo remove
+            Card toPlay = playerService.getPlayer(playerId).getHand().getCards().stream().findFirst().get();
+            System.out.println("Card to play: " + toPlay.getName());
+            playCardFromPlayerToPlayedCards(game, playerId, toPlay.getId());
+            convertAndPublishGame(game, null);
+
+        }
     }
+
+    private PlayedCard convertFromCard(Card card){
+        PlayedCard playedCard = new PlayedCard();
+        playedCard.setName(card.getName());
+        playedCard.setSort(card.getSort());
+        return playedCard;
+    }
+
+    private void playCardFromPlayerToPlayedCards(Game game, String playerId, String cardId){
+        Card playedCard = cardService.getCard(cardId);
+        Player player = playerService.getPlayer(playerId);
+
+        //remove Card from Player.Hand
+        player.getHand().getCards().remove(playedCard);
+        cardService.deleteCard(playedCard);
+
+
+        //add card to Game.PlayedCards
+        if (game.getPlayedcards() == null){
+            game.setPlayedcards(new PlayedCards());
+        }
+        PlayedCard p2 = convertFromCard(playedCard);
+        game.getPlayedcards().getPlayedcards().add(p2);
+        p2.setPlayedcards(game.getPlayedcards());
+
+        //store action
+        ch.cas.html5.multicardgame.entity.Action action = new ch.cas.html5.multicardgame.entity.Action();
+        action.setGame(game);
+        action.setPlayer(player);
+        game.getActions().add(action);
+        player.getActions().add(action);
+    }
+
 
     private void handOutCards(Game game) {
         System.out.println("hand out cards to players");
