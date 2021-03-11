@@ -1,7 +1,9 @@
 package ch.cas.html5.multicardgame.services;
 
 import ch.cas.html5.multicardgame.entity.Card;
+import ch.cas.html5.multicardgame.entity.PlayedCard;
 import ch.cas.html5.multicardgame.repository.CardRepository;
+import ch.cas.html5.multicardgame.repository.PlayedCardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,13 @@ public class CardServiceImpl {
         this.cardRepository = cardRepository;
     }
 
+    @Autowired
+    private PlayedCardRepository playedCardRepository;
+
+    public void setPlayedCardRepository(PlayedCardRepository playedCardRepository) {
+        this.playedCardRepository = playedCardRepository;
+    }
+
     public List<Card> retrieveCards() {
         List<Card> cards = cardRepository.findAll();
         return cards;
@@ -32,12 +41,20 @@ public class CardServiceImpl {
         return cardRepository.save(card);
     }
 
-    public void deleteCard(String cardId){
-        cardRepository.deleteById(cardId);
+    public void deleteCard(Card card){
+        cardRepository.delete(card);
+//        cardRepository.deleteById(cardId);
     }
 
     public void updateCard(Card card) {
         cardRepository.save(card);
     }
 
+    public PlayedCard savePlayedCard(PlayedCard playedCard){
+        return playedCardRepository.save(playedCard);
+    }
+
+    public void deletePlayedCard(String playedCardId){
+        playedCardRepository.deleteById(playedCardId);
+    }
 }
