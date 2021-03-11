@@ -1,6 +1,6 @@
 package ch.cas.html5.multicardgame.dto;
 
-public class PlayedCardDTO {
+public class PlayedCardDTO extends CardDTO {
     public String getPlayerId() {
         return playerId;
     }

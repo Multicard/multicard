@@ -62,7 +62,7 @@ export interface HandDTO {
     cards: CardDTO[];
 }
 
-export interface PlayedCardDTO {
+export interface PlayedCardDTO extends CardDTO {
     playerId: string;
 }
 

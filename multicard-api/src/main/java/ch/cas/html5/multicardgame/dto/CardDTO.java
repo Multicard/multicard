@@ -6,6 +6,9 @@ public class CardDTO implements Comparable<CardDTO> {
     private Boolean isFaceUp = false;
     private int sort;
 
+    public CardDTO() {
+    }
+
     public CardDTO(String id, String name, int sort, Boolean isFaceUp){
         this.id = id;
         this.name = name;
