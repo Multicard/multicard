@@ -38,6 +38,7 @@
                                         <class>ch.cas.html5.multicardgame.messages.GameMessage</class>
                                         <class>ch.cas.html5.multicardgame.messages.GameStateMessage</class>
                                         <class>ch.cas.html5.multicardgame.messages.PlayedCardMessage</class>
+                                        <class>ch.cas.html5.multicardgame.messages.RevertLastPlayerActionMessage</class>
                                     </classes>
                                     <outputFile>${app.basedir}/src/app-gen/generated-model/index.ts</outputFile>
                                     <outputKind>module</outputKind>

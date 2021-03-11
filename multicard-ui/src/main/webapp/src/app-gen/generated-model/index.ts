@@ -12,14 +12,22 @@ export interface GameDTO {
 }
 
 export interface GameMessage {
+    messageName: "GameMessage" | "GameStateMessage" | "PlayedCardMessage" | "RevertLastPlayerActionMessage";
     command: Action;
 }
 
 export interface GameStateMessage extends GameMessage {
+    messageName: "GameStateMessage";
     game: GameDTO;
 }
 
 export interface PlayedCardMessage extends GameMessage {
+    messageName: "PlayedCardMessage";
+    card: CardDTO;
+}
+
+export interface RevertLastPlayerActionMessage extends GameMessage {
+    messageName: "RevertLastPlayerActionMessage";
     card: CardDTO;
 }
 
@@ -69,6 +77,8 @@ export interface PlayedCardDTO extends CardDTO {
 export interface Comparable<T> {
 }
 
+export type GameMessageUnion = GameStateMessage | PlayedCardMessage | RevertLastPlayerActionMessage;
+
 export enum Gamestate {
     INITIAL = "INITIAL",
     READYTOSTART = "READYTOSTART",
@@ -83,6 +93,8 @@ export enum Action {
     CLIENT_REQUEST_STATE = "CLIENT_REQUEST_STATE",
     CLIENT_CARD_PLAYED = "CLIENT_CARD_PLAYED",
     CLIENT_PLAYED_CARDS_TAKEN = "CLIENT_PLAYED_CARDS_TAKEN",
+    CLIENT_REVERT_LAST_PLAYER_ACTION = "CLIENT_REVERT_LAST_PLAYER_ACTION",
+    CLIENT_REVERT_ACTION = "CLIENT_REVERT_ACTION",
     START_GAME = "START_GAME",
     GAME_STATE = "GAME_STATE",
 }

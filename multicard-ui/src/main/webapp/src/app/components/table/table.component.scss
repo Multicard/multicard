@@ -6,7 +6,7 @@
   height: 100%;
 
   .table-top {
-    flex: 1 1 20%;
+    flex: 0 0 20%;
     margin: 8px 4px;
 
     .player-top {
@@ -16,7 +16,7 @@
 
   @include small-size {
     .table-center {
-      flex: 1 1 50%;
+      flex: 1 1 60%;
       display: flex;
       flex-direction: column;
 
@@ -44,7 +44,7 @@
 
   @include normal-size {
     .table-center {
-      flex: 1 1 50%;
+      flex: 1 1 60%;
       display: flex;
 
       .table-left, .table-right {
@@ -70,7 +70,7 @@
   }
 
   .table-bottom {
-    flex: 1 1 30%;
+    flex: 0 0 20%;
     padding: 2px;
   }
 }
