@@ -11,6 +11,8 @@ public class GameDTO {
     private Gamestate state;
     private List<PlayerDTO> players = new ArrayList<>();
     private List<StackDTO> stacks = new ArrayList<>();
+    private PlayedCardsDTO playedCards;
+    private ActionDTO lastAction;
 
     public GameDTO(String id, String title, Gamestate state){
         this.id = id;
@@ -56,5 +58,21 @@ public class GameDTO {
 
     public void setState(Gamestate state) {
         this.state = state;
+    }
+
+    public PlayedCardsDTO getPlayedCards() {
+        return playedCards;
+    }
+
+    public void setPlayedCards(PlayedCardsDTO playedCards) {
+        this.playedCards = playedCards;
+    }
+
+    public ActionDTO getLastAction() {
+        return lastAction;
+    }
+
+    public void setLastAction(ActionDTO lastAction) {
+        this.lastAction = lastAction;
     }
 }

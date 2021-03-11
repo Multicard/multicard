@@ -7,6 +7,7 @@ public enum Action {
     CLIENT_START_GAME,
     CLIENT_REQUEST_STATE,
     CLIENT_CARD_PLAYED,
+    CLIENT_PLAYED_CARDS_TAKEN,
 
     // Messages vom Backend ans UI
     START_GAME,

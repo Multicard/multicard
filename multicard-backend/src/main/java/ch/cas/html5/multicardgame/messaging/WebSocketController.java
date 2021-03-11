@@ -1,7 +1,7 @@
 package ch.cas.html5.multicardgame.messaging;
 
 import ch.cas.html5.multicardgame.control.GameControlService;
-import ch.cas.html5.multicardgame.dto.GameMessage;
+import ch.cas.html5.multicardgame.messages.GameMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
