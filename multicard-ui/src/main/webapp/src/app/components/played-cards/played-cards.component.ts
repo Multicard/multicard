@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
-import {PlayedCard, PlayedCards} from '../../../app-gen/generated-model';
+import {PlayedCardDTO, PlayedCardsDTO} from '../../../app-gen/generated-model';
 import {GameService} from '../../services/game.service';
 
 @Component({
@@ -11,12 +11,12 @@ import {GameService} from '../../services/game.service';
 export class PlayedCardsComponent implements OnInit, OnChanges {
 
   @Input()
-  public playedCards?: PlayedCards;
+  public playedCards?: PlayedCardsDTO;
 
   @Input()
   public playerIds!: string[];
 
-  cards: PlayedCard[][] = new Array(4);
+  cards: PlayedCardDTO[][] = new Array(4);
 
   constructor(
     private gameService: GameService
@@ -26,7 +26,7 @@ export class PlayedCardsComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.cards = new Array(4).fill([]).map(() => new Array<PlayedCard>());
+    this.cards = new Array(4).fill([]).map(() => new Array<PlayedCardDTO>());
     if (this.playedCards?.cards !== undefined) {
       this.playedCards.cards.forEach((c) => {
         this.cards[this.playerIds.findIndex(pId => pId === c.playerId)].push(c);

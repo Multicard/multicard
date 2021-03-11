@@ -5,7 +5,7 @@ import {RxStompService} from '@stomp/ng2-stompjs';
 import {Message} from '@stomp/stompjs';
 import {HttpClient} from '@angular/common/http';
 import {take} from 'rxjs/operators';
-import {Action, CardDTO, GameDTO, GameMessage, Gamestate} from '../../app-gen/generated-model';
+import {Action, CardDTO, GameDTO, GameMessage, Gamestate, GameStateMessage} from '../../app-gen/generated-model';
 
 const restApiUrl = '/api/Games';
 
@@ -110,13 +110,14 @@ export class GameService implements OnDestroy {
     console.log('message of type=' + message.command + ' received');
     switch (message.command) {
       case Action.GAME_STATE:
-        const sortedPLayers = message.game.players.sort((p1, p2) => p1.position - p2.position);
+        const gameStateMessage = message as GameStateMessage;
+        const sortedPLayers = gameStateMessage.game.players.sort((p1, p2) => p1.position - p2.position);
         const indexCurrUser = sortedPLayers.findIndex(p => p.id === PLAYER_ID);
         // sortiere die Players so, dass der erste PLayer in der Liste dem current User entspricht
-        message.game.players = [...message.game.players.slice(indexCurrUser),
-          ...message.game.players.slice(0, indexCurrUser)];
+        gameStateMessage.game.players = [...gameStateMessage.game.players.slice(indexCurrUser),
+          ...gameStateMessage.game.players.slice(0, indexCurrUser)];
 
-        this.gameSubject.next(message.game);
+        this.gameSubject.next(gameStateMessage.game);
         break;
 
       case Action.START_GAME:

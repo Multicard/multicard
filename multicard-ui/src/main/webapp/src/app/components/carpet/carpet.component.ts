@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {PlayedCards, StackDTO} from '../../../app-gen/generated-model';
+import {PlayedCardsDTO, StackDTO} from '../../../app-gen/generated-model';
 
 @Component({
   selector: 'mc-carpet',
@@ -12,7 +12,7 @@ export class CarpetComponent implements OnInit {
   public stacks!: StackDTO[];
 
   @Input()
-  public playedCards?: PlayedCards;
+  public playedCards?: PlayedCardsDTO;
 
   @Input()
   public playerIds!: string[];
