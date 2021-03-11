@@ -1,29 +1,29 @@
 <div class="played-cards">
   <div class="played-cards-area-top">
-    <div *ngIf="!playedCards?.onSameStack">
+    <div *ngIf="!playedCards?.onSameStack" class="played-area-cards">
       <mc-card-pile [cards]="cards[2]" cardCssClass="table-card"></mc-card-pile>
     </div>
   </div>
   <div class="played-cards-area-center">
     <div class="played-cards-area-left">
-      <div *ngIf="!playedCards?.onSameStack">
+      <div *ngIf="!playedCards?.onSameStack" class="played-area-cards">
         <mc-card-pile [cards]="cards[1]" cardCssClass="table-card"></mc-card-pile>
       </div>
     </div>
     <div class="played-cards-area-middle">
-      <div *ngIf="playedCards?.onSameStack" class="played-cards-target" cdkDropList [id]="'played-cards-target'" (cdkDropListDropped)="cardDroppedMiddle($event)">
+      <div *ngIf="playedCards?.onSameStack" class="played-cards-target played-area-cards" cdkDropList [id]="'played-cards-target'" (cdkDropListDropped)="cardDroppedMiddle($event)">
         <mc-card-pile [cards]="playedCards?.cards" cardCssClass="table-card"></mc-card-pile>
       </div>
       <ng-content></ng-content>
     </div>
     <div class="played-cards-area-right">
-      <div *ngIf="!playedCards?.onSameStack">
+      <div *ngIf="!playedCards?.onSameStack" class="played-area-cards">
         <mc-card-pile [cards]="cards[3]" cardCssClass="table-card"></mc-card-pile>
       </div>
     </div>
   </div>
   <div class="played-cards-area-bottom">
-    <div *ngIf="!playedCards?.onSameStack" class="played-cards-target" cdkDropList [id]="'played-cards-target'" (cdkDropListDropped)="cardDroppedBottom($event)">
+    <div *ngIf="!playedCards?.onSameStack" class="played-cards-target played-area-cards" cdkDropList [id]="'played-cards-target'" (cdkDropListDropped)="cardDroppedBottom($event)">
       <mc-card-pile [cards]="cards[0]" cardCssClass="table-card"></mc-card-pile>
     </div>
   </div>
