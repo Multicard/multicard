@@ -39,6 +39,14 @@ public class Player {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Stack> stacks = new HashSet<>();
 
+    @JsonIgnoreProperties("player")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Action> actions = new HashSet<>();
+
+    @JsonIgnoreProperties("player")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PlayedCard> playedcards = new HashSet<>();
+
     public String getId() {
         return id;
     }
@@ -94,4 +102,20 @@ public class Player {
     public Boolean getPlayerReady() {return isPlayerReady; }
 
     public void setPlayerReady(Boolean playerReady) {isPlayerReady = playerReady; }
+
+    public Set<Action> getActions() {
+        return actions;
+    }
+
+    public void setActions(Set<Action> actions) {
+        this.actions = actions;
+    }
+
+    public Set<PlayedCard> getPlayedcards() {
+        return playedcards;
+    }
+
+    public void setPlayedcards(Set<PlayedCard> playedcards) {
+        this.playedcards = playedcards;
+    }
 }
