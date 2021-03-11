@@ -8,6 +8,8 @@ public enum Action {
     CLIENT_REQUEST_STATE,
     CLIENT_CARD_PLAYED,
     CLIENT_PLAYED_CARDS_TAKEN,
+    CLIENT_REVERT_LAST_PLAYER_ACTION,
+    CLIENT_REVERT_ACTION,
 
     // Messages vom Backend ans UI
     START_GAME,
