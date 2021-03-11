@@ -12,18 +12,22 @@ export interface GameDTO {
 }
 
 export interface GameMessage {
+    messageName: "GameMessage" | "GameStateMessage" | "PlayedCardMessage" | "RevertLastPlayerActionMessage";
     command: Action;
 }
 
 export interface GameStateMessage extends GameMessage {
+    messageName: "GameStateMessage";
     game: GameDTO;
 }
 
 export interface PlayedCardMessage extends GameMessage {
+    messageName: "PlayedCardMessage";
     card: CardDTO;
 }
 
 export interface RevertLastPlayerActionMessage extends GameMessage {
+    messageName: "RevertLastPlayerActionMessage";
     card: CardDTO;
 }
 
@@ -72,6 +76,8 @@ export interface PlayedCardDTO extends CardDTO {
 
 export interface Comparable<T> {
 }
+
+export type GameMessageUnion = GameStateMessage | PlayedCardMessage | RevertLastPlayerActionMessage;
 
 export enum Gamestate {
     INITIAL = "INITIAL",
