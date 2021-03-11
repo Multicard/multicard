@@ -1,10 +1,13 @@
-<div class="user-player" cdkDropList cdkDropListConnectedTo="played-cards-target">
-  <div class="card-wrapper" *ngFor="let card of handCards">
-    <div class="user-player-card" [cdkDragData]="card" cdkDrag (dblclick)="handOutCard(card)">
-      <img [src]="getCardImage(card)">
+<div class="user-player" >
+  <div class="user-player-cards" cdkDropList cdkDropListConnectedTo="played-cards-drop-target">
+    <div class="card-wrapper" *ngFor="let card of handCards">
+      <div class="user-player-card" cdkDrag [cdkDragData]="card" (dblclick)="handOutCard(card)">
+        <img [src]="getCardImage(card)">
+      </div>
     </div>
   </div>
-  <div class="stack">
-    <mc-card-pile [cards]="player.stacks[0]?.cards" cardCssClass="user-player-card"></mc-card-pile>
+  <div class="stack-cards" cdkDropList id="user-stack-drop-target"
+       (cdkDropListDropped)="tableCardsDroppedOnStack($event)">
+    <mc-card-pile cdkDrag [cards]="player.stacks[0]?.cards" cardCssClass="user-player-card"></mc-card-pile>
   </div>
 </div>

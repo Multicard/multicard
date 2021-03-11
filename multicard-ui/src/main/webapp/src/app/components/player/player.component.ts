@@ -12,12 +12,8 @@ const translationXPerCardInPixels = 7;
 })
 export class PlayerComponent implements OnInit, OnChanges {
 
-  @Input()
-  public player!: PlayerDTO;
-
-  @Input()
-  public turnNameAround = false;
-
+  @Input() public player!: PlayerDTO;
+  @Input() public turnNameAround = false;
   public handCards: CardDTO[] = [];
 
   constructor() {

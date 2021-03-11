@@ -8,14 +8,9 @@ import {PlayedCardsDTO, StackDTO} from '../../../app-gen/generated-model';
 })
 export class CarpetComponent implements OnInit {
 
-  @Input()
-  public stacks!: StackDTO[];
-
-  @Input()
-  public playedCards?: PlayedCardsDTO;
-
-  @Input()
-  public playerIds!: string[];
+  @Input() public stacks!: StackDTO[];
+  @Input() public playedCards?: PlayedCardsDTO;
+  @Input() public playerIds!: string[];
 
   constructor() {
   }

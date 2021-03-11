@@ -5,13 +5,22 @@ import {RxStompService} from '@stomp/ng2-stompjs';
 import {Message} from '@stomp/stompjs';
 import {HttpClient} from '@angular/common/http';
 import {take} from 'rxjs/operators';
-import {Action, CardDTO, GameDTO, GameMessage, Gamestate, GameStateMessage} from '../../app-gen/generated-model';
+import {
+  Action,
+  CardDTO,
+  GameDTO,
+  GameMessage,
+  Gamestate,
+  GameStateMessage,
+  PlayedCardMessage,
+  PlayedCardsDTO
+} from '../../app-gen/generated-model';
 
 const restApiUrl = '/api/Games';
 
 // TODO: Spiel ID und Player ID dynamisch lesen
-const GAME_ID = 'EA9CA14C-AA81-4A62-8536-E68099975130';
-const PLAYER_ID = '45BC9F58-51D0-44D4-9E66-DD40C8C2B2BD';
+export const GAME_ID = 'EA9CA14C-AA81-4A62-8536-E68099975130';
+export const PLAYER_ID = '45BC9F58-51D0-44D4-9E66-DD40C8C2B2BD';
 
 @Injectable({providedIn: 'root'})
 export class GameService implements OnDestroy {
@@ -30,11 +39,11 @@ export class GameService implements OnDestroy {
     this.rxStompService.connected$
       .pipe(take(1))
       .subscribe(() => {
-        this.sendWebsocketMessage(Action.CLIENT_GAME_READY);
+        this.sendWebsocketGameMessage(Action.CLIENT_GAME_READY);
         // this.http.put<string>(restApiUrl + '/EA9CA14C-AA81-4A62-8536-E68099975130', '').subscribe(() =>
         //   this.sendWebsocketMessage(Action.CLIENT_PLAYER_READY)
         // );
-        this.sendWebsocketMessage(Action.CLIENT_PLAYER_READY);
+        this.sendWebsocketGameMessage(Action.CLIENT_PLAYER_READY);
       });
 
     // TODO remove Mockcall
@@ -62,7 +71,7 @@ export class GameService implements OnDestroy {
 
       game.state = Gamestate.STARTED;
       this.gameStartedByThisClient = true;
-      this.sendWebsocketMessage(Action.CLIENT_START_GAME);
+      this.sendWebsocketGameMessage(Action.CLIENT_START_GAME);
 
       // TODO remove Mockcall
       //this.initMockWebsocketGameStartMessages();
@@ -86,10 +95,38 @@ export class GameService implements OnDestroy {
     game = {...game, players: [{...game.players[0]}, ...game.players.slice(1)]};
     this.gameSubject.next(game);
 
-    this.sendWebsocketMessage(Action.CLIENT_CARD_PLAYED, card);
+    this.sendWebsocketPlayedCardMessage(Action.CLIENT_CARD_PLAYED, card);
 
     // TODO remove Mockcall
     this.initMockWebsocketGameCardAddedMessage(card);
+  }
+
+  tableCardsTakenByUser(cards: CardDTO[]) {
+    let game = this.gameSubject.getValue();
+    if (!game.players[0].stacks) {
+      game.players[0].stacks = [];
+    }
+    if (game.players[0].stacks.length === 0) {
+      game.players[0].stacks.push({id: '', cards: []});
+    }
+
+    game.players[0].stacks[0].cards = [...game.players[0].stacks[0].cards, ...cards];
+    game.playedCards.cards = [];
+    game = {...game, players: [{...game.players[0]}, ...game.players.slice(1)]};
+    this.gameSubject.next(game);
+
+    this.sendWebsocketGameMessage(Action.CLIENT_PLAYED_CARDS_TAKEN);
+  }
+
+  isLastCardPLayedByUser(playedCards: PlayedCardsDTO | undefined) {
+    if (playedCards && playedCards.cards) {
+      return playedCards.cards[playedCards.cards.length - 1]?.playerId === PLAYER_ID;
+    }
+    return false;
+  }
+
+  haveAllPlayersPlayed(playedCards: PlayedCardsDTO | undefined) {
+    return new Set(playedCards?.cards?.map(c => c.playerId)).size >= 4;
   }
 
   ngOnDestroy(): void {
@@ -147,7 +184,7 @@ export class GameService implements OnDestroy {
         this.giveCards(++i, numberOfTotalCardsPerPlayer, numberOfPLayerCardsPerTurn, numberOfPLayers);
       }, 200);
     } else {
-      this.sendWebsocketMessage(Action.CLIENT_REQUEST_STATE);
+      this.sendWebsocketGameMessage(Action.CLIENT_REQUEST_STATE);
 
       // TODO remove Mockcall
       //this.initMockWebsocketGameStartedMessages();
@@ -158,10 +195,20 @@ export class GameService implements OnDestroy {
     return game?.players[0]?.organizer;
   }
 
-  private sendWebsocketMessage(command: Action, card: CardDTO | undefined = undefined) {
+  private sendWebsocketGameMessage(command: Action) {
+    const message: GameMessage = {command, messageName: 'GameMessage'};
+    this.sendWebsocketMessage(message);
+  }
+
+  private sendWebsocketPlayedCardMessage(command: Action, card: CardDTO) {
+    const message: PlayedCardMessage = {command, card, messageName: 'PlayedCardMessage'};
+    this.sendWebsocketMessage(message);
+  }
+
+  private sendWebsocketMessage(message: GameMessage) {
     this.rxStompService.publish({
       destination: `/app/${GAME_ID}/${PLAYER_ID}`,
-      body: JSON.stringify({command, card})
+      body: JSON.stringify(message)
     });
   }
 
@@ -572,12 +619,27 @@ export class GameService implements OnDestroy {
   }
 
   private initMockWebsocketGameCardAddedMessage(card: CardDTO) {
-    const game = {...this.gameSubject.getValue()};
-    game.playedCards = {cards: [{...card, playerId: PLAYER_ID}], onSameStack: false};
     setTimeout(
-      () => this.handleWebsocketMessage({
+      () => {
+        const game = {...this.gameSubject.getValue()};
+        game.playedCards = {
+          cards: [{...card, playerId: PLAYER_ID}],
+          onSameStack: false
+        };
+        this.handleWebsocketMessage({
+          command: Action.GAME_STATE,
+          game
+        } as any as GameMessage);
+      }, 1000);
+
+    setTimeout(() => {
+      const game = {...this.gameSubject.getValue()};
+      game.playedCards.cards = [...game.playedCards.cards, {...card, playerId: game.players[1].id},
+        {...card, playerId: game.players[2].id}, {...card, playerId: game.players[3].id}];
+      this.handleWebsocketMessage({
         command: Action.GAME_STATE,
         game
-      } as any as GameMessage), 1000);
+      } as any as GameMessage);
+    }, 2000);
   }
 }

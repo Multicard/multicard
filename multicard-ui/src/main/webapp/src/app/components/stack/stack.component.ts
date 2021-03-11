@@ -21,11 +21,8 @@ import {getCardImage} from '../../model/cardHelper';
 })
 export class StackComponent implements OnInit, OnDestroy {
 
-  @Input()
-  public stack!: StackDTO;
-
+  @Input() public stack!: StackDTO;
   translateExpression = '';
-
   private unsubscribe = new Subject();
 
   constructor(private gameService: GameService) {

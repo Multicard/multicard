@@ -8,11 +8,8 @@ import {CardDTO} from '../../../app-gen/generated-model';
 })
 export class CardPileComponent implements OnInit {
 
-  @Input()
-  public cards?: CardDTO[] = [];
-
-  @Input()
-  public cardCssClass = '';
+  @Input() public cards?: CardDTO[] = [];
+  @Input() public cardCssClass = '';
 
   constructor() {
   }
@@ -21,7 +18,8 @@ export class CardPileComponent implements OnInit {
   }
 
   public get3DMargin(i: number): number {
-    return 2 * i;
+    const singleMargin = this.cards && this.cards.length > 10 ? 0.5 : 1;
+    return singleMargin * i;
   }
 
   public getCardImage(card: CardDTO) {

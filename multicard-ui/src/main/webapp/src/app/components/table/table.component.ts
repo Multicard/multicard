@@ -8,9 +8,7 @@ import {GameDTO} from '../../../app-gen/generated-model';
 })
 export class TableComponent implements OnInit, OnChanges {
 
-  @Input()
-  gameState!: GameDTO;
-
+  @Input() gameState!: GameDTO;
   playerIdList!: string[];
 
   constructor() {

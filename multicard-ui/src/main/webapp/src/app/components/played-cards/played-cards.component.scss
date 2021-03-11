@@ -1,3 +1,5 @@
+@import "src/styles/mixins";
+
 :host {
   display: block;
   width: 100%;
@@ -6,42 +8,65 @@
   .played-cards {
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
 
-    .cdk-drop-list-receiving {
-      border-color: red;
-      border-style: solid;
-      border-width: 4px;
-      background-color: rgba(255, 00, 00, 0.3);
-    }
-
-    .played-cards-area-top, .played-cards-area-bottom {
-      flex: 1 1 30%;
-    }
-
-    .played-cards-area-center {
-      flex: 1 1 40%;
-      display: flex;
-
-      .played-cards-area-left, .played-cards-area-right {
-        flex: 1 1 30%
-      }
-
-      .played-cards-area-middle {
-        flex: 1 1 20%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-    }
-
-    .played-area-cards {
-      display: flex;
+    .played-cards-drag-area {
       width: 100%;
       height: 100%;
-      justify-content: center;
-      align-items: center;
+      display: flex;
+      flex-direction: column;
+
+      .undo-button {
+        position: absolute;
+      }
+
+      .cdk-drop-list-receiving {
+        border-color: red;
+        border-style: solid;
+        border-width: 4px;
+        background-color: rgba(255, 00, 00, 0.3);
+      }
+
+      .table-cards-draggeable {
+        cursor: grab;
+      }
+
+      .played-cards-area-top, .played-cards-area-bottom {
+        flex: 1 1 30%;
+      }
+
+      .played-cards-area-center {
+        flex: 1 1 40%;
+        display: flex;
+
+        .played-cards-area-left, .played-cards-area-right {
+          flex: 1 1 30%
+        }
+
+        .played-cards-area-middle {
+          flex: 1 1 20%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+
+      .played-area-cards {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+      }
     }
   }
+}
+
+.drag-table-card-placeholder {
+  @include table-card;
+
+  border-color: red;
+  border-style: solid;
+  border-width: 2px;
+  overflow: visible;
 }

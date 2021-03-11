@@ -1,20 +1,38 @@
 @import "src/styles/mixins";
 
 .user-player {
-  display: flex;
   width: 100%;
   height: 100%;
-  justify-content: center;
-  align-items: center;
+  display: flex;
 
-  .card-wrapper {
-    overflow: hidden;
-    cursor: grab;
+  .user-player-cards {
+    display: flex;
+    flex: 1 1;
+    justify-content: center;
+    align-items: center;
+
+    .card-wrapper {
+      overflow: hidden;
+      cursor: grab;
+    }
+
+    .card-wrapper:last-child, .card-wrapper:hover {
+      overflow: visible;
+    }
   }
 
-  .card-wrapper:last-child, .card-wrapper:hover {
-    overflow: visible;
+  .stack-cards {
+    flex: 0 0 100px;
   }
+}
+
+.cdk-drop-list-receiving.stack-cards {
+  @include table-card;
+  flex: 1 1 100%;
+  border-color: red;
+  border-style: solid;
+  border-width: 4px;
+  background-color: rgba(255, 00, 00, 0.3);
 }
 
 .user-player-card.cdk-drag-placeholder {
@@ -27,4 +45,3 @@
     border-width: 2px;
   }
 }
-
