@@ -23,6 +23,10 @@ export interface PlayedCardMessage extends GameMessage {
     card: CardDTO;
 }
 
+export interface RevertLastPlayerActionMessage extends GameMessage {
+    card: CardDTO;
+}
+
 export interface PlayerDTO {
     id: string;
     name: string;
@@ -83,6 +87,8 @@ export enum Action {
     CLIENT_REQUEST_STATE = "CLIENT_REQUEST_STATE",
     CLIENT_CARD_PLAYED = "CLIENT_CARD_PLAYED",
     CLIENT_PLAYED_CARDS_TAKEN = "CLIENT_PLAYED_CARDS_TAKEN",
+    CLIENT_REVERT_LAST_PLAYER_ACTION = "CLIENT_REVERT_LAST_PLAYER_ACTION",
+    CLIENT_REVERT_ACTION = "CLIENT_REVERT_ACTION",
     START_GAME = "START_GAME",
     GAME_STATE = "GAME_STATE",
 }
