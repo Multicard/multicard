@@ -27,6 +27,13 @@ public class Card {
     @ManyToOne(optional = true)
     private Hand hand;
 
+    @OneToOne(mappedBy = "playedCard")
+    private Player player;
+
+    @JsonIgnoreProperties("playedcards")
+    @ManyToOne(optional = true)
+    private PlayedCards playedcards;
+
 //    @OneToOne(mappedBy = "topCard")
 //    private Stack stackTopCard;
 
@@ -66,7 +73,23 @@ public class Card {
 
     public void setSort(int sort) { this.sort = sort; }
 
-//    public Stack getStackTopCard() { return stackTopCard; }
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public PlayedCards getPlayedcards() {
+        return playedcards;
+    }
+
+    public void setPlayedcards(PlayedCards playedcards) {
+        this.playedcards = playedcards;
+    }
+
+    //    public Stack getStackTopCard() { return stackTopCard; }
 //
 //    public void setStackTopCard(Stack stackTopCard) {
 //        this.stackTopCard = stackTopCard;

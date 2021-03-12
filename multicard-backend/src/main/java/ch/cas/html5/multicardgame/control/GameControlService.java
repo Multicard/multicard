@@ -250,30 +250,23 @@ public class GameControlService {
         }
     }
 
-    private PlayedCard convertFromCard(Card card, Player player){
-        PlayedCard playedCard = new PlayedCard();
-        playedCard.setName(card.getName());
-        playedCard.setSort(card.getSort());
-        playedCard.setPlayer(player);
-        return playedCard;
-    }
-
     private void playCardFromPlayerToPlayedCards(Game game, String playerId, String cardId){
         Card playedCard = cardService.getCard(cardId);
         Player player = playerService.getPlayer(playerId);
 
-        //remove Card from Player.Hand
-        player.getHand().getCards().remove(playedCard);
-        cardService.deleteCard(playedCard);
-
+        //add Card to Player.PlayedCard and remove from Player.Hand
+        player.setPlayedCard(playedCard);
+        playedCard.setPlayer(player);
+        playedCard.setHand(null);
+//        player.getHand().getCards().remove(playedCard);
 
         //add card to Game.PlayedCards
         if (game.getPlayedcards() == null){
             game.setPlayedcards(new PlayedCards());
         }
-        PlayedCard p2 = convertFromCard(playedCard, player);
-        game.getPlayedcards().getPlayedcards().add(p2);
-        p2.setPlayedcards(game.getPlayedcards());
+        game.getPlayedcards().setOnSameStack(Boolean.FALSE);
+        game.getPlayedcards().getPlayedcards().add(playedCard);
+        playedCard.setPlayedcards(game.getPlayedcards());
 
         //store action
         ch.cas.html5.multicardgame.entity.Action action = new ch.cas.html5.multicardgame.entity.Action();

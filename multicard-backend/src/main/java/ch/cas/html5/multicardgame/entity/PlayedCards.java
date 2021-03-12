@@ -20,7 +20,7 @@ public class PlayedCards {
 
     @JsonIgnoreProperties("playedcards")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "playedcards", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PlayedCard> playedcards = new HashSet<>();
+    private Set<Card> playedcards = new HashSet<>();
 
     @OneToOne(mappedBy = "playedcards")
     private Game game;
@@ -42,11 +42,11 @@ public class PlayedCards {
         isOnSameStack = onSameStack;
     }
 
-    public Set<PlayedCard> getPlayedcards() {
+    public Set<Card> getPlayedcards() {
         return playedcards;
     }
 
-    public void setPlayedcards(Set<PlayedCard> playedcards) {
+    public void setPlayedcards(Set<Card> playedcards) {
         this.playedcards = playedcards;
     }
 
