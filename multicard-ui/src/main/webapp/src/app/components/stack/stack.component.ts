@@ -50,7 +50,7 @@ export class StackComponent implements OnInit, OnDestroy {
     if (action.action === ActionType.drawCard) {
       switch (action.direction) {
         case DirectionType.down:
-          this.translateExpression = 'translatey(50vh) rotate(180deg)';
+          this.translateExpression = 'translatey(30vh) rotate(180deg)';
           break;
         case DirectionType.left:
           this.translateExpression = 'translatex(-40vw) rotate(90deg)';
