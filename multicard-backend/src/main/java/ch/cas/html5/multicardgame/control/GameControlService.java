@@ -7,6 +7,7 @@ import ch.cas.html5.multicardgame.enums.Action;
 import ch.cas.html5.multicardgame.enums.Gamestate;
 import ch.cas.html5.multicardgame.messages.GameMessage;
 import ch.cas.html5.multicardgame.messages.GameStateMessage;
+import ch.cas.html5.multicardgame.messages.PlayedCardMessage;
 import ch.cas.html5.multicardgame.messaging.WebSocketController;
 import ch.cas.html5.multicardgame.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -239,8 +240,9 @@ public class GameControlService {
 
         if (gameMessage.getCommand().equals(Action.CLIENT_CARD_PLAYED)) {
 
-            //todo remove
-            Card toPlay = playerService.getPlayer(playerId).getHand().getCards().stream().findFirst().get();
+            PlayedCardMessage msg = (PlayedCardMessage) gameMessage;
+            String cardId = msg.getCard().getId();
+            Card toPlay = cardService.getCard(cardId);
             System.out.println("Card to play: " + toPlay.getName());
             playCardFromPlayerToPlayedCards(game, playerId, toPlay.getId());
             convertAndPublishGame(game, null);
@@ -248,10 +250,11 @@ public class GameControlService {
         }
     }
 
-    private PlayedCard convertFromCard(Card card){
+    private PlayedCard convertFromCard(Card card, Player player){
         PlayedCard playedCard = new PlayedCard();
         playedCard.setName(card.getName());
         playedCard.setSort(card.getSort());
+        playedCard.setPlayer(player);
         return playedCard;
     }
 
@@ -268,7 +271,7 @@ public class GameControlService {
         if (game.getPlayedcards() == null){
             game.setPlayedcards(new PlayedCards());
         }
-        PlayedCard p2 = convertFromCard(playedCard);
+        PlayedCard p2 = convertFromCard(playedCard, player);
         game.getPlayedcards().getPlayedcards().add(p2);
         p2.setPlayedcards(game.getPlayedcards());
 
