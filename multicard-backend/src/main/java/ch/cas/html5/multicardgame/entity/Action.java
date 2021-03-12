@@ -1,12 +1,13 @@
 package ch.cas.html5.multicardgame.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@SequenceGenerator(name="action_seq", initialValue=1, allocationSize=10)
 @Table(name="action")
 public class Action {
 
@@ -22,8 +23,8 @@ public class Action {
     @ManyToOne(optional = true)
     private Player player;
 
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq")
-    private long sort;
+    @CreationTimestamp
+    private Date created_at;
 
     public String getId() {
         return id;
@@ -49,11 +50,11 @@ public class Action {
         this.player = player;
     }
 
-    public long getSort() {
-        return sort;
+    public Date getCreated_at() {
+        return created_at;
     }
 
-    public void setSort(long sort) {
-        this.sort = sort;
+    public void setCreated_at(Date sort) {
+        this.created_at = sort;
     }
 }

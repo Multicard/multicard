@@ -3,7 +3,6 @@ package ch.cas.html5.multicardgame.control;
 import ch.cas.html5.multicardgame.dto.CardDTO;
 import ch.cas.html5.multicardgame.dto.PlayedCardDTO;
 import ch.cas.html5.multicardgame.entity.Card;
-import ch.cas.html5.multicardgame.entity.PlayedCard;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,18 +21,18 @@ public final class EntityToDtoConverter {
         return cardsdto;
     }
 
-    public List<PlayedCardDTO> convertPlayedCards(Set<PlayedCard> playedcards){
-
+    public List<PlayedCardDTO> convertPlayedCards(Set<Card> cards){
         List<PlayedCardDTO> cardsdto = new ArrayList() ;
-        for (PlayedCard card : playedcards){
-            PlayedCardDTO playeddto = new PlayedCardDTO();
-            playeddto.setName(card.getName());
-            playeddto.setFaceUp(true);
-            playeddto.setSort(card.getSort());
-            playeddto.setPlayerId(card.getPlayer().getId());
-            cardsdto.add(playeddto);
+        for (Card card : cards){
+            PlayedCardDTO playedCard = new PlayedCardDTO();
+            playedCard.setId(card.getId());
+            playedCard.setName(card.getName());
+            playedCard.setSort(card.getSort());
+            playedCard.setFaceUp(Boolean.TRUE);
+            playedCard.setPlayerId(card.getPlayer().getId());
+            cardsdto.add(playedCard);
         }
+        Collections.sort(cardsdto);
         return cardsdto;
     }
-
 }
