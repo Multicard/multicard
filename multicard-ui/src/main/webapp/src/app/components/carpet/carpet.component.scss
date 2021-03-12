@@ -11,6 +11,7 @@
 
     @include small-size {
       width: 96vmin;
+      max-width: 50vh;
     }
 
     @include normal-size {

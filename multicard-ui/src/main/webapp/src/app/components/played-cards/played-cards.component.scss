@@ -65,6 +65,9 @@
 .drag-table-card-placeholder {
   @include table-card;
 
+  position: absolute;
+  left: 0;
+  top: 0;
   border-color: red;
   border-style: solid;
   border-width: 2px;

@@ -8,6 +8,6 @@
   </div>
   <div class="stack-cards" cdkDropList id="user-stack-drop-target"
        (cdkDropListDropped)="tableCardsDroppedOnStack($event)">
-    <mc-card-pile cdkDrag [cards]="player.stacks[0]?.cards" cardCssClass="user-player-card"></mc-card-pile>
+    <mc-card-pile [cards]="player.stacks[0]?.cards" cardCssClass="user-player-card"></mc-card-pile>
   </div>
 </div>
