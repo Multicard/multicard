@@ -1,7 +1,7 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {CardDTO, PlayerDTO} from '../../../app-gen/generated-model';
-import {createCardsForHand, getCardImage} from '../../model/cardHelper';
-import {GameService} from '../../services/game.service';
+import {CardDTO, PlayerDTO} from '../../../../../app-gen/generated-model';
+import {createCardsForHand, getCardImage} from '../../../../model/cardHelper';
+import {GameService} from '../../../../services/game.service';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 
 @Component({

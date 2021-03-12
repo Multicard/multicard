@@ -18,13 +18,11 @@ import {
 
 const restApiUrl = '/api/Games';
 
-// TODO: Spiel ID und Player ID dynamisch lesen
-export const GAME_ID = 'EA9CA14C-AA81-4A62-8536-E68099975130';
-export const PLAYER_ID = '45BC9F58-51D0-44D4-9E66-DD40C8C2B2BD';
-
 @Injectable({providedIn: 'root'})
 export class GameService implements OnDestroy {
 
+  private gameId!: string;
+  private playerId!: string;
   private stompQueueSubscription!: Subscription;
   // @ts-ignore
   private gameSubject: BehaviorSubject<GameDTO> = new BehaviorSubject<GameDTO>(null);
@@ -34,12 +32,17 @@ export class GameService implements OnDestroy {
   constructor(private http: HttpClient, private rxStompService: RxStompService) {
   }
 
-  initGame(): Observable<GameDTO> {
+  initGame(gameId: string, playerId: string): Observable<GameDTO> {
+    this.gameId = gameId;
+    this.playerId = playerId;
     this.subscribeToTopic();
     this.rxStompService.connected$
       .pipe(take(1))
       .subscribe(() => {
-        this.sendWebsocketGameMessage(Action.CLIENT_GAME_READY);
+        // TODO Senden von Game Ready zu der Konfiguration des Games verschieben
+        if (playerId === '45BC9F58-51D0-44D4-9E66-DD40C8C2B2BD') {
+          this.sendWebsocketGameMessage(Action.CLIENT_GAME_READY);
+        }
         // this.http.put<string>(restApiUrl + '/EA9CA14C-AA81-4A62-8536-E68099975130', '').subscribe(() =>
         //   this.sendWebsocketMessage(Action.CLIENT_PLAYER_READY)
         // );
@@ -89,7 +92,7 @@ export class GameService implements OnDestroy {
     if (!game.playedCards.cards) {
       game.playedCards.cards = [];
     }
-    game.playedCards.cards = [...game.playedCards.cards, {...card, playerId: PLAYER_ID}];
+    game.playedCards.cards = [...game.playedCards.cards, {...card, playerId: this.playerId}];
 
     game.players[0].hand.cards = game.players[0].hand.cards.filter(c => c.id !== card.id);
     game = {...game, players: [{...game.players[0]}, ...game.players.slice(1)]};
@@ -122,7 +125,7 @@ export class GameService implements OnDestroy {
 
   isLastCardPLayedByUser(playedCards: PlayedCardsDTO | undefined) {
     if (playedCards && playedCards.cards) {
-      return playedCards.cards[playedCards.cards.length - 1]?.playerId === PLAYER_ID;
+      return playedCards.cards[playedCards.cards.length - 1]?.playerId === this.playerId;
     }
     return false;
   }
@@ -139,7 +142,7 @@ export class GameService implements OnDestroy {
 
   private subscribeToTopic() {
     this.stompQueueSubscription = this.rxStompService
-      .watch(`/queue/${GAME_ID}/${PLAYER_ID}`)
+      .watch(`/queue/${this.gameId}/${this.playerId}`)
       .subscribe((message: Message) => {
         this.handleWebsocketMessage(JSON.parse(message.body));
       });
@@ -151,7 +154,7 @@ export class GameService implements OnDestroy {
       case Action.GAME_STATE:
         const gameStateMessage = message as GameStateMessage;
         const sortedPLayers = gameStateMessage.game.players.sort((p1, p2) => p1.position - p2.position);
-        const indexCurrUser = sortedPLayers.findIndex(p => p.id === PLAYER_ID);
+        const indexCurrUser = sortedPLayers.findIndex(p => p.id === this.playerId);
         // sortiere die Players so, dass der erste PLayer in der Liste dem current User entspricht
         gameStateMessage.game.players = [...gameStateMessage.game.players.slice(indexCurrUser),
           ...gameStateMessage.game.players.slice(0, indexCurrUser)];
@@ -209,7 +212,7 @@ export class GameService implements OnDestroy {
 
   private sendWebsocketMessage(message: GameMessage) {
     this.rxStompService.publish({
-      destination: `/app/${GAME_ID}/${PLAYER_ID}`,
+      destination: `/app/${this.gameId}/${this.playerId}`,
       body: JSON.stringify(message)
     });
   }
@@ -625,7 +628,7 @@ export class GameService implements OnDestroy {
       () => {
         const game = {...this.gameSubject.getValue()};
         game.playedCards = {
-          cards: [{...card, playerId: PLAYER_ID}],
+          cards: [{...card, playerId: this.playerId}],
           onSameStack: false
         };
         this.handleWebsocketMessage({

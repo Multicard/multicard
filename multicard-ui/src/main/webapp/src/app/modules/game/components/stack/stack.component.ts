@@ -1,11 +1,11 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {Subject} from 'rxjs';
-import {GameService} from '../../services/game.service';
+import {GameService} from '../../../../services/game.service';
 import {takeUntil} from 'rxjs/operators';
-import {CardDTO, StackDTO} from '../../../app-gen/generated-model';
-import {ActionType, DirectionType, StackAction} from '../../model/game.model';
-import {getCardImage} from '../../model/cardHelper';
+import {CardDTO, StackDTO} from '../../../../../app-gen/generated-model';
+import {ActionType, DirectionType, StackAction} from '../../../../model/game.model';
+import {getCardImage} from '../../../../model/cardHelper';
 
 @Component({
   selector: 'mc-stack',

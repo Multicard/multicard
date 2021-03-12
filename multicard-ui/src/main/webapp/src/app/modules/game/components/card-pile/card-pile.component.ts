@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {CardDTO} from '../../../app-gen/generated-model';
+import {CardDTO} from '../../../../../app-gen/generated-model';
 
 @Component({
   selector: 'mc-card-pile',

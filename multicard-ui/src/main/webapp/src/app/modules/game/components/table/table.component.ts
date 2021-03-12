@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {GameDTO} from '../../../app-gen/generated-model';
+import {GameDTO} from '../../../../../app-gen/generated-model';
 
 @Component({
   selector: 'mc-table',

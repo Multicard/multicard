@@ -1,7 +1,7 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
-import {CardDTO, PlayedCardDTO, PlayedCardsDTO} from '../../../app-gen/generated-model';
-import {GameService} from '../../services/game.service';
+import {CardDTO, PlayedCardDTO, PlayedCardsDTO} from '../../../../../app-gen/generated-model';
+import {GameService} from '../../../../services/game.service';
 
 @Component({
   selector: 'mc-played-cards',
