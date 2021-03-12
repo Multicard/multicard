@@ -1,4 +1,4 @@
-<div *ngIf="gameState$ | async as gameState; else loading">
+<div class="game-wrapper" *ngIf="gameState$ | async as gameState; else loading">
   <div class="toolbar">
     <button *ngIf="isGameStarteable(gameState)" class="start-button" color="primary" mat-raised-button
             (click)="startGame()">

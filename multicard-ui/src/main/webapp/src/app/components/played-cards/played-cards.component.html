@@ -17,12 +17,14 @@
       <div class="played-cards-area-middle">
         <div *ngIf="playedCards?.onSameStack" class="played-cards-drop-target played-area-cards" cdkDropList
              [id]="'played-cards-drop-target'" (cdkDropListDropped)="cardDroppedMiddle($event)">
-          <button mat-icon-button *ngIf="isLastCardPLayedByUser" class="undo-button" color="primary" mat-raised-button
-                  (click)="redoLastCardAction()" aria-label="Karte zurücknehmen" title="Karte zurücknehmen">
-            <mat-icon>undo</mat-icon>
-          </button>
-          <mc-card-pile [cards]="playedCards?.cards" cardCssClass="table-card" cdkDragHandle
-                        [ngClass]="{'table-cards-draggeable': isDragAndDropOfCardsAllowed()}"></mc-card-pile>
+          <div class="pile-with-undo-button">
+            <button mat-mini-fab color="primary" *ngIf="isLastCardPLayedByUser" class="undo-button" mat-raised-button
+                    (click)="redoLastCardAction()" aria-label="Karte zurücknehmen" title="Karte zurücknehmen">
+              <mat-icon>undo</mat-icon>
+            </button>
+            <mc-card-pile [cards]="playedCards?.cards" cardCssClass="table-card" cdkDragHandle
+                          [ngClass]="{'table-cards-draggeable': isDragAndDropOfCardsAllowed()}"></mc-card-pile>
+          </div>
         </div>
 
         <ng-content></ng-content>
@@ -38,19 +40,22 @@
     <div class="played-cards-area-bottom">
       <div *ngIf="!playedCards?.onSameStack" class="played-cards-drop-target played-area-cards" cdkDropList
            [id]="'played-cards-drop-target'" (cdkDropListDropped)="cardDroppedBottom($event)">
-       <button mat-icon-button *ngIf="isLastCardPLayedByUser" class="undo-button" color="primary" mat-raised-button
-                (click)="redoLastCardAction()" aria-label="Karte zurücknehmen" title="Karte zurücknehmen">
-          <mat-icon>undo</mat-icon>
-        </button>
-        <mc-card-pile [cards]="cards[0]" cardCssClass="table-card" cdkDragHandle
-                      [ngClass]="{'table-cards-draggeable': isDragAndDropOfCardsAllowed()}">
-          <div *cdkDragPreview>
-            <mc-card-pile [cards]="playedCards?.cards" cardCssClass="table-card" ></mc-card-pile>
-          </div>
-           <div *cdkDragPlaceholder>
-            <mc-card-pile class="drag-table-card-placeholder" [cards]="playedCards?.cards" cardCssClass="table-card" ></mc-card-pile>
-          </div>
-        </mc-card-pile>
+        <div class="pile-with-undo-button">
+          <button mat-mini-fab color="primary" *ngIf="isLastCardPLayedByUser" class="undo-button"
+                  (click)="redoLastCardAction()" aria-label="Karte zurücknehmen" title="Karte zurücknehmen">
+            <mat-icon>undo</mat-icon>
+          </button>
+          <mc-card-pile [cards]="cards[0]" cardCssClass="table-card" cdkDragHandle
+                        [ngClass]="{'table-cards-draggeable': isDragAndDropOfCardsAllowed()}">
+            <div *cdkDragPreview>
+              <mc-card-pile [cards]="playedCards?.cards" cardCssClass="table-card"></mc-card-pile>
+            </div>
+            <div *cdkDragPlaceholder>
+              <mc-card-pile class="drag-table-card-placeholder" [cards]="playedCards?.cards"
+                            cardCssClass="table-card"></mc-card-pile>
+            </div>
+          </mc-card-pile>
+        </div>
       </div>
     </div>
   </div>

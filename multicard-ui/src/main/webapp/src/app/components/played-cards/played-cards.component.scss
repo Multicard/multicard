@@ -15,8 +15,19 @@
       display: flex;
       flex-direction: column;
 
-      .undo-button {
-        position: absolute;
+      .pile-with-undo-button {
+        position: relative;
+
+        .undo-button {
+          position: absolute;
+          right: -20px;
+          bottom: 8px;
+          width: 24px;
+          height: 24px;
+          mat-icon {
+            font-size: 10px !important;
+          }
+        }
       }
 
       .cdk-drop-list-receiving {
