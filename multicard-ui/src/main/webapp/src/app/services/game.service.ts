@@ -13,7 +13,9 @@ import {
   Gamestate,
   GameStateMessage,
   PlayedCardMessage,
-  PlayedCardsDTO
+  PlayedCardsDTO,
+  PlayerDTO,
+  PlayersPositionedMessage
 } from '../../app-gen/generated-model';
 
 const restApiUrl = '/api/Games';
@@ -98,7 +100,7 @@ export class GameService implements OnDestroy {
     game = {...game, players: [{...game.players[0]}, ...game.players.slice(1)]};
     this.gameSubject.next(game);
 
-    this.sendWebsocketPlayedCardMessage(Action.CLIENT_CARD_PLAYED, card);
+    this.sendWebsocketPlayedCardMessage(card);
 
     // TODO remove Mockcall
     this.initMockWebsocketGameCardAddedMessage(card);
@@ -121,6 +123,14 @@ export class GameService implements OnDestroy {
     this.gameSubject.next(game);
 
     this.sendWebsocketGameMessage(Action.CLIENT_PLAYED_CARDS_TAKEN);
+  }
+
+  changePlayerPosition(oldIndex: number, newIndex: number) {
+    const game = this.gameSubject.getValue();
+    game.players.splice(newIndex, 0, game.players.splice(oldIndex, 1)[0]);
+    game.players.forEach((p, i) => p.position = i + 1);
+
+    this.sendWebsocketPlayersPositionedMessage(game.players);
   }
 
   isLastCardPLayedByUser(playedCards: PlayedCardsDTO | undefined) {
@@ -205,8 +215,17 @@ export class GameService implements OnDestroy {
     this.sendWebsocketMessage(message);
   }
 
-  private sendWebsocketPlayedCardMessage(command: Action, card: CardDTO) {
-    const message: PlayedCardMessage = {command, card, messageName: 'PlayedCardMessage'};
+  private sendWebsocketPlayersPositionedMessage(players: PlayerDTO[]) {
+    const message: PlayersPositionedMessage = {
+      command: Action.CLIENT_PLAYERS_POSITIONED,
+      players,
+      messageName: 'PlayersPositionedMessage'
+    };
+    this.sendWebsocketMessage(message);
+  }
+
+  private sendWebsocketPlayedCardMessage(card: CardDTO) {
+    const message: PlayedCardMessage = {command: Action.CLIENT_CARD_PLAYED, card, messageName: 'PlayedCardMessage'};
     this.sendWebsocketMessage(message);
   }
 

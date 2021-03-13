@@ -78,3 +78,25 @@
     padding: 2px;
   }
 }
+
+.cdk-drag {
+  cursor: grab;
+}
+
+.cdk-drag.cdk-drag-disabled {
+  cursor: auto;
+}
+
+.cdk-drop-list-receiving {
+  border-color: red;
+  border-style: solid;
+  border-width: 4px;
+  background-color: rgba(255, 00, 00, 0.3);
+}
+
+.cdk-drop-list.cdk-drop-list-dragging {
+  border-color: green;
+  border-style: solid;
+  border-width: 4px;
+  background-color: rgba(00, 128, 00, 0.3);
+}
