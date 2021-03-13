@@ -38,6 +38,10 @@ export class PlayedCardsComponent implements OnInit, OnChanges {
     this.haveAllPlayersPlayed = this.gameService.haveAllPlayersPlayed(this.playedCards);
   }
 
+  getCardImage(card: CardDTO) {
+    return 'assets/cards/' + (card.faceUp ? card.name : 'BLUE_BACK') + '.svg';
+  }
+
   cardDroppedMiddle(event: CdkDragDrop<string[]>) {
     console.log('card dropped onto carpet', event);
     this.gameService.cardPlayed(event.item.data);
@@ -52,11 +56,13 @@ export class PlayedCardsComponent implements OnInit, OnChanges {
     return this.haveAllPlayersPlayed;
   }
 
-  redoLastCardAction() {
-
+  takePlayedCards() {
+    if (this.isDragAndDropOfCardsAllowed() && this.playedCards?.cards) {
+      this.gameService.tableCardsTakenByUser(this.playedCards.cards);
+    }
   }
 
-  public getCardImage(card: CardDTO) {
-    return 'assets/cards/' + (card.faceUp ? card.name : 'BLUE_BACK') + '.svg';
+  redoLastCardAction() {
+
   }
 }

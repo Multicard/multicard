@@ -2,7 +2,7 @@
      [cdkDropListDisabled]="!isDragAndDropOfCardsAllowed()">
   <div class="played-cards-drag-area" cdkDrag [cdkDragData]="playedCards?.cards">
     <div class="played-cards-area-top">
-      <div *ngIf="!playedCards?.onSameStack" class="played-area-cards">
+      <div *ngIf="!playedCards?.onSameStack" class="played-area-cards" (dblclick)="takePlayedCards()">
         <mc-card-pile [cards]="cards[2]" cardCssClass="table-card" cdkDragHandle
                       [flyInAnimation]="flyInAnimationFromTop"
                       [ngClass]="{'table-cards-draggeable': isDragAndDropOfCardsAllowed()}"></mc-card-pile>
@@ -10,7 +10,7 @@
     </div>
     <div class="played-cards-area-center">
       <div class="played-cards-area-left">
-        <div *ngIf="!playedCards?.onSameStack" class="played-area-cards">
+        <div *ngIf="!playedCards?.onSameStack" class="played-area-cards" (dblclick)="takePlayedCards()">
           <mc-card-pile [cards]="cards[1]" cardCssClass="table-card" cdkDragHandle
                         [flyInAnimation]="flyInAnimationFromLeft"
                         [ngClass]="{'table-cards-draggeable': isDragAndDropOfCardsAllowed()}"></mc-card-pile>
@@ -19,7 +19,7 @@
       <div class="played-cards-area-middle">
         <div *ngIf="playedCards?.onSameStack" class="played-cards-drop-target played-area-cards" cdkDropList
              [id]="'played-cards-drop-target'" (cdkDropListDropped)="cardDroppedMiddle($event)">
-          <div class="pile-with-undo-button">
+          <div class="pile-with-undo-button" (dblclick)="takePlayedCards()">
             <button mat-mini-fab color="primary" *ngIf="isLastCardPLayedByUser" class="undo-button" mat-raised-button
                     (click)="redoLastCardAction()" aria-label="Karte zurücknehmen" title="Karte zurücknehmen">
               <mat-icon>undo</mat-icon>
@@ -33,7 +33,7 @@
 
       </div>
       <div class="played-cards-area-right">
-        <div *ngIf="!playedCards?.onSameStack" class="played-area-cards">
+        <div *ngIf="!playedCards?.onSameStack" class="played-area-cards" (dblclick)="takePlayedCards()">
           <mc-card-pile [cards]="cards[3]" cardCssClass="table-card" cdkDragHandle
                         [flyInAnimation]="flyInAnimationFromRight"
                         [ngClass]="{'table-cards-draggeable': isDragAndDropOfCardsAllowed()}"></mc-card-pile>
@@ -43,7 +43,7 @@
     <div class="played-cards-area-bottom">
       <div *ngIf="!playedCards?.onSameStack" class="played-cards-drop-target played-area-cards" cdkDropList
            [id]="'played-cards-drop-target'" (cdkDropListDropped)="cardDroppedBottom($event)">
-        <div class="pile-with-undo-button">
+        <div class="pile-with-undo-button" (dblclick)="takePlayedCards()">
           <button mat-mini-fab color="primary" *ngIf="isLastCardPLayedByUser" class="undo-button"
                   (click)="redoLastCardAction()" aria-label="Karte zurücknehmen" title="Karte zurücknehmen">
             <mat-icon>undo</mat-icon>
