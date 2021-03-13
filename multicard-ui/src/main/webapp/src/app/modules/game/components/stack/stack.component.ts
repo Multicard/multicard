@@ -50,17 +50,17 @@ export class StackComponent implements OnInit, OnDestroy {
     if (action.action === ActionType.drawCard) {
       switch (action.direction) {
         case DirectionType.down:
-          this.translateExpression = 'translatey(30vh) rotate(180deg)';
+          this.translateExpression = 'translateY(30vh) rotate(180deg)';
           break;
         case DirectionType.left:
-          this.translateExpression = 'translatex(-40vw) rotate(90deg)';
+          this.translateExpression = 'translateX(-40vw) rotate(90deg)';
           break;
         case DirectionType.up:
-          this.translateExpression = 'translatey(-30vh) rotate(180deg)';
+          this.translateExpression = 'translateY(-30vh) rotate(180deg)';
           break;
         case DirectionType.right:
         default:
-          this.translateExpression = 'translatex(40vw) rotate(90deg)';
+          this.translateExpression = 'translateX(40vw) rotate(90deg)';
       }
       for (let i = 0; i < action.numberOfCards; i++) {
         setTimeout(() => {

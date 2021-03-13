@@ -42,19 +42,19 @@
       }
 
       .played-cards-area-top, .played-cards-area-bottom {
-        flex: 1 1 30%;
+        flex: 1 1 33.3%;
       }
 
       .played-cards-area-center {
-        flex: 1 1 40%;
+        flex: 1 1 33.3%;
         display: flex;
 
         .played-cards-area-left, .played-cards-area-right {
-          flex: 1 1 30%
+          flex: 1 1 33.3%
         }
 
         .played-cards-area-middle {
-          flex: 1 1 20%;
+          flex: 1 133.3%;
           display: flex;
           justify-content: center;
           align-items: center;

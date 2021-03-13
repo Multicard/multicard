@@ -2,6 +2,7 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core'
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {CardDTO, PlayedCardDTO, PlayedCardsDTO} from '../../../../../app-gen/generated-model';
 import {GameService} from '../../../../services/game.service';
+import {FlyInAnimation} from '../card-pile/card-pile.component';
 
 @Component({
   selector: 'mc-played-cards',
@@ -15,6 +16,9 @@ export class PlayedCardsComponent implements OnInit, OnChanges {
   cards: PlayedCardDTO[][] = new Array(4);
   isLastCardPLayedByUser = false;
   haveAllPlayersPlayed = false;
+  readonly flyInAnimationFromTop = FlyInAnimation.fromTop;
+  readonly flyInAnimationFromLeft = FlyInAnimation.fromLeft;
+  readonly flyInAnimationFromRight = FlyInAnimation.fromRight;
 
   constructor(
     private gameService: GameService) {
