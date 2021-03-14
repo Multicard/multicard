@@ -43,9 +43,13 @@ public class Player {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Action> actions = new HashSet<>();
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "card_id", referencedColumnName = "id")
-    private Card playedCard;
+//    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JoinColumn(name = "card_id", referencedColumnName = "id")
+//    private Card playedCard;
+
+    @JsonIgnoreProperties("player")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Card> playedCards = new HashSet<>();
 
     public String getId() {
         return id;
@@ -111,11 +115,11 @@ public class Player {
         this.actions = actions;
     }
 
-    public Card getPlayedCard() {
-        return playedCard;
+    public Set<Card> getPlayedCards() {
+        return playedCards;
     }
 
-    public void setPlayedCard(Card playedCard) {
-        this.playedCard = playedCard;
+    public void setPlayedCards(Set<Card> playedCards) {
+        this.playedCards = playedCards;
     }
 }

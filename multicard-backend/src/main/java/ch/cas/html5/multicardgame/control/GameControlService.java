@@ -147,7 +147,7 @@ public class GameControlService {
         }
 
         //Convert Game.PlayedCards
-        if (game.getPlayedcards() != null){
+        if (game.getPlayedcards() != null) {
             gamedto.setPlayedCards(new PlayedCardsDTO());
             gamedto.getPlayedCards().setCards(converter.convertPlayedCards(game.getPlayedcards().getPlayedcards()));
         }
@@ -183,7 +183,7 @@ public class GameControlService {
 
                 //Convert Game.Action
                 List<ch.cas.html5.multicardgame.entity.Action> actions = actionService.getActionsSorted(game.getId());
-                if (actions.size() > 0){
+                if (actions.size() > 0) {
                     ActionDTO actiondto = new ActionDTO();
                     actiondto.setId(actions.get(0).getId());
                     actiondto.setPlayerId(actions.get(0).getPlayer().getId());
@@ -192,10 +192,10 @@ public class GameControlService {
             }
 
             //send to Player p1
-            if (sendOnlyToSpecificUser == null){
+            if (sendOnlyToSpecificUser == null) {
                 System.out.println("Convert and Publish Game for Player: " + p1.getName());
                 publishGameToPlayer(gamedto.getId(), p1.getId(), gameMessage);
-            }else if(sendOnlyToSpecificUser != null && sendOnlyToSpecificUser.equals(p1.getId())){
+            } else if (sendOnlyToSpecificUser != null && sendOnlyToSpecificUser.equals(p1.getId())) {
                 System.out.println("Convert and Publish Game for Player: " + p1.getName());
                 publishGameToPlayer(gamedto.getId(), p1.getId(), gameMessage);
             }
@@ -235,12 +235,16 @@ public class GameControlService {
         if (gameMessage.getCommand().equals(Action.CLIENT_START_GAME)) {
             game.setState(Gamestate.STARTED);
             gameService.updateGame(game);
-            if (getFirstGameStack(game).getCards().size() == 36){
+            if (getFirstGameStack(game).getCards().size() == 36) {
                 handOutCards(game);
             }
             GameMessage response = new GameMessage();
             response.setCommand(Action.START_GAME);
-            publishGameToPlayer(gameId, playerId, response);
+            for (Player publishPlayer : game.getPlayers()){
+                if (!publishPlayer.getId().equals(playerId)){
+                    publishGameToPlayer(gameId, publishPlayer.getId(), response);
+                }
+            }
             System.out.println("Game started");
         }
 
@@ -267,19 +271,40 @@ public class GameControlService {
             convertAndPublishGame(game, null);
         }
 
+        if (gameMessage.getCommand().equals(Action.CLIENT_PLAYED_CARDS_TAKEN)) {
+            System.out.println("Player take played Cars to his stack");
+            takePlayedCardsToPlayerStack(game, playerId, Action.CLIENT_PLAYED_CARDS_TAKEN);
+            convertAndPublishGame(game, null);
+        }
+    }
+
+    private void takePlayedCardsToPlayerStack(Game game, String playerId, Action actionEnum) {
+        Player player = playerService.getPlayer(playerId);
+
+        if (player.getStacks().size() == 0){
+            player.getStacks().add(new Stack());
+        }
+        Set<Card> cardToMove = new HashSet<>();
+        cardToMove = game.getPlayedcards().getPlayedcards();
+        for (Card card : cardToMove){
+            card.setPlayer(null);
+            game.getPlayedcards().getPlayedcards().remove(card);
+            game.getGameStacks().stream().findFirst().get().getCards().add(card);
         }
 
-    private void playCardFromPlayerToPlayedCards(Game game, String playerId, Card playedCard, Action actionEnum){
+    }
+
+    private void playCardFromPlayerToPlayedCards(Game game, String playerId, Card playedCard, Action actionEnum) {
         Player player = playerService.getPlayer(playerId);
 
         //add Card to Player.PlayedCard and remove from Player.Hand
         player.getHand().getCards().remove(playedCard);
         playedCard.setHand(null);
-        player.setPlayedCard(playedCard);
+        player.getPlayedCards().add(playedCard);
         playedCard.setPlayer(player);
 
         //add card to Game.PlayedCards
-        if (game.getPlayedcards() == null){
+        if (game.getPlayedcards() == null) {
             game.setPlayedcards(new PlayedCards());
         }
         game.getPlayedcards().setOnSameStack(Boolean.FALSE);
@@ -298,26 +323,27 @@ public class GameControlService {
     }
 
 
-    private void revertPlayedCardToPlayer(Game game, String playerId, Card playedCard, Action actionEnum){
+    private void revertPlayedCardToPlayer(Game game, String playerId, Card playedCard, Action actionEnum) {
         Player player = playerService.getPlayer(playerId);
 
         //check revert action = last game action
         ch.cas.html5.multicardgame.entity.Action lastAction = actionService.getActionsSorted(game.getId()).get(0);
-        if (lastAction != null){
-            if (!lastAction.getCard_id().equals(playedCard.getId()) || !lastAction.getPlayer().getId().equals(playerId)){
+        if (lastAction != null) {
+            if (!lastAction.getCard_id().equals(playedCard.getId()) || !lastAction.getPlayer().getId().equals(playerId)) {
                 System.out.println("Revert Action declined: " + playedCard.getHand());
                 return;
             }
         }
 
-        player.getPlayedCard().getPlayedcards().getPlayedcards().remove(playedCard);
+
+        player.getPlayedCards().remove(playedCard);
         playedCard.setPlayedcards(null);
 
         player.getHand().getCards().add(playedCard);
         playedCard.setHand(player.getHand());
 
         //remove card from Game.PlayedCards
-        if (game.getPlayedcards() == null){
+        if (game.getPlayedcards() == null) {
             game.getPlayedcards().getPlayedcards().remove(playedCard);
         }
 
@@ -354,16 +380,16 @@ public class GameControlService {
         }
     }
 
-    private Player getPlayerByPosition(Game game, int position){
-        for (Player player : game.getPlayers()){
-            if (player.getPosition() == position){
+    private Player getPlayerByPosition(Game game, int position) {
+        for (Player player : game.getPlayers()) {
+            if (player.getPosition() == position) {
                 return player;
             }
         }
         return null;
     }
 
-    private Stack getFirstGameStack(Game game){
+    private Stack getFirstGameStack(Game game) {
         Optional<Stack> firstGameStack = game.getGameStacks().stream().findFirst();
         return firstGameStack.get();
     }

@@ -103,12 +103,14 @@ public class GameResetService {
             playedCardsToDelete.addAll(game.getPlayedcards().getPlayedcards());
 
             for (Player player : game.getPlayers()){
-//                if (player.getPlayedCard() != null && player.getPlayedCard().getPlayedcards().getPlayedcards().size() > 0){
-//                    player.getPlayedCard().getPlayedcards().getPlayedcards().removeAll(player.getPlayedCard().getPlayedcards().getPlayedcards());
-//                }
-                if (player.getPlayedCard() != null ){
-                    player.setPlayedCard(null);
+                Set<Card> playerCards = new HashSet<>();
+                playerCards.addAll(player.getPlayedCards());
+                player.getPlayedCards().removeAll(player.getPlayedCards());
+                for (Card played : playerCards){
+                    played.getPlayer().getPlayedCards().remove(played);
+                    cardService.deleteCard(played);
                 }
+
             }
 
 //            game.getPlayedcards().getPlayedcards().removeAll(game.getPlayedcards().getPlayedcards());

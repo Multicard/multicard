@@ -27,7 +27,8 @@ public class Card {
     @ManyToOne(optional = true)
     private Hand hand;
 
-    @OneToOne(mappedBy = "playedCard")
+    @JsonIgnoreProperties("cards")
+    @ManyToOne(optional = true)
     private Player player;
 
     @JsonIgnoreProperties("playedcards")
