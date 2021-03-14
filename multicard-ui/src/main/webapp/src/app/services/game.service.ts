@@ -103,7 +103,7 @@ export class GameService implements OnDestroy {
     this.sendWebsocketPlayedCardMessage(card);
 
     // TODO remove Mockcall
-    this.initMockWebsocketGameCardAddedMessage(card);
+    //this.initMockWebsocketGameCardAddedMessage(card);
   }
 
   tableCardsTakenByUser(cards: CardDTO[]) {
@@ -658,6 +658,13 @@ export class GameService implements OnDestroy {
 
     setTimeout(() => {
       const game = {...this.gameSubject.getValue()};
+      game.players[2].stacks = [{
+        id: '',
+        cards: [{id: '', faceUp: false, name: '', sort: 1}, {id: '', faceUp: false, name: '', sort: 1},
+          {id: '', faceUp: false, name: '', sort: 1}, {id: '', faceUp: false, name: '', sort: 1}]
+      }];
+      game.players[2] = {...game.players[2]};
+      game.players = [...game.players];
       game.playedCards.cards = [...game.playedCards.cards, {...card, playerId: game.players[1].id},
         {...card, playerId: game.players[2].id}, {...card, playerId: game.players[3].id}];
       this.handleWebsocketMessage({

@@ -46,9 +46,11 @@ button {
 }
 
 .table-card {
-  grid-area: 1 / 1 / 2 / 2;
-
   @include table-card;
+}
+
+.player-card {
+  @include player-card;
 }
 
 

@@ -2,7 +2,7 @@
      [cdkDropListConnectedTo]="['player-left-drop-list', 'player-right-drop-list']"
      [cdkDropListDisabled]="!isDragAndDropOfPlayersAllowed()"
      (cdkDropListDropped)="playerDroppedTop($event)">
-    <mc-player class="player-top" [player]="gameState.players[2]" [turnNameAround]="true" cdkDrag [cdkDragData]="2">
+    <mc-player class="player-top" [player]="gameState.players[2]" [tablePosition]="playerPositionTop" cdkDrag [cdkDragData]="2">
       <div *cdkDragPreview>
         <mat-icon>directions_run</mat-icon>
       </div>
@@ -17,7 +17,7 @@
        [cdkDropListConnectedTo]="['player-top-drop-list', 'player-right-drop-list']"
        [cdkDropListDisabled]="!isDragAndDropOfPlayersAllowed()"
        (cdkDropListDropped)="playerDroppedLeft($event)">
-    <mc-player class="player-left" [player]="gameState.players[1]" cdkDrag [cdkDragData]="1">
+    <mc-player class="player-left" [player]="gameState.players[1]" [tablePosition]="playerPositionLeft" cdkDrag [cdkDragData]="1">
       <div *cdkDragPreview>
         <mat-icon>directions_run</mat-icon>
       </div>
@@ -33,7 +33,7 @@
        [cdkDropListConnectedTo]="['player-top-drop-list', 'player-left-drop-list']"
        [cdkDropListDisabled]="!isDragAndDropOfPlayersAllowed()"
        (cdkDropListDropped)="playerDroppedRight($event)">
-    <mc-player class="player-right" [player]="gameState.players[3]" cdkDrag [cdkDragData]="3">
+    <mc-player class="player-right" [player]="gameState.players[3]" [tablePosition]="playerPositionRight" cdkDrag [cdkDragData]="3">
       <div *cdkDragPreview>
         <mat-icon>directions_run</mat-icon>
       </div>

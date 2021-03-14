@@ -11,8 +11,8 @@ import {CdkDragDrop} from '@angular/cdk/drag-drop';
 })
 export class UserPlayerComponent implements OnInit, OnChanges {
 
-  @Input() public player!: PlayerDTO;
-  public handCards: CardDTO[] = [];
+  @Input() player!: PlayerDTO;
+  handCards: CardDTO[] = [];
 
   constructor(
     private gameService: GameService) {
