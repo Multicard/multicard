@@ -1,7 +1,8 @@
 @import "src/styles/mixins";
 
 :host {
-  display: block;
+  display: flex;
+  align-items: flex-end;
 
   .pile {
     margin: 0 10px;

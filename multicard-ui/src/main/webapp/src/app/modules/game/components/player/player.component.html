@@ -1,7 +1,10 @@
 <div class="card-wrapper">
-  <div [style.transform]="'rotate(' + getRotation(i) + 'deg) translateX(' + getTranslateX(i) + 'px)'" class="card"
-       *ngFor="let card of handCards; let i = index">
-    <img src="../../../../../assets/cards/BLUE_BACK.svg" alt="card cover">
+  <div class="player-hand">
+    <div [style.transform]="'rotate(' + getRotation(i) + 'deg) translateX(' + getTranslateX(i) + 'px)'" class="card"
+         *ngFor="let card of handCards; let i = index">
+      <img src="../../../../../assets/cards/BLUE_BACK.svg" alt="card cover">
+    </div>
   </div>
+  <mc-card-pile [cards]="stack" cardCssClass="player-card"></mc-card-pile>
 </div>
 <div class="player-name" [ngClass]="{'turn-around': turnNameAround}">{{player.name}}</div>

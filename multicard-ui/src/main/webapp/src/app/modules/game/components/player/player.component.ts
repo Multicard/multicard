@@ -15,6 +15,7 @@ export class PlayerComponent implements OnInit, OnChanges {
   @Input() public player!: PlayerDTO;
   @Input() public turnNameAround = false;
   public handCards: CardDTO[] = [];
+  public stack!: CardDTO[];
 
   constructor() {
   }
@@ -24,6 +25,7 @@ export class PlayerComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.handCards = createCardsForHand(this.player?.hand);
+    this.stack = this.player?.stacks?.length > 0 ? this.player.stacks[0]?.cards : [];
   }
 
   getRotation(i: number): number {

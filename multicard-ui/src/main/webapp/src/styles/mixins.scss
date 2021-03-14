@@ -35,3 +35,21 @@
 
   @include card-image;
 }
+
+@mixin player-card {
+  aspect-ratio: 77 / 115;
+
+  @include small-size {
+    height: min(calc(100vh * 0.4 * 0.1), calc(100vw * 0.07));
+    max-height: min(calc(100vh * 0.4 * 0.1), calc(100vw * 0.07));
+    max-width: calc(100vw * 0.07);
+  }
+
+  @include normal-size {
+    height: min(calc(100vh * 0.4 * 0.2), calc(100vw * 0.1));
+    max-height: min(calc(100vh * 0.4 * 0.2), calc(100vw * 0.1));
+    max-width: calc(100vw * 0.1);
+  }
+
+  @include card-image;
+}
