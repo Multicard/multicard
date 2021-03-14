@@ -25,7 +25,7 @@ public class WebSocketController {
     public void sendToUser(String playgroundId, String userId, GameMessage msg) {
         String dest = "/queue/" + playgroundId + "/" + userId;
         simpMessagingTemplate.convertAndSend(dest, msg);
-        System.out.println("Message sent to: " + dest);
+//        System.out.println("Message sent to: " + dest);
     }
 
     @MessageMapping("/{gameId}/{playerId}")

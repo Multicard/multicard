@@ -8,6 +8,7 @@ import ch.cas.html5.multicardgame.enums.Gamestate;
 import ch.cas.html5.multicardgame.messages.GameMessage;
 import ch.cas.html5.multicardgame.messages.GameStateMessage;
 import ch.cas.html5.multicardgame.messages.PlayedCardMessage;
+import ch.cas.html5.multicardgame.messages.RevertLastPlayerActionMessage;
 import ch.cas.html5.multicardgame.messaging.WebSocketController;
 import ch.cas.html5.multicardgame.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -253,14 +254,22 @@ public class GameControlService {
             String cardId = msg.getCard().getId();
             Card toPlay = cardService.getCard(cardId);
             System.out.println("Card to play: " + toPlay.getName());
-            playCardFromPlayerToPlayedCards(game, playerId, toPlay.getId());
+            playCardFromPlayerToPlayedCards(game, playerId, toPlay, Action.CLIENT_CARD_PLAYED);
             convertAndPublishGame(game, null);
 
         }
-    }
+        if (gameMessage.getCommand().equals(Action.CLIENT_REVERT_LAST_PLAYER_ACTION)) {
+            RevertLastPlayerActionMessage revertAvtioMsg = (RevertLastPlayerActionMessage) gameMessage;
+            String cardId = revertAvtioMsg.getCard().getId();
+            Card toRevert = cardService.getCard(cardId);
+            System.out.println("Revert Action for Card: " + toRevert.getName());
+            revertPlayedCardToPlayer(game, playerId, toRevert, Action.CLIENT_CARD_PLAYED);
+            convertAndPublishGame(game, null);
+        }
 
-    private void playCardFromPlayerToPlayedCards(Game game, String playerId, String cardId){
-        Card playedCard = cardService.getCard(cardId);
+        }
+
+    private void playCardFromPlayerToPlayedCards(Game game, String playerId, Card playedCard, Action actionEnum){
         Player player = playerService.getPlayer(playerId);
 
         //add Card to Player.PlayedCard and remove from Player.Hand
@@ -281,11 +290,44 @@ public class GameControlService {
         ch.cas.html5.multicardgame.entity.Action action = new ch.cas.html5.multicardgame.entity.Action();
         action.setGame(game);
         action.setPlayer(player);
+        action.setAction(actionEnum);
+        action.setCard_id(playedCard.getId());
         action.setSort(actionService.getNextValFromSeq());
         game.getActions().add(action);
         player.getActions().add(action);
     }
 
+
+    private void revertPlayedCardToPlayer(Game game, String playerId, Card playedCard, Action actionEnum){
+        Player player = playerService.getPlayer(playerId);
+
+        //check revert action = last game action
+        ch.cas.html5.multicardgame.entity.Action lastAction = actionService.getActionsSorted(game.getId()).get(0);
+        if (lastAction != null){
+            if (!lastAction.getCard_id().equals(playedCard.getId()) || !lastAction.getPlayer().getId().equals(playerId)){
+                System.out.println("Revert Action declined: " + playedCard.getHand());
+                return;
+            }
+        }
+
+        player.getPlayedCard().getPlayedcards().getPlayedcards().remove(playedCard);
+        playedCard.setPlayedcards(null);
+
+        player.getHand().getCards().add(playedCard);
+        playedCard.setHand(player.getHand());
+
+        //remove card from Game.PlayedCards
+        if (game.getPlayedcards() == null){
+            game.getPlayedcards().getPlayedcards().remove(playedCard);
+        }
+
+        //remove action
+        game.getActions().remove(lastAction);
+        player.getActions().remove(lastAction);
+        lastAction.setGame(null);
+        lastAction.setPlayer(null);
+        actionService.deleteAction(lastAction.getId());
+    }
 
     private void handOutCards(Game game) {
         System.out.println("hand out cards to players");

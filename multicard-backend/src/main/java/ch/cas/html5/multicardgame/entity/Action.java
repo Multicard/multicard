@@ -21,8 +21,14 @@ public class Action {
     @ManyToOne(optional = true)
     private Player player;
 
+    @Column(name="action")
+    private ch.cas.html5.multicardgame.enums.Action action;
+
     @Column(name="sort")
     private Long sort;
+
+    @Column(name="card_id")
+    private String card_id;
 
     public String getId() {
         return id;
@@ -54,5 +60,21 @@ public class Action {
 
     public void setSort(Long sort) {
         this.sort = sort;
+    }
+
+    public ch.cas.html5.multicardgame.enums.Action getAction() {
+        return action;
+    }
+
+    public void setAction(ch.cas.html5.multicardgame.enums.Action action) {
+        this.action = action;
+    }
+
+    public String getCard_id() {
+        return card_id;
+    }
+
+    public void setCard_id(String card_id) {
+        this.card_id = card_id;
     }
 }
