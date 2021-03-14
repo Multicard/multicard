@@ -1,6 +1,0 @@
-<div class="pile">
-  <div *ngFor="let card of cards; let i = index" class="pile-card" [ngClass]="cardCssClass">
-    <img [style.marginTop.px]="get3DMargin(i)" [style.marginLeft.px]="get3DMargin(i)"
-         [src]="getCardImage(card)" [alt]="getCardImage(card)">
-  </div>
-</div>

@@ -1,9 +1,9 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {GameComponent} from './components/game/game.component';
 
 const routes: Routes = [
-  {path: '', component: GameComponent}
+  { path: '', pathMatch: 'full', loadChildren: () => import('./modules/registration/registration.module').then(m => m.RegistrationModule) },
+  { path: 'game', loadChildren: () => import('./modules/game/game.module').then(m => m.GameModule) },
 ];
 
 @NgModule({

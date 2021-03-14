@@ -12,13 +12,18 @@ export interface GameDTO {
 }
 
 export interface GameMessage {
-    messageName: "GameMessage" | "GameStateMessage" | "PlayedCardMessage" | "RevertLastPlayerActionMessage";
+    messageName: "GameMessage" | "GameStateMessage" | "PlayersPositionedMessage" | "PlayedCardMessage" | "RevertLastPlayerActionMessage";
     command: Action;
 }
 
 export interface GameStateMessage extends GameMessage {
     messageName: "GameStateMessage";
     game: GameDTO;
+}
+
+export interface PlayersPositionedMessage extends GameMessage {
+    messageName: "PlayersPositionedMessage";
+    players: PlayerDTO[];
 }
 
 export interface PlayedCardMessage extends GameMessage {
@@ -89,6 +94,7 @@ export enum Gamestate {
 export enum Action {
     CLIENT_GAME_READY = "CLIENT_GAME_READY",
     CLIENT_PLAYER_READY = "CLIENT_PLAYER_READY",
+    CLIENT_PLAYERS_POSITIONED = "CLIENT_PLAYERS_POSITIONED",
     CLIENT_START_GAME = "CLIENT_START_GAME",
     CLIENT_REQUEST_STATE = "CLIENT_REQUEST_STATE",
     CLIENT_CARD_PLAYED = "CLIENT_CARD_PLAYED",

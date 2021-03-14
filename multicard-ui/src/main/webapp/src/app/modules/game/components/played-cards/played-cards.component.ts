@@ -1,7 +1,8 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
-import {CardDTO, PlayedCardDTO, PlayedCardsDTO} from '../../../app-gen/generated-model';
-import {GameService} from '../../services/game.service';
+import {CardDTO, PlayedCardDTO, PlayedCardsDTO} from '../../../../../app-gen/generated-model';
+import {GameService} from '../../../../services/game.service';
+import {FlyInAnimation} from '../card-pile/card-pile.component';
 
 @Component({
   selector: 'mc-played-cards',
@@ -15,6 +16,9 @@ export class PlayedCardsComponent implements OnInit, OnChanges {
   cards: PlayedCardDTO[][] = new Array(4);
   isLastCardPLayedByUser = false;
   haveAllPlayersPlayed = false;
+  readonly flyInAnimationFromTop = FlyInAnimation.fromTop;
+  readonly flyInAnimationFromLeft = FlyInAnimation.fromLeft;
+  readonly flyInAnimationFromRight = FlyInAnimation.fromRight;
 
   constructor(
     private gameService: GameService) {
@@ -34,6 +38,10 @@ export class PlayedCardsComponent implements OnInit, OnChanges {
     this.haveAllPlayersPlayed = this.gameService.haveAllPlayersPlayed(this.playedCards);
   }
 
+  getCardImage(card: CardDTO) {
+    return 'assets/cards/' + (card.faceUp ? card.name : 'BLUE_BACK') + '.svg';
+  }
+
   cardDroppedMiddle(event: CdkDragDrop<string[]>) {
     console.log('card dropped onto carpet', event);
     this.gameService.cardPlayed(event.item.data);
@@ -48,11 +56,13 @@ export class PlayedCardsComponent implements OnInit, OnChanges {
     return this.haveAllPlayersPlayed;
   }
 
-  redoLastCardAction() {
-
+  takePlayedCards() {
+    if (this.isDragAndDropOfCardsAllowed() && this.playedCards?.cards) {
+      this.gameService.tableCardsTakenByUser(this.playedCards.cards);
+    }
   }
 
-  public getCardImage(card: CardDTO) {
-    return 'assets/cards/' + (card.faceUp ? card.name : 'BLUE_BACK') + '.svg';
+  redoLastCardAction() {
+
   }
 }

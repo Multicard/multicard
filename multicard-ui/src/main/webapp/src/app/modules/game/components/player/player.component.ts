@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {CardDTO, PlayerDTO} from '../../../app-gen/generated-model';
-import {createCardsForHand} from '../../model/cardHelper';
+import {CardDTO, PlayerDTO} from '../../../../../app-gen/generated-model';
+import {createCardsForHand} from '../../../../model/cardHelper';
 
 const rotationPerCardInDegrees = 5;
 const translationXPerCardInPixels = 7;

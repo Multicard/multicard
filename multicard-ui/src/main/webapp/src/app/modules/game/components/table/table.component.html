@@ -1,0 +1,49 @@
+<div class="table-top" cdkDropList id="player-top-drop-list"
+     [cdkDropListConnectedTo]="['player-left-drop-list', 'player-right-drop-list']"
+     [cdkDropListDisabled]="!isDragAndDropOfPlayersAllowed()"
+     (cdkDropListDropped)="playerDroppedTop($event)">
+    <mc-player class="player-top" [player]="gameState.players[2]" [turnNameAround]="true" cdkDrag [cdkDragData]="2">
+      <div *cdkDragPreview>
+        <mat-icon>directions_run</mat-icon>
+      </div>
+      <div *cdkDragPlaceholder class="player-drag-placeholder">
+        <mat-icon>person</mat-icon>
+      </div>
+    </mc-player>
+</div>
+
+<div class="table-center">
+  <div class="table-left" cdkDropList id="player-left-drop-list"
+       [cdkDropListConnectedTo]="['player-top-drop-list', 'player-right-drop-list']"
+       [cdkDropListDisabled]="!isDragAndDropOfPlayersAllowed()"
+       (cdkDropListDropped)="playerDroppedLeft($event)">
+    <mc-player class="player-left" [player]="gameState.players[1]" cdkDrag [cdkDragData]="1">
+      <div *cdkDragPreview>
+        <mat-icon>directions_run</mat-icon>
+      </div>
+      <div *cdkDragPlaceholder class="player-drag-placeholder">
+        <mat-icon>person</mat-icon>
+      </div>
+    </mc-player>
+  </div>
+  <div class="table-carpet">
+    <mc-carpet [stacks]="gameState.stacks" [playedCards]="gameState.playedCards" [playerIds]="playerIdList"></mc-carpet>
+  </div>
+  <div class="table-right" cdkDropList id="player-right-drop-list"
+       [cdkDropListConnectedTo]="['player-top-drop-list', 'player-left-drop-list']"
+       [cdkDropListDisabled]="!isDragAndDropOfPlayersAllowed()"
+       (cdkDropListDropped)="playerDroppedRight($event)">
+    <mc-player class="player-right" [player]="gameState.players[3]" cdkDrag [cdkDragData]="3">
+      <div *cdkDragPreview>
+        <mat-icon>directions_run</mat-icon>
+      </div>
+      <div *cdkDragPlaceholder class="player-drag-placeholder">
+        <mat-icon>person</mat-icon>
+      </div>
+    </mc-player>
+  </div>
+</div>
+
+<div class="table-bottom">
+  <mc-user-player [player]="gameState.players[0]"></mc-user-player>
+</div>

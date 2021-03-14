@@ -1,0 +1,28 @@
+<section class="multicard-app">
+  <header class="header">
+    <h1>Multicard Game</h1>
+    <h4>Registrierung</h4>
+  </header>
+
+  <section class="game-section">
+    <mat-form-field appearance="fill">
+      <mat-label>Spiel</mat-label>
+      <mat-select required [(value)]="selectedGame">
+        <mat-option *ngFor="let game of games" [value]="game.id">
+          {{game.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Spieler</mat-label>
+      <mat-select required [(value)]="selectedPlayer">
+        <mat-option *ngFor="let player of players" [value]="player.id">
+          {{player.name}}
+        </mat-option>
+     </mat-select>
+    </mat-form-field>
+
+    <button class="btn btn-success" (click)="joinGame()">am Spiel teilnehmen</button>
+  </section>
+</section>
