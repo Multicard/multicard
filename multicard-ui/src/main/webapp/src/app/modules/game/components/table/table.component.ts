@@ -2,6 +2,7 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core'
 import {GameDTO, Gamestate} from '../../../../../app-gen/generated-model';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {GameService} from '../../../../services/game.service';
+import {TablePosition} from '../player/player.component';
 
 @Component({
   selector: 'mc-table',
@@ -12,6 +13,9 @@ export class TableComponent implements OnInit, OnChanges {
 
   @Input() gameState!: GameDTO;
   playerIdList: string[] = [];
+  readonly playerPositionLeft = TablePosition.left;
+  readonly playerPositionTop = TablePosition.top;
+  readonly playerPositionRight = TablePosition.right;
 
   constructor(
     private gameService: GameService) {

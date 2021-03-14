@@ -1,9 +1,17 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {CardDTO, PlayerDTO} from '../../../../../app-gen/generated-model';
 import {createCardsForHand} from '../../../../model/cardHelper';
+import {FlyInAnimation} from '../card-pile/card-pile.component';
 
 const rotationPerCardInDegrees = 5;
 const translationXPerCardInPixels = 7;
+
+export enum TablePosition {
+  left,
+  top,
+  right,
+  bottom
+}
 
 @Component({
   selector: 'mc-player',
@@ -12,10 +20,10 @@ const translationXPerCardInPixels = 7;
 })
 export class PlayerComponent implements OnInit, OnChanges {
 
-  @Input() public player!: PlayerDTO;
-  @Input() public turnNameAround = false;
-  public handCards: CardDTO[] = [];
-  public stack!: CardDTO[];
+  @Input() player!: PlayerDTO;
+  @Input() tablePosition = TablePosition.bottom;
+  handCards: CardDTO[] = [];
+  stack!: CardDTO[];
 
   constructor() {
   }
@@ -34,6 +42,23 @@ export class PlayerComponent implements OnInit, OnChanges {
 
   getTranslateX(i: number): number {
     return 0 - (Math.max(this.getNumberOfCards() - 1, 0) * translationXPerCardInPixels / 2) + i * translationXPerCardInPixels;
+  }
+
+  isNameTurnedAround() {
+    return this.tablePosition === TablePosition.top;
+  }
+
+  getStackFlyInAnimation() {
+    switch (this.tablePosition) {
+      case TablePosition.left:
+        return FlyInAnimation.fromLeft;
+      case TablePosition.top:
+        return FlyInAnimation.fromTop;
+      case TablePosition.right:
+        return FlyInAnimation.fromRight;
+      case TablePosition.bottom:
+        return FlyInAnimation.noAnimation;
+    }
   }
 
   private getNumberOfCards() {

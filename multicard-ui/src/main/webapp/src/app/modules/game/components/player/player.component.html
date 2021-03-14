@@ -5,6 +5,6 @@
       <img src="../../../../../assets/cards/BLUE_BACK.svg" alt="card cover">
     </div>
   </div>
-  <mc-card-pile [cards]="stack" cardCssClass="player-card"></mc-card-pile>
+  <mc-card-pile [cards]="stack" cardCssClass="player-card" [flyInAnimation]="getStackFlyInAnimation()"></mc-card-pile>
 </div>
-<div class="player-name" [ngClass]="{'turn-around': turnNameAround}">{{player.name}}</div>
+<div class="player-name" [ngClass]="{'turn-around': isNameTurnedAround()}">{{player.name}}</div>
