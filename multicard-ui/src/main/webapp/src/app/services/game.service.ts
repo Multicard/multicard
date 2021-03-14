@@ -103,7 +103,7 @@ export class GameService implements OnDestroy {
     this.sendWebsocketPlayedCardMessage(card);
 
     // TODO remove Mockcall
-    this.initMockWebsocketGameCardAddedMessage(card);
+    //this.initMockWebsocketGameCardAddedMessage(card);
   }
 
   tableCardsTakenByUser(cards: CardDTO[]) {
