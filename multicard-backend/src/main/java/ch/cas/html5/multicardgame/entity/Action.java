@@ -1,10 +1,8 @@
 package ch.cas.html5.multicardgame.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -23,8 +21,8 @@ public class Action {
     @ManyToOne(optional = true)
     private Player player;
 
-    @CreationTimestamp
-    private Date created_at;
+    @Column(name="sort")
+    private Long sort;
 
     public String getId() {
         return id;
@@ -50,11 +48,11 @@ public class Action {
         this.player = player;
     }
 
-    public Date getCreated_at() {
-        return created_at;
+    public Long getSort() {
+        return sort;
     }
 
-    public void setCreated_at(Date sort) {
-        this.created_at = sort;
+    public void setSort(Long sort) {
+        this.sort = sort;
     }
 }

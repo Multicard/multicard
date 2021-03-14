@@ -179,6 +179,15 @@ public class GameControlService {
                     playerdto.getStacks().add(stackdto);
                 }
                 gamedto.getPlayers().add(playerdto);
+
+                //Convert Game.Action
+                List<ch.cas.html5.multicardgame.entity.Action> actions = actionService.getActionsSorted(game.getId());
+                if (actions.size() > 0){
+                    ActionDTO actiondto = new ActionDTO();
+                    actiondto.setId(actions.get(0).getId());
+                    actiondto.setPlayerId(actions.get(0).getPlayer().getId());
+                    gamedto.setLastAction(actiondto);
+                }
             }
 
             //send to Player p1
@@ -255,10 +264,10 @@ public class GameControlService {
         Player player = playerService.getPlayer(playerId);
 
         //add Card to Player.PlayedCard and remove from Player.Hand
+        player.getHand().getCards().remove(playedCard);
+        playedCard.setHand(null);
         player.setPlayedCard(playedCard);
         playedCard.setPlayer(player);
-        playedCard.setHand(null);
-//        player.getHand().getCards().remove(playedCard);
 
         //add card to Game.PlayedCards
         if (game.getPlayedcards() == null){
@@ -272,6 +281,7 @@ public class GameControlService {
         ch.cas.html5.multicardgame.entity.Action action = new ch.cas.html5.multicardgame.entity.Action();
         action.setGame(game);
         action.setPlayer(player);
+        action.setSort(actionService.getNextValFromSeq());
         game.getActions().add(action);
         player.getActions().add(action);
     }

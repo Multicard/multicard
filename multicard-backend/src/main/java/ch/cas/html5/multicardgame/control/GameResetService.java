@@ -1,14 +1,12 @@
 package ch.cas.html5.multicardgame.control;
 
-import ch.cas.html5.multicardgame.entity.Game;
-import ch.cas.html5.multicardgame.entity.Hand;
-import ch.cas.html5.multicardgame.entity.Player;
-import ch.cas.html5.multicardgame.entity.Stack;
+import ch.cas.html5.multicardgame.entity.*;
 import ch.cas.html5.multicardgame.enums.Gamestate;
 import ch.cas.html5.multicardgame.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Service
@@ -90,15 +88,39 @@ public class GameResetService {
         }
 
         // delete Game.Actions
-        Set<ch.cas.html5.multicardgame.entity.Action> actionList = game.getActions();
-        for (ch.cas.html5.multicardgame.entity.Action action : actionList){
-            game.getActions().remove(action);
+        Set<ch.cas.html5.multicardgame.entity.Action> actionsToDelete = new HashSet<>();
+        actionsToDelete.addAll(game.getActions());
+        game.getActions().removeAll(game.getActions());
+        for (ch.cas.html5.multicardgame.entity.Action action : actionsToDelete){
             action.getPlayer().getActions().remove(action);
             actionService.deleteAction(action.getId());
         }
 
+
         if (game.getPlayedcards() != null){
-            playedCardsService.deletePlayedCards(game.getPlayedcards().getId());
+
+            Set<Card> playedCardsToDelete = new HashSet<>();
+            playedCardsToDelete.addAll(game.getPlayedcards().getPlayedcards());
+
+            for (Player player : game.getPlayers()){
+//                if (player.getPlayedCard() != null && player.getPlayedCard().getPlayedcards().getPlayedcards().size() > 0){
+//                    player.getPlayedCard().getPlayedcards().getPlayedcards().removeAll(player.getPlayedCard().getPlayedcards().getPlayedcards());
+//                }
+                if (player.getPlayedCard() != null ){
+                    player.setPlayedCard(null);
+                }
+            }
+
+//            game.getPlayedcards().getPlayedcards().removeAll(game.getPlayedcards().getPlayedcards());
+            for (Card playedCard : playedCardsToDelete){
+                game.getPlayedcards().getPlayedcards().remove(playedCard);
+                playedCard.setPlayedcards(null);
+                playedCard.setPlayer(null);
+                cardService.deleteCard(playedCard);
+            }
+            String id = game.getPlayedcards().getId();
+            game.setPlayedcards(null);
+            playedCardsService.deletePlayedCards(id);
         }
 
 
@@ -118,7 +140,7 @@ public class GameResetService {
             }
 
             player.setPlayerReady(false);
-            playerService.savePlayer(player);
+//            playerService.savePlayer(player);
         }
         System.out.println("reset finished");
 

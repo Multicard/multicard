@@ -40,5 +40,12 @@ public class ActionServiceImpl {
         actionRepository.save(action);
     }
 
+    public Long getNextValFromSeq(){ return actionRepository.getNextValueSeq(); }
+
+    public List<Action> getActionsSorted(String gameId) {
+        List<Action> actions = actionRepository.getActionSorted(gameId);
+        return actions;
+    }
+
 }
 
