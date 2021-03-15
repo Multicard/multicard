@@ -4,7 +4,7 @@
     <div class="played-cards-area-top">
       <div *ngIf="!playedCards?.onSameStack" class="played-area-cards" (dblclick)="takePlayedCards()">
         <mc-card-pile [cards]="cards[2]" cardCssClass="table-card" cdkDragHandle
-                      [flyInAnimation]="flyInAnimationFromTop"
+                      [flyInAnimation]="indexOfLastPLayer === 2 ?  flyInAnimationFromTop : noFlyInAnimation"
                       [ngClass]="{'table-cards-draggeable': isDragAndDropOfCardsAllowed()}"></mc-card-pile>
       </div>
     </div>
@@ -12,7 +12,7 @@
       <div class="played-cards-area-left">
         <div *ngIf="!playedCards?.onSameStack" class="played-area-cards" (dblclick)="takePlayedCards()">
           <mc-card-pile [cards]="cards[1]" cardCssClass="table-card" cdkDragHandle
-                        [flyInAnimation]="flyInAnimationFromLeft"
+                        [flyInAnimation]="indexOfLastPLayer === 1 ?  flyInAnimationFromLeft : noFlyInAnimation"
                         [ngClass]="{'table-cards-draggeable': isDragAndDropOfCardsAllowed()}"></mc-card-pile>
         </div>
       </div>
@@ -43,7 +43,7 @@
       <div class="played-cards-area-right">
         <div *ngIf="!playedCards?.onSameStack" class="played-area-cards" (dblclick)="takePlayedCards()">
           <mc-card-pile [cards]="cards[3]" cardCssClass="table-card" cdkDragHandle
-                        [flyInAnimation]="flyInAnimationFromRight"
+                        [flyInAnimation]="indexOfLastPLayer === 3 ?  flyInAnimationFromRight : noFlyInAnimation"
                         [ngClass]="{'table-cards-draggeable': isDragAndDropOfCardsAllowed()}"></mc-card-pile>
         </div>
       </div>
