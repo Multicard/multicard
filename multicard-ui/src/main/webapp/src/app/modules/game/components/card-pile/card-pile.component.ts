@@ -44,8 +44,9 @@ export class CardPileComponent implements OnInit {
     return 'assets/cards/' + (card.faceUp ? card.name : 'BLUE_BACK') + '.svg';
   }
 
-  isAnimationDisabled() {
-    return this.flyInAnimation === FlyInAnimation.noAnimation;
+  isAnimationDisabled(cardIndex: number) {
+    // @ts-ignore
+    return this.flyInAnimation === FlyInAnimation.noAnimation || cardIndex < this.cards.length - 1;
   }
 
   getFlyInAnimateTransformExpression() {

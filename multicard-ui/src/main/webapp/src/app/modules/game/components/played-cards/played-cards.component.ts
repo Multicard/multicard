@@ -14,8 +14,10 @@ export class PlayedCardsComponent implements OnInit, OnChanges {
   @Input() playedCards?: PlayedCardsDTO;
   @Input() playerIds!: string[];
   cards: PlayedCardDTO[][] = new Array(4);
+  indexOfLastPLayer = 0;
   isLastCardPLayedByUser = false;
   haveAllPlayersPlayed = false;
+  readonly noFlyInAnimation = FlyInAnimation.noAnimation;
   readonly flyInAnimationFromTop = FlyInAnimation.fromTop;
   readonly flyInAnimationFromLeft = FlyInAnimation.fromLeft;
   readonly flyInAnimationFromRight = FlyInAnimation.fromRight;
@@ -31,7 +33,8 @@ export class PlayedCardsComponent implements OnInit, OnChanges {
     this.cards = new Array(4).fill([]).map(() => new Array<PlayedCardDTO>());
     if (this.playedCards?.cards !== undefined) {
       this.playedCards.cards.forEach((c) => {
-        this.cards[this.playerIds.findIndex(pId => pId === c.playerId)].push(c);
+        this.indexOfLastPLayer = this.playerIds.findIndex(pId => pId === c.playerId);
+        this.cards[this.indexOfLastPLayer].push(c);
       });
     }
     this.isLastCardPLayedByUser = this.gameService.isLastCardPLayedByUser(this.playedCards);
