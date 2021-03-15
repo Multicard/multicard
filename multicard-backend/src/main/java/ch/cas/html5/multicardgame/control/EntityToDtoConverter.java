@@ -21,18 +21,29 @@ public final class EntityToDtoConverter {
         return cardsdto;
     }
 
-    public List<PlayedCardDTO> convertPlayedCards(Set<Card> cards){
+    public List<PlayedCardDTO> convertPlayedCards(Set<Card> cards, List<ch.cas.html5.multicardgame.entity.Action> actions){
         List<PlayedCardDTO> cardsdto = new ArrayList() ;
-        for (Card card : cards){
-            PlayedCardDTO playedCard = new PlayedCardDTO();
-            playedCard.setId(card.getId());
-            playedCard.setName(card.getName());
-            playedCard.setSort(card.getSort());
-            playedCard.setFaceUp(Boolean.TRUE);
-            playedCard.setPlayerId(card.getPlayer().getId());
-            cardsdto.add(playedCard);
+        for (int i = actions.size(); i > 0; i--) {
+            Card c = getCardFromPlayedCards(actions.get(i-1).getCard_id(), cards);
+            if (c != null){
+                PlayedCardDTO playedCard = new PlayedCardDTO();
+                playedCard.setId(c.getId());
+                playedCard.setName(c.getName());
+                playedCard.setSort(c.getSort());
+                playedCard.setFaceUp(Boolean.TRUE);
+                playedCard.setPlayerId(c.getPlayer().getId());
+                cardsdto.add(playedCard);
+            }
         }
-        Collections.sort(cardsdto);
         return cardsdto;
+    }
+
+    private Card getCardFromPlayedCards(String card_id, Set<Card> cards){
+        for (Card card : cards){
+            if (card.getId().equals(card_id)){
+                return card;
+            }
+        }
+        return null;
     }
 }
