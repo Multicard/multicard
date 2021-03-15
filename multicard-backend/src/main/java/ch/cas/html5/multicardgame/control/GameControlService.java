@@ -149,7 +149,8 @@ public class GameControlService {
         //Convert Game.PlayedCards
         if (game.getPlayedcards() != null) {
             gamedto.setPlayedCards(new PlayedCardsDTO());
-            gamedto.getPlayedCards().setCards(converter.convertPlayedCards(game.getPlayedcards().getPlayedcards()));
+            List<ch.cas.html5.multicardgame.entity.Action> actions = actionService.getActionsSorted(game.getId());
+            gamedto.getPlayedCards().setCards(converter.convertPlayedCards(game.getPlayedcards().getPlayedcards(), actions));
         }
 
         //Convert Game.Players
@@ -187,6 +188,7 @@ public class GameControlService {
                     ActionDTO actiondto = new ActionDTO();
                     actiondto.setId(actions.get(0).getId());
                     actiondto.setPlayerId(actions.get(0).getPlayer().getId());
+                    actiondto.setAction(actions.get(0).getAction());
                     gamedto.setLastAction(actiondto);
                 }
             }
@@ -282,15 +284,28 @@ public class GameControlService {
         Player player = playerService.getPlayer(playerId);
 
         if (player.getStacks().size() == 0){
-            player.getStacks().add(new Stack());
+            Stack newStack = new Stack();
+            player.getStacks().add(newStack);
+            newStack.setPlayer(player);
         }
         Set<Card> cardToMove = new HashSet<>();
-        cardToMove = game.getPlayedcards().getPlayedcards();
+        cardToMove.addAll(game.getPlayedcards().getPlayedcards());
         for (Card card : cardToMove){
-            card.setPlayer(null);
             game.getPlayedcards().getPlayedcards().remove(card);
-            game.getGameStacks().stream().findFirst().get().getCards().add(card);
+            card.getPlayer().getPlayedCards().remove(card);
+            card.getPlayedcards().getPlayedcards().remove(card);
+            player.getStacks().stream().findFirst().get().getCards().add(card);
+            card.setStack(player.getStacks().stream().findFirst().get());
         }
+
+        //store action
+        ch.cas.html5.multicardgame.entity.Action action = new ch.cas.html5.multicardgame.entity.Action();
+        action.setGame(game);
+        action.setPlayer(player);
+        action.setAction(actionEnum);
+        action.setSort(actionService.getNextValFromSeq());
+        game.getActions().add(action);
+        player.getActions().add(action);
 
     }
 
