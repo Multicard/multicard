@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CardDTO} from '../../../../../app-gen/generated-model';
 import {animate, style, transition, trigger} from '@angular/animations';
 
@@ -12,6 +12,7 @@ export enum FlyInAnimation {
 
 @Component({
   selector: 'mc-card-pile',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './card-pile.component.html',
   styleUrls: ['./card-pile.component.scss'],
   animations: [

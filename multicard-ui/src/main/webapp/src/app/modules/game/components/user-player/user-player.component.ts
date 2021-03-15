@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {CardDTO, PlayerDTO} from '../../../../../app-gen/generated-model';
 import {createCardsForHand, getCardImage} from '../../../../model/cardHelper';
 import {GameService} from '../../../../services/game.service';
@@ -6,6 +6,7 @@ import {CdkDragDrop} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'mc-user-player',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './user-player.component.html',
   styleUrls: ['./user-player.component.scss']
 })

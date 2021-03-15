@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {Subject} from 'rxjs';
 import {GameService} from '../../../../services/game.service';
@@ -9,6 +9,7 @@ import {getCardImage} from '../../../../model/cardHelper';
 
 @Component({
   selector: 'mc-stack',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './stack.component.html',
   styleUrls: ['./stack.component.scss'],
   animations: [
@@ -25,7 +26,9 @@ export class StackComponent implements OnInit, OnDestroy {
   translateExpression = '';
   private unsubscribe = new Subject();
 
-  constructor(private gameService: GameService) {
+  constructor(
+    private gameService: GameService,
+    private changeDetectorRef: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -38,11 +41,11 @@ export class StackComponent implements OnInit, OnDestroy {
     this.unsubscribe.next();
   }
 
-  public get3DMargin(i: number): number {
+  get3DMargin(i: number): number {
     return 2 * Math.round(i / 4);
   }
 
-  public getCardImage(card: CardDTO) {
+  getCardImage(card: CardDTO) {
     return getCardImage(card);
   }
 
@@ -66,6 +69,7 @@ export class StackComponent implements OnInit, OnDestroy {
         setTimeout(() => {
           if (this.stack.cards?.length > 0) {
             this.stack.cards.pop();
+            this.changeDetectorRef.detectChanges();
           }
         }, i * 20);
       }

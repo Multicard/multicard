@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {GameDTO, Gamestate} from '../../../../../app-gen/generated-model';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {GameService} from '../../../../services/game.service';
@@ -6,6 +6,7 @@ import {TablePosition} from '../player/player.component';
 
 @Component({
   selector: 'mc-table',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss']
 })
