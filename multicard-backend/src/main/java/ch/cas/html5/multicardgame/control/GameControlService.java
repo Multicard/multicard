@@ -290,10 +290,14 @@ public class GameControlService {
         }
         Set<Card> cardToMove = new HashSet<>();
         cardToMove.addAll(game.getPlayedcards().getPlayedcards());
+
         for (Card card : cardToMove){
             game.getPlayedcards().getPlayedcards().remove(card);
             card.getPlayer().getPlayedCards().remove(card);
             card.getPlayedcards().getPlayedcards().remove(card);
+            card.setPlayer(null);
+            card.setPlayedcards(null);
+
             player.getStacks().stream().findFirst().get().getCards().add(card);
             card.setStack(player.getStacks().stream().findFirst().get());
         }
