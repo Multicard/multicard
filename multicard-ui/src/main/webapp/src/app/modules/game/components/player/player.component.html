@@ -1,7 +1,7 @@
 <div class="card-wrapper">
   <div class="player-hand">
     <div [style.transform]="'rotate(' + getRotation(i) + 'deg) translateX(' + getTranslateX(i) + 'px)'" class="card"
-         *ngFor="let card of handCards; let i = index">
+         *ngFor="let card of handCards; let i = index; trackBy: trackByCardId">
       <img src="../../../../../assets/cards/BLUE_BACK.svg" alt="card cover">
     </div>
   </div>

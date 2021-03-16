@@ -73,4 +73,8 @@ export class CardPileComponent implements OnInit {
         return 'translateY(30vh)';
     }
   }
+
+  trackByCardId(index: number, card: CardDTO) {
+    return card.id;
+  }
 }

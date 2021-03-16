@@ -38,4 +38,8 @@ export class UserPlayerComponent implements OnInit, OnChanges {
     console.log('table cards dropped onto user hand stack', event);
     this.gameService.tableCardsTakenByUser(event.item.data);
   }
+
+  trackByCardId(index: number, card: CardDTO) {
+    return card.id;
+  }
 }

@@ -62,6 +62,10 @@ export class PlayerComponent implements OnInit, OnChanges {
     }
   }
 
+  trackByCardId(index: number, card: CardDTO) {
+    return card.id;
+  }
+
   private getNumberOfCards() {
     return this.handCards?.length;
   }
