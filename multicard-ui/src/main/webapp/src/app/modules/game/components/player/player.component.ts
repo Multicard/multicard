@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {CardDTO, PlayerDTO} from '../../../../../app-gen/generated-model';
 import {createCardsForHand} from '../../../../model/cardHelper';
 import {FlyInAnimation} from '../card-pile/card-pile.component';
@@ -15,6 +15,7 @@ export enum TablePosition {
 
 @Component({
   selector: 'mc-player',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.scss']
 })

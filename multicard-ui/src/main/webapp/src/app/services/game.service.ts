@@ -195,8 +195,10 @@ export class GameService implements OnDestroy {
           currPlayer.hand = {id: '', cardCount: 0, cards: []};
         }
         currPlayer.hand.cardCount += numberOfPLayerCardsPerTurn;
+        game.players = [...game.players];
 
         this.giveCards(++i, numberOfTotalCardsPerPlayer, numberOfPLayerCardsPerTurn, numberOfPLayers);
+        this.gameSubject.next({...game});
       }, 200);
     } else {
       this.sendWebsocketGameMessage(Action.CLIENT_REQUEST_STATE);

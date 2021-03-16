@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {CardDTO, PlayedCardDTO, PlayedCardsDTO} from '../../../../../app-gen/generated-model';
 import {GameService} from '../../../../services/game.service';
@@ -6,6 +6,7 @@ import {FlyInAnimation} from '../card-pile/card-pile.component';
 
 @Component({
   selector: 'mc-played-cards',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './played-cards.component.html',
   styleUrls: ['./played-cards.component.scss']
 })

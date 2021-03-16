@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {GameService} from '../../../../services/game.service';
 import {Observable} from 'rxjs';
 import {GameDTO, Gamestate} from '../../../../../app-gen/generated-model';
@@ -6,6 +6,7 @@ import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'mc-game',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss']
 })

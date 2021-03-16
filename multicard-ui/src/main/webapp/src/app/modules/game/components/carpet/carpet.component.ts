@@ -1,8 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {PlayedCardsDTO, StackDTO} from '../../../../../app-gen/generated-model';
 
 @Component({
   selector: 'mc-carpet',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './carpet.component.html',
   styleUrls: ['./carpet.component.scss']
 })
