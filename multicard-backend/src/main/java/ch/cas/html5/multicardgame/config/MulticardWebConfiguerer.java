@@ -12,12 +12,14 @@ import java.io.IOException;
 @Configuration
 public class MulticardWebConfiguerer implements WebMvcConfigurer {
 
+
+
     /*
      * Serves our angular app as a static resource.
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("**")
+        registry.addResourceHandler("https://multicard-test.herokuapp.com/**")
                 .addResourceLocations("classpath:/static/")
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver() {
