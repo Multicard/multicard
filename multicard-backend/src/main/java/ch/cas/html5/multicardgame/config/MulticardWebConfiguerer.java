@@ -19,7 +19,7 @@ public class MulticardWebConfiguerer implements WebMvcConfigurer {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("https://multicard-test.herokuapp.com/**")
+        registry.addResourceHandler("multicard-test.herokuapp.com/**")
                 .addResourceLocations("classpath:/static/")
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver() {
