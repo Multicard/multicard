@@ -3,6 +3,8 @@ package ch.cas.html5.multicardgame.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -27,8 +29,9 @@ public class Action {
     @Column(name="sort")
     private Long sort;
 
+    @ElementCollection
     @Column(name="card_id")
-    private String card_id;
+    private Set<String> cards_id = new HashSet<>();
 
     public String getId() {
         return id;
@@ -70,11 +73,11 @@ public class Action {
         this.action = action;
     }
 
-    public String getCard_id() {
-        return card_id;
+    public Set<String> getCards_id() {
+        return cards_id;
     }
 
-    public void setCard_id(String card_id) {
-        this.card_id = card_id;
+    public void setCards_id(Set<String> cards_id) {
+        this.cards_id = cards_id;
     }
 }

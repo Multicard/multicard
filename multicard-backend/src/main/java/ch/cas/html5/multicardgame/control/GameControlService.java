@@ -335,7 +335,7 @@ public class GameControlService {
         action.setGame(game);
         action.setPlayer(player);
         action.setAction(actionEnum);
-        action.setCard_id(playedCard.getId());
+        action.getCards_id().add(playedCard.getId());
         action.setSort(actionService.getNextValFromSeq());
         game.getActions().add(action);
         player.getActions().add(action);
@@ -347,8 +347,8 @@ public class GameControlService {
 
         //check revert action = last game action
         ch.cas.html5.multicardgame.entity.Action lastAction = actionService.getActionsSorted(game.getId()).get(0);
-        if (lastAction != null) {
-            if (!lastAction.getCard_id().equals(playedCard.getId()) || !lastAction.getPlayer().getId().equals(playerId)) {
+        if (lastAction != null && lastAction.getCards_id().size() == 1) {
+            if (!lastAction.getCards_id().stream().findFirst().get().equals(playedCard.getId()) || !lastAction.getPlayer().getId().equals(playerId)) {
                 System.out.println("Revert Action declined: " + playedCard.getHand());
                 return;
             }
