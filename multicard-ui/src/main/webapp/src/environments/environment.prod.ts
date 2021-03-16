@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  websocketUrl: 'wss://multicardgame.herokuapp.com/ws-endpoint'
+  websocketUrl: 'wss://multicard-test.herokuapp.com/ws-endpoint'
 };
