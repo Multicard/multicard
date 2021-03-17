@@ -5,10 +5,7 @@ import ch.cas.html5.multicardgame.entity.Stack;
 import ch.cas.html5.multicardgame.entity.*;
 import ch.cas.html5.multicardgame.enums.Action;
 import ch.cas.html5.multicardgame.enums.Gamestate;
-import ch.cas.html5.multicardgame.messages.GameMessage;
-import ch.cas.html5.multicardgame.messages.GameStateMessage;
-import ch.cas.html5.multicardgame.messages.PlayedCardMessage;
-import ch.cas.html5.multicardgame.messages.RevertLastPlayerActionMessage;
+import ch.cas.html5.multicardgame.messages.*;
 import ch.cas.html5.multicardgame.messaging.WebSocketController;
 import ch.cas.html5.multicardgame.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -278,6 +275,24 @@ public class GameControlService {
             takePlayedCardsToPlayerStack(game, playerId, Action.CLIENT_PLAYED_CARDS_TAKEN);
             convertAndPublishGame(game, null);
         }
+
+        if (gameMessage.getCommand().equals(Action.CLIENT_PLAYERS_POSITIONED)){
+            PlayersPositionedMessage playersPositionMsg = (PlayersPositionedMessage) gameMessage;
+            System.out.println("New Positions for Players");
+            newPositionForPlayers(game, playersPositionMsg);
+            convertAndPublishGame(game, null);
+        }
+    }
+
+    private void newPositionForPlayers(Game game, PlayersPositionedMessage msg){
+        for (Player player : game.getPlayers()){
+            for (PlayerDTO p2 : msg.getPlayers()){
+                if (p2.getId().equals(player.getId())){
+                    player.setPosition(p2.getPosition());
+                }
+            }
+        }
+
     }
 
     private void takePlayedCardsToPlayerStack(Game game, String playerId, Action actionEnum) {
