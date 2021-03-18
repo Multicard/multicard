@@ -3,23 +3,22 @@ package ch.cas.html5.multicardgame.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 
 import java.io.IOException;
 
-@EnableWebMvc
 @Configuration
 public class MulticardWebConfiguerer implements WebMvcConfigurer {
+
 
     /*
      * Serves our angular app as a static resource.
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/resources/**")
+        registry.addResourceHandler("/app/**")
                 .addResourceLocations("classpath:/static/")
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver() {
@@ -40,4 +39,3 @@ public class MulticardWebConfiguerer implements WebMvcConfigurer {
     }
 
 }
-
