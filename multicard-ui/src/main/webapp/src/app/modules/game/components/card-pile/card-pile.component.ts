@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CardDTO} from '../../../../../app-gen/generated-model';
 import {animate, style, transition, trigger} from '@angular/animations';
+import {getCardImage} from '../../../../model/cardHelper';
 
 export enum FlyInAnimation {
   noAnimation = 'noAnimation',
@@ -42,7 +43,7 @@ export class CardPileComponent implements OnInit {
   }
 
   getCardImage(card: CardDTO) {
-    return 'assets/cards/' + (card.faceUp ? card.name : 'BLUE_BACK') + '.svg';
+    return getCardImage(card);
   }
 
   isAnimationDisabled(cardIndex: number) {
