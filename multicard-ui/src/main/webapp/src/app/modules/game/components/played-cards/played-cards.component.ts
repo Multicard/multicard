@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
-import {CardDTO, PlayedCardDTO, PlayedCardsDTO} from '../../../../../app-gen/generated-model';
+import {PlayedCardDTO, PlayedCardsDTO} from '../../../../../app-gen/generated-model';
 import {GameService} from '../../../../services/game.service';
 import {FlyInAnimation} from '../card-pile/card-pile.component';
 
@@ -40,10 +40,6 @@ export class PlayedCardsComponent implements OnInit, OnChanges {
     }
     this.isLastCardPLayedByUser = this.gameService.isLastCardPLayedByUser(this.playedCards);
     this.haveAllPlayersPlayed = this.gameService.haveAllPlayersPlayed(this.playedCards);
-  }
-
-  getCardImage(card: CardDTO) {
-    return 'assets/cards/' + (card.faceUp ? card.name : 'BLUE_BACK') + '.svg';
   }
 
   cardDroppedMiddle(event: CdkDragDrop<string[]>) {

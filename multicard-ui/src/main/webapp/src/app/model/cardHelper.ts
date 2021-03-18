@@ -1,6 +1,6 @@
 import {CardDTO, HandDTO} from '../../app-gen/generated-model';
 
-export const getCardImage = (card: CardDTO) => 'assets/cards/' + (card.faceUp ? card.name : 'BLUE_BACK') + '.svg';
+export const getCardImage = (card: CardDTO) => './assets/cards/' + (card.faceUp ? card.name : 'BLUE_BACK') + '.svg';
 
 export const createCardsForHand = (hand: HandDTO): CardDTO[] => {
   if (!hand) {
