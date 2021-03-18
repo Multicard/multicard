@@ -74,7 +74,9 @@
                         <configuration>
                             <arguments>run build-prod</arguments>
                         </configuration>
+                        <phase>generate-resources</phase>
                     </execution>
+<!--
                     <execution>
                         <id>prod</id>
                         <goals>
@@ -85,6 +87,7 @@
                         </configuration>
                         <phase>generate-resources</phase>
                     </execution>
+-->
                 </executions>
             </plugin>
 
