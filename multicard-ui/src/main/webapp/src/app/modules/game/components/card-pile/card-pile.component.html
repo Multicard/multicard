@@ -1,5 +1,5 @@
 <div class="pile">
-  <div *ngFor="let card of cards; let i = index" class="pile-card" [ngClass]="cardCssClass"
+  <div *ngFor="let card of cards; let i = index; trackBy: trackByCardId" class="pile-card" [ngClass]="cardCssClass"
        [@flyIn]="{value: '', params: {styleTransformExpression: getFlyInStyleTransformExpression(), animateTransformExpression: getFlyInAnimateTransformExpression()}}"
        [@.disabled]="isAnimationDisabled(i)">
     <img [style.marginTop.px]="get3DMargin(i)" [style.marginLeft.px]="get3DMargin(i)"

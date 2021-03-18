@@ -15,7 +15,8 @@ import {
   PlayedCardMessage,
   PlayedCardsDTO,
   PlayerDTO,
-  PlayersPositionedMessage
+  PlayersPositionedMessage,
+  RevertLastPlayerActionMessage
 } from '../../app-gen/generated-model';
 
 const restApiUrl = '/api/Games';
@@ -125,6 +126,10 @@ export class GameService implements OnDestroy {
     this.sendWebsocketGameMessage(Action.CLIENT_PLAYED_CARDS_TAKEN);
   }
 
+  revertLastAction(card: CardDTO) {
+    this.sendWebsocketRevertLastPlayerActionMessage(card);
+  }
+
   changePlayerPosition(oldIndex: number, newIndex: number) {
     const game = this.gameSubject.getValue();
     game.players.splice(newIndex, 0, game.players.splice(oldIndex, 1)[0]);
@@ -228,6 +233,12 @@ export class GameService implements OnDestroy {
 
   private sendWebsocketPlayedCardMessage(card: CardDTO) {
     const message: PlayedCardMessage = {command: Action.CLIENT_CARD_PLAYED, card, messageName: 'PlayedCardMessage'};
+    this.sendWebsocketMessage(message);
+  }
+
+  private sendWebsocketRevertLastPlayerActionMessage(card: CardDTO) {
+    const message: RevertLastPlayerActionMessage =
+      {command: Action.CLIENT_REVERT_LAST_PLAYER_ACTION, card, messageName: 'RevertLastPlayerActionMessage'};
     this.sendWebsocketMessage(message);
   }
 

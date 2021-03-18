@@ -49,6 +49,10 @@ export class StackComponent implements OnInit, OnDestroy {
     return getCardImage(card);
   }
 
+  trackByCardId(index: number, card: CardDTO) {
+    return card.id;
+  }
+
   private triggerAction(action: StackAction) {
     if (action.action === ActionType.drawCard) {
       switch (action.direction) {

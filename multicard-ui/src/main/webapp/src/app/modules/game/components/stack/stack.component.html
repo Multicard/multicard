@@ -1,5 +1,5 @@
 <div *ngIf="stack.cards.length > 0" class="stack">
-  <div *ngFor="let card of stack?.cards; let i = index" class="stack-card table-card"
+  <div *ngFor="let card of stack?.cards; let i = index; trackBy: trackByCardId" class="stack-card table-card"
        [@flyOut]="{value: '', params: {translateExpression: translateExpression}}">
     <img [style.marginTop.px]="get3DMargin(i)" [style.marginLeft.px]="get3DMargin(i)"
          [src]="getCardImage(card)" [alt]="card.faceUp ? card.name : 'card cover'">
