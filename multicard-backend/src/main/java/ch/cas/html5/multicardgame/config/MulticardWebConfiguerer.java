@@ -19,7 +19,7 @@ public class MulticardWebConfiguerer implements WebMvcConfigurer {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**")
+        registry.addResourceHandler("/resources//**")
                 .addResourceLocations("classpath:/static/")
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver() {
