@@ -15,10 +15,14 @@ import {MatCardModule} from '@angular/material/card';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatDialogModule} from '@angular/material/dialog';
+import {PatternRestrictionDirective} from './directives/pattern-restriction.directive';
 
 
 @NgModule({
-  declarations: [HeaderComponent],
+  declarations: [
+    HeaderComponent,
+    PatternRestrictionDirective
+  ],
   imports: [
     CommonModule
   ],
@@ -38,7 +42,8 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatRadioModule,
     MatSelectModule,
     MatSlideToggleModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    PatternRestrictionDirective
   ]
 })
 export class SharedModule {
