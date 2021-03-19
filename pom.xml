@@ -19,9 +19,9 @@
     <description>CAS project - Multicardgame</description>
 
     <modules>
-        <module>multicard-backend</module>
-        <module>multicard-ui</module>
         <module>multicard-api</module>
+        <module>multicard-ui</module>
+        <module>multicard-backend</module>
     </modules>
 
     <properties>
