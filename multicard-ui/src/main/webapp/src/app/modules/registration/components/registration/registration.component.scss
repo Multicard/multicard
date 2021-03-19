@@ -1,14 +1,63 @@
+@import "src/styles/mixins";
+
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
 
-  .multicard-app {
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 80px;
+    background-color: #e8ebee;
+    justify-content: center;
+    align-items: center;
+
+    .game-id {
+      padding: 0 5px;
+      flex-basis: 400px;
+
+      ::ng-deep .mat-form-field-wrapper {
+        padding: 0 5px;
+      }
+    }
+
+    button {
+      margin-bottom: 4px;
+    }
+  }
+
+  .multicard-app, .header-normal-size, .header-small-size {
     margin: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-    .game-section {
-      margin: 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
+    h1, h2 {
+      text-align: center;
+    }
+
+    h1 {
+      margin: 50px;
+      margin-bottom: 40px;
+      font-weight: 500;
+      font-size: 40px;
+    }
+
+    h4 {
+      margin: 20px 0;
+    }
+
+    @include normal-size {
+
+      .header-small-size {
+        display: none;
+      }
+    }
+
+    @include small-size {
+      .header-normal-size {
+        display: none;
+      }
     }
   }
 }

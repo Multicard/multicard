@@ -2,17 +2,24 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RegistrationComponent} from './components/registration/registration.component';
 import {RegistrationRoutingModule} from './registration-routing.module';
-import {FormsModule} from '@angular/forms';
-import {MatSelectModule} from '@angular/material/select';
+import {PlayerRegistrationComponent} from './components/player-registration/player-registration.component';
+import {SharedModule} from '../shared/shared.module';
+import {ConfigurationComponent} from './components/configuration/configuration.component';
 
 
 @NgModule({
-  declarations: [RegistrationComponent],
+  declarations: [
+    RegistrationComponent,
+    PlayerRegistrationComponent,
+    ConfigurationComponent
+  ],
   imports: [
     CommonModule,
     RegistrationRoutingModule,
-    FormsModule,
-    MatSelectModule
+    SharedModule
+  ],
+  entryComponents: [
+    PlayerRegistrationComponent
   ]
 })
 export class RegistrationModule {

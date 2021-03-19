@@ -1,28 +1,26 @@
-<section class="multicard-app">
-  <header class="header">
-    <h1>Multicard Game</h1>
-    <h4>Registrierung</h4>
-  </header>
+<header>
+  <mat-form-field appearance="outline" class="game-id">
+    <mat-label>Spiel ID</mat-label>
+    <input matInput [(ngModel)]="gameId">
+  </mat-form-field>
+  <button mat-raised-button color="primary" (click)="joinGame()">Spiel beitreten</button>
+</header>
 
-  <section class="game-section">
-    <mat-form-field appearance="fill">
-      <mat-label>Spiel</mat-label>
-      <mat-select required [(value)]="selectedGame">
-        <mat-option *ngFor="let game of games" [value]="game.id">
-          {{game.name}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+<main class="multicard-app">
+  <h1>Multicard Game</h1>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Spieler</mat-label>
-      <mat-select required [(value)]="selectedPlayer">
-        <mat-option *ngFor="let player of players" [value]="player.id">
-          {{player.name}}
-        </mat-option>
-     </mat-select>
-    </mat-form-field>
+  <div class="header-normal-size">
+    <h2>Konfiguriere ein Kartenspiel für dich und deine Freunde innert Sekunden</h2>
+    <h4>Erzeuge mit wenigen Clicks einen Spieltisch</h4>
+  </div>
 
-    <button class="btn btn-success" (click)="joinGame()">am Spiel teilnehmen</button>
-  </section>
-</section>
+  <div class="header-small-size">
+    <h2>in wenigen Sekunden zu einem neuen Spiel</h2>
+  </div>
+
+  <button mat-raised-button color="primary" #createGameBtn="matButton" (click)="createGame()">neues Spiel erstellen</button>
+</main>
+
+<ng-template #errorDialogTemplate let-data>
+  <div>{{data.error}}</div>
+</ng-template>

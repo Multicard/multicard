@@ -1,0 +1,44 @@
+<mc-header></mc-header>
+
+<form [formGroup]="gameForm" (ngSubmit)="onSubmit()" class="game-config-form">
+  <mat-form-field appearance="outline">
+    <mat-label>Anzeigename</mat-label>
+    <label>
+      <input matInput formControlName="gameName" required placeholder="z.B. fröhliche Jassrunde">
+    </label>
+  </mat-form-field>
+
+  <div class="game-type">
+    <mat-label id="gameTypeRadioGroupLabel">gewünschtes Spiel</mat-label>
+    <mat-radio-group aria-labelledby="gameTypeRadioGroupLabel" formControlName="gameType">
+      <mat-radio-button *ngFor="let gameType of gameTypes" [value]="gameType">
+        {{gameType}}
+      </mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <mat-expansion-panel class="game-type-specific-config" [expanded]="true" [disabled]="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        spezifische Spieleinstellungen
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-form-field appearance="fill">
+      <mat-label>Anzahl Spieler</mat-label>
+      <input matInput type="number" formControlName="numberOfPlayers" required>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Anzahl zu gebende Karten pro Spieler</mat-label>
+      <input matInput type="number" formControlName="numberOfGivenCardsPerPlayer" required>
+    </mat-form-field>
+    <mat-slide-toggle [checked]="false" [disabled]="true">
+      Karten auf gemeinsamen Stappel legen
+    </mat-slide-toggle>
+  </mat-expansion-panel>
+
+  <div class="create-game-button">
+    <button type="submit" mat-raised-button color="primary" #createGameBtn="matButton" [disabled]="!gameForm.valid">
+      Spiel erzeugen
+    </button>
+  </div>
+</form>

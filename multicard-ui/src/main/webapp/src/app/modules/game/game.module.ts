@@ -8,12 +8,8 @@ import {PlayerComponent} from './components/player/player.component';
 import {PlayedCardsComponent} from './components/played-cards/played-cards.component';
 import {CardPileComponent} from './components/card-pile/card-pile.component';
 import {GameComponent} from './components/game/game.component';
-import {HttpClientModule} from '@angular/common/http';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {DragDropModule} from '@angular/cdk/drag-drop';
 import {GameRoutingModule} from './game-routing.module';
+import {SharedModule} from '../shared/shared.module';
 
 
 @NgModule({
@@ -29,12 +25,8 @@ import {GameRoutingModule} from './game-routing.module';
   ],
   imports: [
     CommonModule,
-    HttpClientModule,
-    MatButtonModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    DragDropModule,
-    GameRoutingModule
+    GameRoutingModule,
+    SharedModule
   ]
 })
 export class GameModule { }

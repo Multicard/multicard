@@ -1,5 +1,15 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
+import {MatButton} from '@angular/material/button';
+import {MatDialog} from '@angular/material/dialog';
+import {GamePlayerParam, PlayerRegistrationComponent} from '../player-registration/player-registration.component';
+import {PlayerService} from '../../../../services/player.service';
+import {Player} from '../../../../model/game.model';
+
+const MISSING_GAME_ID = `Gib bitte die ID des Spiels ein, an welchem du teilnehmen willst.
+Kontaktiere den Spielorganisator, falls du sie nicht kennst`;
+const UNKNOWN_GAME_ID = `Die eingegene Spiel ID ist unbekannt. Bitte prüfe den eingegebenen Wert und
+kontaktiere den Spielorganisator, falls du die Spiel ID richtig eingegeben hast`;
 
 @Component({
   selector: 'mc-registration',
@@ -8,28 +18,68 @@ import {Router} from '@angular/router';
 })
 export class RegistrationComponent implements OnInit {
 
-  readonly games = [{id: 'EA9CA14C-AA81-4A62-8536-E68099975130', name: 'Jassrunde 0815'}];
-  readonly players = [
-    {id: '45BC9F58-51D0-44D4-9E66-DD40C8C2B2BD', name: 'Chefspieler'},
-    {id: '53BE4441-C575-41B9-BECD-9B2A634C771B', name: 'Spieler2'},
-    {id: '0EB0DD34-8DD9-44E6-8D21-9265E190500A', name: 'Spieler3'},
-    {id: '8EE3E68B-C9B8-41B2-BEC8-6BBE4916B817', name: 'Spieler4'}
-  ];
+  @ViewChild('createGameBtn', {static: true}) buttonRef!: MatButton;
+  @ViewChild('errorDialogTemplate', {static: true}) errorDialogTemplate!: TemplateRef<any>;
 
-  selectedGame!: string;
-  selectedPlayer!: string;
+  gameId!: string;
+  player!: Player;
 
-  constructor(private router: Router) {
+  constructor(
+    private playerService: PlayerService,
+    private router: Router,
+    private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
+    this.player = this.playerService.loadPlayerFromLocalStorage();
+    this.buttonRef.focus();
   }
 
   joinGame() {
-    if (this.selectedGame === undefined || this.selectedPlayer === undefined) {
-      alert('wähle bitte ein Spiel und einen Spieler aus');
+    if (!this.gameId) {
+      this.dialog.open(this.errorDialogTemplate, {data: {error: MISSING_GAME_ID}, position: {top: '60px'}});
+      return;
     }
 
-    this.router.navigate([`/game/${this.selectedGame}/${this.selectedPlayer}`]);
+    const gameId = 'EA9CA14C-AA81-4A62-8536-E68099975130';
+    if (this.gameId !== gameId) {
+      this.dialog.open(this.errorDialogTemplate, {data: {error: UNKNOWN_GAME_ID}, position: {top: '60px'}});
+      return;
+    }
+
+    const playerId = this.player.registeredGames.find(game => game.gameId === this.gameId)?.playerId;
+    if (playerId !== undefined) {
+      // TODO prüfen, dass der Player im Backend dem Spiel wirklich zugeordnet ist
+      this.navigateToGame(playerId);
+    } else {
+      const data: GamePlayerParam = {gameId: this.gameId, player: this.player};
+      const dialogRef = this.dialog.open(PlayerRegistrationComponent,
+        {data, hasBackdrop: false, position: {top: '100px'}});
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.handlePlayerRegistrationResult(result as Player);
+        }
+      });
+    }
+  }
+
+  createGame() {
+    this.router.navigate(['/registration/config']);
+  }
+
+  private handlePlayerRegistrationResult(player: Player) {
+    const playerId = this.findPLayerIdForGame(this.player)?.playerId;
+    if (playerId) {
+      this.navigateToGame(playerId);
+    } else {
+      console.error('playerId is not defined aftter player registration', player);
+    }
+  }
+  private findPLayerIdForGame(player: Player) {
+    return player.registeredGames.find(game => game.gameId === this.gameId);
+  }
+
+  private navigateToGame(playerId: string) {
+    this.router.navigate([`/game/${this.gameId}/${playerId}`]);
   }
 }
