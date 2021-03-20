@@ -1,6 +1,5 @@
 package ch.cas.html5.multicardgame.services;
 
-import ch.cas.html5.multicardgame.entity.Game;
 import ch.cas.html5.multicardgame.entity.Player;
 import ch.cas.html5.multicardgame.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,44 +37,20 @@ public class PlayerServiceImpl {
         return null;
     }
 
-    public Player addPlayerToGame(String gameId, String name, Boolean isOrganizer, int position){
-
-        Game game = gameService.getGame(gameId);
-        if (game != null){
-            Player player = new Player();
-            player.setGame(game);
-            player.setName(name);
-            player.setIsOrganizer(isOrganizer);
-            player.setPosition(position);
-            playerRepository.save(player);
-            game.addPlayer(player);
-            return player;
+    public Boolean checkPassword(String playerId, String pwd) {
+        Optional<Player> optPlayer = playerRepository.findById(playerId);
+        if (optPlayer.isPresent()){
+            if (optPlayer.get().equals(pwd)){
+                return true;
+            }
         }
-        return null;
+        return false;
     }
+
 
     public Player savePlayer(Player player){
         return playerRepository.save(player);
     }
 
-    public void deletePlayer(String playerId){
-        playerRepository.deleteById(playerId);
-    }
-
-    public List<Player> getUsesersByPlayground(String gameId){
-        List<Player> players = playerRepository.getPlayersByGame(gameId);
-        return players;
-    }
-
-    public Player updatePlayer(String playerId, String name, Boolean isOrganizer, int position){
-        Player player = getPlayer(playerId);
-        if (player == null) {
-            return null;
-        }
-        player.setName(name);
-        player.setIsOrganizer(isOrganizer);
-        player.setPosition(position);
-        return playerRepository.save(player);
-    }
 
 }

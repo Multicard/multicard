@@ -1,6 +1,6 @@
 package ch.cas.html5.multicardgame.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -15,11 +15,11 @@ public class Action {
     @Column(unique = true, name = "id", nullable = false)
     private String id = UUID.randomUUID().toString().toUpperCase();
 
-    @JsonIgnoreProperties("action")
+    @JsonIgnore
     @ManyToOne(optional = true)
     private Game game;
 
-    @JsonIgnoreProperties("action")
+    @JsonIgnore
     @ManyToOne(optional = true)
     private Player player;
 
@@ -29,6 +29,7 @@ public class Action {
     @Column(name="sort")
     private Long sort;
 
+    @JsonIgnore
     @ElementCollection
     @Column(name="card_id")
     private Set<String> cards_id = new HashSet<>();

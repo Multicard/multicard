@@ -1,6 +1,6 @@
 package ch.cas.html5.multicardgame.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -19,24 +19,21 @@ public class Card {
     @Column(name="sort")
     private int sort;
 
-    @JsonIgnoreProperties("cards")
+    @JsonIgnore
     @ManyToOne(optional = true)
     private Stack stack;
 
-    @JsonIgnoreProperties("cards")
+    @JsonIgnore
     @ManyToOne(optional = true)
     private Hand hand;
 
-    @JsonIgnoreProperties("cards")
+    @JsonIgnore
     @ManyToOne(optional = true)
     private Player player;
 
-    @JsonIgnoreProperties("playedcards")
+    @JsonIgnore
     @ManyToOne(optional = true)
     private PlayedCards playedcards;
-
-//    @OneToOne(mappedBy = "topCard")
-//    private Stack stackTopCard;
 
     public String getId() {
         return id;

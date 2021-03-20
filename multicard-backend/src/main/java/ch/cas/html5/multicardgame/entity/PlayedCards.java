@@ -1,6 +1,6 @@
 package ch.cas.html5.multicardgame.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -18,10 +18,11 @@ public class PlayedCards {
     @Column(name="isonsamestack")
     private Boolean isOnSameStack = false;
 
-    @JsonIgnoreProperties("playedcards")
+    @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "playedcards", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Card> playedcards = new HashSet<>();
 
+    @JsonIgnore
     @OneToOne(mappedBy = "playedcards")
     private Game game;
 

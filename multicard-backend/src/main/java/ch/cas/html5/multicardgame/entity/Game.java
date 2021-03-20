@@ -1,10 +1,13 @@
 package ch.cas.html5.multicardgame.entity;
 
 import ch.cas.html5.multicardgame.enums.Gamestate;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name="game")
@@ -18,7 +21,6 @@ public class Game {
     private String title;
 
     //https://stackoverflow.com/questions/49130173/how-to-fix-spring-boot-one-to-many-bidirectional-infinity-loop
-    @JsonIgnoreProperties("game")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "game", cascade = CascadeType.ALL)
     private Set<Player> players = new HashSet<>();
 
@@ -27,14 +29,16 @@ public class Game {
     @Enumerated(EnumType.STRING)
     private Gamestate state;
 
-    @JsonIgnoreProperties("game")
+    @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Stack> stacks = new HashSet<>();
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "playedcards_id", referencedColumnName = "id")
     private PlayedCards playedcards;
 
+    @JsonIgnore
     @JsonIgnoreProperties("action")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "game", cascade = CascadeType.ALL)
     private Set<Action> actions = new HashSet<>();
