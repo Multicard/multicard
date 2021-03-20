@@ -1,7 +1,7 @@
 package ch.cas.html5.multicardgame.controller;
 
-import ch.cas.html5.multicardgame.entity.Game;
 import ch.cas.html5.multicardgame.control.GameControlService;
+import ch.cas.html5.multicardgame.entity.Game;
 import ch.cas.html5.multicardgame.entity.Player;
 import ch.cas.html5.multicardgame.services.GameServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +35,10 @@ public class GameRestController {
         return gameService.getGame(gameId);
     }
 
-//    @PostMapping(path = "/api/Games", consumes = "application/json", produces = "application/json")
-//    public Game saveGame(@RequestBody String title){
-//        return gameService.saveGame(title);
-//    }
+    @PostMapping(path = "/api/Games", consumes = "application/json", produces = "application/json")
+    public Game saveGame(@RequestBody String title){
+        return gameService.saveGame(title);
+    }
 
     @PutMapping(path = "/api/Games", consumes = "application/json", produces = "application/json")
     public Player addPlayer(@RequestBody String gameId, String name, Boolean isOrganizer, int position, String pwd){

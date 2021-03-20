@@ -40,7 +40,7 @@ public class PlayerServiceImpl {
     public Boolean checkPassword(String playerId, String pwd) {
         Optional<Player> optPlayer = playerRepository.findById(playerId);
         if (optPlayer.isPresent()){
-            if (optPlayer.get().equals(pwd)){
+            if (optPlayer.get().getPwd().equals(pwd)){
                 return true;
             }
         }

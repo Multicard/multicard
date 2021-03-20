@@ -60,8 +60,8 @@ public class GameServiceImpl {
             player.setPosition(position);
             player.setPwd(pwd);
             player.setGame(optGame.get());
-            optGame.get().getPlayers().add(player);
             playerRepository.save(player);
+            optGame.get().getPlayers().add(player);
             return  player;
         }
         return null;

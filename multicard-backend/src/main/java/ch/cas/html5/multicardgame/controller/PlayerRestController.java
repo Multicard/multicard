@@ -27,7 +27,7 @@ public class PlayerRestController {
         return playerService.getPlayer(playerId);
     }
 
-    @GetMapping("/api/Players/{PlayerId, pwd}")
+    @GetMapping("/api/Players/{PlayerId}/{pwd}")
     public Boolean checkPassword(@PathVariable(name="PlayerId")String playerId, @PathVariable(name="pwd")String pwd) {
         return playerService.checkPassword(playerId, pwd);
     }
