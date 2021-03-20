@@ -3,7 +3,7 @@
 <form #playerForm="ngForm" class="player-registration">
   <mat-form-field appearance="outline">
     <mat-label>Name</mat-label>
-    <input name="playerName" matInput [(ngModel)]="player.playerName" mcPatternRestriction="[a-zA-Z0-9_]" required minlength="4">
+    <input name="playerName" matInput [(ngModel)]="player.playerName" mcCharactersRestriction="a-zA-Z0-9_" required minlength="4">
   </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-label>Passwort</mat-label>
