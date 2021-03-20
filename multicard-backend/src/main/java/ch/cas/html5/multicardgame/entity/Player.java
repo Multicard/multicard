@@ -1,7 +1,7 @@
 package ch.cas.html5.multicardgame.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -27,29 +27,31 @@ public class Player {
     @Column(name = "position")
     private Integer position;
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "hand_id", referencedColumnName = "id")
     private Hand hand;
 
-    @JsonIgnoreProperties("players")
+    @JsonIgnore
     @ManyToOne(optional = true)
     private Game game;
 
-    @JsonIgnoreProperties("player")
+    @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Stack> stacks = new HashSet<>();
 
-    @JsonIgnoreProperties("player")
+    @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Action> actions = new HashSet<>();
 
-//    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JoinColumn(name = "card_id", referencedColumnName = "id")
-//    private Card playedCard;
-
-    @JsonIgnoreProperties("player")
+    @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Card> playedCards = new HashSet<>();
+
+    @JsonIgnore
+    @Column(name = "pwd")
+    private String pwd;
+
 
     public String getId() {
         return id;
@@ -121,5 +123,13 @@ public class Player {
 
     public void setPlayedCards(Set<Card> playedCards) {
         this.playedCards = playedCards;
+    }
+
+    public String getPwd() {
+        return pwd;
+    }
+
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
     }
 }

@@ -1,10 +1,11 @@
 package ch.cas.html5.multicardgame.services;
 
 
-import ch.cas.html5.multicardgame.entity.*;
-import ch.cas.html5.multicardgame.control.GameControlService;
+import ch.cas.html5.multicardgame.entity.Game;
+import ch.cas.html5.multicardgame.entity.Player;
 import ch.cas.html5.multicardgame.enums.Gamestate;
 import ch.cas.html5.multicardgame.repository.GameRepository;
+import ch.cas.html5.multicardgame.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +21,11 @@ public class GameServiceImpl {
     }
 
     @Autowired
-    private GameControlService gameControlService;
-    public void setGameControlService(GameControlService gameControlService) {
-        this.gameControlService = gameControlService;
+    private PlayerRepository playerRepository;
+    public void setPlayerRepository(PlayerRepository playerRepository) {
+        this.playerRepository = playerRepository;
     }
+
 
     public List<Game> retrieveGames() {
         List<Game> games = gameRepository.findAll();
@@ -49,8 +51,20 @@ public class GameServiceImpl {
         return gameRepository.save(game);
     }
 
-    public void deleteGame(String gameId){
-        gameRepository.deleteById(gameId);
+    public Player addPlayer(String gameId, String name, Boolean isOrganizer, int position, String pwd){
+        Optional<Game> optGame = gameRepository.findById(gameId);
+        if (optGame.isPresent()) {
+            Player player = new Player();
+            player.setName(name);
+            player.setIsOrganizer(isOrganizer);
+            player.setPosition(position);
+            player.setPwd(pwd);
+            player.setGame(optGame.get());
+            playerRepository.save(player);
+            optGame.get().getPlayers().add(player);
+            return  player;
+        }
+        return null;
     }
 
 

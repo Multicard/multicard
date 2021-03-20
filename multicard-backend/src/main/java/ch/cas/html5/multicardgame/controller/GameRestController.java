@@ -1,7 +1,8 @@
 package ch.cas.html5.multicardgame.controller;
 
-import ch.cas.html5.multicardgame.entity.Game;
 import ch.cas.html5.multicardgame.control.GameControlService;
+import ch.cas.html5.multicardgame.entity.Game;
+import ch.cas.html5.multicardgame.entity.Player;
 import ch.cas.html5.multicardgame.services.GameServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -39,16 +40,10 @@ public class GameRestController {
         return gameService.saveGame(title);
     }
 
-    @DeleteMapping("/api/Games/{GameId}")
-    public void deleteGame(@PathVariable(name="GameId")String gameId){
-        gameService.deleteGame(gameId);
+    @PutMapping(path = "/api/Games", consumes = "application/json", produces = "application/json")
+    public Player addPlayer(@RequestBody String gameId, String name, Boolean isOrganizer, int position, String pwd){
+        return gameService.addPlayer(gameId, name, isOrganizer, position, pwd);
     }
-
-    @PutMapping("/api/Games/{GameId}")
-    public void gameReady(@PathVariable(name="GameId")String gameId){
-        gameControlService.getGameAndSetReady(gameId);
-    }
-
 }
 
 

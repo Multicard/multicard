@@ -27,25 +27,9 @@ public class PlayerRestController {
         return playerService.getPlayer(playerId);
     }
 
-    @PostMapping(path = "/api/Players", consumes = "application/json", produces = "application/json")
-    public Player savePlayer(@RequestBody String gameId, String name, Boolean isOrganizer, int position){
-        return playerService.addPlayerToGame(gameId, name, isOrganizer, position);
-    }
-
-//    @PostMapping(path = "/api/Players", consumes = "application/json", produces = "application/json")
-//    public Player savePlayer(@RequestBody Player player){
-//        return playerService.savePlayer(player);
-//    }
-
-    @DeleteMapping("/api/Players/{PlayerId}")
-    public void deletePlayer(@PathVariable(name="PlayerId")String playerId){
-        playerService.deletePlayer(playerId);
-    }
-
-    @PutMapping("/api/Players/{PlayerId}")
-    public Player updatePlayer(@RequestBody String name, Boolean isOrganizer, int position,
-                               @PathVariable(name="PlayerId")String playerId){
-        return playerService.updatePlayer(playerId, name, isOrganizer, position);
+    @GetMapping("/api/Players/{PlayerId}/{pwd}")
+    public Boolean checkPassword(@PathVariable(name="PlayerId")String playerId, @PathVariable(name="pwd")String pwd) {
+        return playerService.checkPassword(playerId, pwd);
     }
 
 }

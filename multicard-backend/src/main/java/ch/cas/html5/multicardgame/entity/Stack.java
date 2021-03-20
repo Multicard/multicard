@@ -1,6 +1,6 @@
 package ch.cas.html5.multicardgame.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -14,21 +14,18 @@ public class Stack {
     @Column(unique = true, name = "id", nullable = false)
     private String id = UUID.randomUUID().toString().toUpperCase();
 
-    @JsonIgnoreProperties("stack")
+    @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "stack", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Card> cards = new HashSet<>();
 
-    @JsonIgnoreProperties("stacks")
+    @JsonIgnore
     @ManyToOne(optional = true)
     private Player player;
 
-    @JsonIgnoreProperties("stacks")
+    @JsonIgnore
     @ManyToOne(optional = true)
     private Game game;
 
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "topcard", referencedColumnName = "id")
-//    private Card topCard;
     private String topCard;
 
     public String getTopCard() {
