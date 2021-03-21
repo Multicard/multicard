@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -40,7 +41,7 @@ public class PlayerServiceImpl {
     public Boolean checkPassword(String playerId, String pwd) {
         Optional<Player> optPlayer = playerRepository.findById(playerId);
         if (optPlayer.isPresent()){
-            if (optPlayer.get().getPwd().equals(pwd)){
+            if (Objects.equals(optPlayer.get().getPwd(), pwd)){
                 return true;
             }
         }

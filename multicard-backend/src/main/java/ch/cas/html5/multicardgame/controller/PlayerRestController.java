@@ -23,12 +23,12 @@ public class PlayerRestController {
     }
 
     @GetMapping("/api/Players/{PlayerId}")
-    public Player getPlayer(@PathVariable(name="PlayerId")String playerId) {
+    public Player getPlayer(@PathVariable(name="PlayerId") String playerId) {
         return playerService.getPlayer(playerId);
     }
 
-    @GetMapping("/api/Players/{PlayerId}/{pwd}")
-    public Boolean checkPassword(@PathVariable(name="PlayerId")String playerId, @PathVariable(name="pwd")String pwd) {
+    @GetMapping("/api/Players/{PlayerId}/pwd")
+    public Boolean checkPassword(@PathVariable(name="PlayerId") String playerId, @RequestHeader(name="pwd") String pwd) {
         return playerService.checkPassword(playerId, pwd);
     }
 
