@@ -23,100 +23,6 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-clean-plugin</artifactId>
-                <configuration>
-                    <failOnError>false</failOnError>
-                    <filesets>
-                        <fileset>
-                            <directory>.</directory>
-                            <followSymlinks>false</followSymlinks>
-                            <includes>
-                                <include>../multicard-backend/src/main/resources/static/**/*</include>
-                                <include>src/main/webapp/dist/**/*</include>
-                                <include>src/main/web/**/*</include>
-                            </includes>
-                        </fileset>
-                    </filesets>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>com.github.eirslett</groupId>
-                <artifactId>frontend-maven-plugin</artifactId>
-                <configuration>
-                    <nodeVersion>v12.19.0</nodeVersion>
-                    <npmVersion>6.14.4</npmVersion>
-                    <workingDirectory>src/main/webapp/</workingDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>install node and npm</id>
-                        <goals>
-                            <goal>install-node-and-npm</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>npm install</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>npm run build</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>run build-prod</arguments>
-                        </configuration>
-                        <phase>generate-resources</phase>
-                    </execution>
-<!--
-                    <execution>
-                        <id>prod</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>run-script build</arguments>
-                        </configuration>
-                        <phase>generate-resources</phase>
-                    </execution>
--->
-                </executions>
-            </plugin>
-
-
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>../multicard-backend/src/main/resources/static/</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/webapp/dist/multi-card/</directory>
-                                    <filtering>false</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
-
     <profiles>
         <profile>
             <id>generate-typescript-model</id>
@@ -167,6 +73,100 @@
                                 <version>${project.version}</version>
                             </dependency>
                         </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>build-ui</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <configuration>
+                            <failOnError>false</failOnError>
+                            <filesets>
+                                <fileset>
+                                    <directory>.</directory>
+                                    <followSymlinks>false</followSymlinks>
+                                    <includes>
+                                        <include>../multicard-backend/src/main/resources/static/**/*</include>
+                                        <include>src/main/webapp/dist/**/*</include>
+                                        <include>src/main/web/**/*</include>
+                                    </includes>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <configuration>
+                            <nodeVersion>v12.19.0</nodeVersion>
+                            <npmVersion>6.14.4</npmVersion>
+                            <workingDirectory>src/main/webapp/</workingDirectory>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>install node and npm</id>
+                                <goals>
+                                    <goal>install-node-and-npm</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>npm install</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>npm run build</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>run build-prod</arguments>
+                                </configuration>
+                                <phase>generate-resources</phase>
+                            </execution>
+                            <!--
+                                                <execution>
+                                                    <id>prod</id>
+                                                    <goals>
+                                                        <goal>npm</goal>
+                                                    </goals>
+                                                    <configuration>
+                                                        <arguments>run-script build</arguments>
+                                                    </configuration>
+                                                    <phase>generate-resources</phase>
+                                                </execution>
+                            -->
+                        </executions>
+                    </plugin>
+
+
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-resources</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>../multicard-backend/src/main/resources/static/</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>src/main/webapp/dist/multi-card/</directory>
+                                            <filtering>false</filtering>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
