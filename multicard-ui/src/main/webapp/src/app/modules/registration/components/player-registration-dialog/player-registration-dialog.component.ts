@@ -16,7 +16,7 @@ export interface PlayerRegistrationParam {
 const ERROR_NO_SPACE_FOR_NEW_PLAYER = `Diesem Spiel sind bereits 4 Spieler beigetreten und es können keine weiteren Spieler mitspielen.
 Bitte trage den korrekten Namen und Passwort ein, falls du dich bereits für das Spiel registriert hast und weiterspielen möchtest.`;
 
-const ERROR_WRONG_PASSWORD = 'Dieser Name ist mit einem anderen Passwort im Spiel registriert.';
+const ERROR_WRONG_PASSWORD = 'Dieser Name ist mit einem anderen Passwort bereits im Spiel registriert.';
 
 const ERROR_COMMUNICATION = 'Leider ist ein unerwarteter Fehler aufgetreten. Bitte versuche es noch einmal.';
 
