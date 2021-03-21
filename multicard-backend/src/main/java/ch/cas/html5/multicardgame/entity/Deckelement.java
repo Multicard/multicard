@@ -20,7 +20,7 @@ public class Deckelement {
     private int sort;
 
     @JsonIgnoreProperties("deckelements")
-    @ManyToOne(optional = true)
+    @ManyToOne()
     private Deck deck;
 
     public String getId() {

@@ -4,7 +4,6 @@ import ch.cas.html5.multicardgame.entity.Deck;
 import ch.cas.html5.multicardgame.entity.Deckelement;
 import ch.cas.html5.multicardgame.services.DeckServiceImpl;
 import ch.cas.html5.multicardgame.services.DeckelementServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,22 +11,17 @@ import java.util.List;
 @RestController
 @CrossOrigin("*")
 public class DeckRestController {
-    @Autowired
-    private DeckServiceImpl deckService;
-    public void setDeckService(DeckServiceImpl deckService) {
-        this.deckService = deckService;
-    }
+    private final DeckServiceImpl deckService;
+    private final DeckelementServiceImpl deckElementService;
 
-    @Autowired
-    private DeckelementServiceImpl deckElementService;
-    public void setDeckelementService(DeckelementServiceImpl deckElementService) {
+    public DeckRestController(DeckServiceImpl deckService, DeckelementServiceImpl deckElementService) {
+        this.deckService = deckService;
         this.deckElementService = deckElementService;
     }
 
     @GetMapping("/api/Decks")
     public List<Deck> getDecks() {
-        List<Deck> decks = deckService.retrieveDecks();
-        return decks;
+        return deckService.retrieveDecks();
     }
 
     @GetMapping("/api/Decks/{DeckId}")
@@ -58,7 +52,5 @@ public class DeckRestController {
         }
 
     }
-
-
 
 }

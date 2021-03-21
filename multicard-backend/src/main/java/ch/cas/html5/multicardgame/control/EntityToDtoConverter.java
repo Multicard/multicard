@@ -14,7 +14,7 @@ public final class EntityToDtoConverter {
 
     public List<CardDTO> convertCards(Set<Card> cards, Boolean anonymous){
 
-        List<CardDTO> cardsdto = new ArrayList() ;
+        ArrayList cardsdto = new ArrayList();
         for (Card card : cards){
             cardsdto.add(new CardDTO(card.getId(), (anonymous ? "N/A" : card.getName()), card.getSort(), !anonymous));
         }

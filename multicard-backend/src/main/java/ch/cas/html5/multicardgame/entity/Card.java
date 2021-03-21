@@ -20,19 +20,19 @@ public class Card {
     private int sort;
 
     @JsonIgnore
-    @ManyToOne(optional = true)
+    @ManyToOne()
     private Stack stack;
 
     @JsonIgnore
-    @ManyToOne(optional = true)
+    @ManyToOne()
     private Hand hand;
 
     @JsonIgnore
-    @ManyToOne(optional = true)
+    @ManyToOne()
     private Player player;
 
     @JsonIgnore
-    @ManyToOne(optional = true)
+    @ManyToOne()
     private PlayedCards playedcards;
 
     public String getId() {
@@ -87,9 +87,4 @@ public class Card {
         this.playedcards = playedcards;
     }
 
-    //    public Stack getStackTopCard() { return stackTopCard; }
-//
-//    public void setStackTopCard(Stack stackTopCard) {
-//        this.stackTopCard = stackTopCard;
-//    }
 }

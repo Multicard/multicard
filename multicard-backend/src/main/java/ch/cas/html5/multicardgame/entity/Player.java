@@ -33,7 +33,7 @@ public class Player {
     private Hand hand;
 
     @JsonIgnore
-    @ManyToOne(optional = true)
+    @ManyToOne()
     private Game game;
 
     @JsonIgnore

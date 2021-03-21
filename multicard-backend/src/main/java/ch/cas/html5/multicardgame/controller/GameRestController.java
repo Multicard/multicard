@@ -1,10 +1,8 @@
 package ch.cas.html5.multicardgame.controller;
 
-import ch.cas.html5.multicardgame.control.GameControlService;
 import ch.cas.html5.multicardgame.entity.Game;
 import ch.cas.html5.multicardgame.entity.Player;
 import ch.cas.html5.multicardgame.services.GameServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,24 +10,15 @@ import java.util.List;
 @RestController
 @CrossOrigin("*")
 public class GameRestController {
-    @Autowired
-    private GameServiceImpl gameService;
+    private final GameServiceImpl gameService;
 
-    public void setGameService(GameServiceImpl gameService) {
+    public GameRestController(GameServiceImpl gameService) {
         this.gameService = gameService;
-    }
-
-    @Autowired
-    private GameControlService gameControlService;
-
-    public void setGameControlService(GameControlService gameControlService) {
-        this.gameControlService = gameControlService;
     }
 
     @GetMapping("/api/Games")
     public List<Game> getGames() {
-        List<Game> games = gameService.retrieveGames();
-        return games;
+        return gameService.retrieveGames();
     }
 
     @GetMapping("/api/Games/{GameId}")

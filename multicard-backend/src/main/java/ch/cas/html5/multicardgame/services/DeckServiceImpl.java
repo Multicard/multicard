@@ -3,7 +3,6 @@ package ch.cas.html5.multicardgame.services;
 import ch.cas.html5.multicardgame.entity.Deck;
 import ch.cas.html5.multicardgame.entity.Deckelement;
 import ch.cas.html5.multicardgame.repository.DeckRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,28 +11,23 @@ import java.util.Optional;
 @Service
 public class DeckServiceImpl {
 
-    @Autowired
-    private DeckRepository deckRepository;
+    private final DeckRepository deckRepository;
 
-    public void setDeckRepository(DeckRepository deckRepository) {
+    public DeckServiceImpl(DeckRepository deckRepository) {
         this.deckRepository = deckRepository;
     }
 
     public List<Deck> retrieveDecks() {
-        List<Deck> decks = deckRepository.findAll();
-        return decks;
+        return deckRepository.findAll();
     }
 
     public Deck getDeck(String deckId) {
         Optional<Deck> optDeck = deckRepository.findById(deckId);
-        if (optDeck.isPresent()) {
-            return optDeck.get();
-        }
-        return null;
+        return optDeck.orElse(null);
     }
 
-    public Deck saveDeck(Deck deck){
-        return deckRepository.save(deck);
+    public void saveDeck(Deck deck){
+        deckRepository.save(deck);
     }
 
     public void deleteDeck(String deckId){
@@ -42,9 +36,7 @@ public class DeckServiceImpl {
 
     public void addDeckelement(String deckId, Deckelement deckelement){
         Optional<Deck> optDeck = deckRepository.findById(deckId);
-        if (optDeck.isPresent()) {
-            optDeck.get().getDeckelements().add(deckelement);
-        }
+        optDeck.ifPresent(deck -> deck.getDeckelements().add(deckelement));
 
     }
 

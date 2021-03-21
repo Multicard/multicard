@@ -16,11 +16,11 @@ public class Action {
     private String id = UUID.randomUUID().toString().toUpperCase();
 
     @JsonIgnore
-    @ManyToOne(optional = true)
+    @ManyToOne()
     private Game game;
 
     @JsonIgnore
-    @ManyToOne(optional = true)
+    @ManyToOne()
     private Player player;
 
     @Column(name="action")

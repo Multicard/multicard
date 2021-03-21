@@ -19,11 +19,11 @@ public class Stack {
     private Set<Card> cards = new HashSet<>();
 
     @JsonIgnore
-    @ManyToOne(optional = true)
+    @ManyToOne()
     private Player player;
 
     @JsonIgnore
-    @ManyToOne(optional = true)
+    @ManyToOne()
     private Game game;
 
     private String topCard;
@@ -66,11 +66,4 @@ public class Stack {
         this.game = game;
     }
 
-//    public Card getTopCard() {
-//        return topCard;
-//    }
-//
-//    public void setTopCard(Card topCard) {
-//        this.topCard = topCard;
-//    }
 }
