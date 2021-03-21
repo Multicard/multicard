@@ -11,6 +11,7 @@ public enum Action {
     CLIENT_PLAYED_CARDS_TAKEN,
     CLIENT_REVERT_LAST_PLAYER_ACTION,
     CLIENT_REVERT_ACTION,
+    CLIENT_IS_ALIVE,
 
     // Messages vom Backend ans UI
     START_GAME,

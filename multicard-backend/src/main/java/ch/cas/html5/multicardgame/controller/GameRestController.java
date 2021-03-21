@@ -1,5 +1,8 @@
 package ch.cas.html5.multicardgame.controller;
 
+import ch.cas.html5.multicardgame.control.GameControlService;
+import ch.cas.html5.multicardgame.dto.GameDTO;
+import ch.cas.html5.multicardgame.dto.PlayerDTO;
 import ch.cas.html5.multicardgame.entity.Game;
 import ch.cas.html5.multicardgame.entity.Player;
 import ch.cas.html5.multicardgame.services.GameServiceImpl;
@@ -11,9 +14,11 @@ import java.util.List;
 @CrossOrigin("*")
 public class GameRestController {
     private final GameServiceImpl gameService;
+    private final GameControlService gameControlService;
 
-    public GameRestController(GameServiceImpl gameService) {
+    public GameRestController(GameServiceImpl gameService, GameControlService gameControlService) {
         this.gameService = gameService;
+        this.gameControlService = gameControlService;
     }
 
     @GetMapping("/api/Games")
@@ -22,22 +27,33 @@ public class GameRestController {
     }
 
     @GetMapping("/api/Games/{GameId}")
-    public Game getGame(@PathVariable(name = "GameId") String gameId) {
-        return gameService.getGame(gameId);
+    public GameDTO getGame(@PathVariable(name = "GameId") String gameId) {
+        Game game = gameService.getGame(gameId);
+        GameDTO gamedto = new GameDTO(game.getId(), game.getTitle(), game.getState());
+        for (Player p2 : game.getPlayers()) {
+            PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), p2.getPlayerReady(), p2.getAliveTimestamp());
+            gamedto.getPlayers().add(playerdto);
+        }
+        return gamedto;
     }
 
-    @PostMapping(path = "/api/Games", consumes = "application/json", produces = "application/json")
-    public Game saveGame(@RequestParam(name = "gameTitle") String title) {
-        return gameService.saveGame(title);
+    @PostMapping(path = "/api/Games")
+    public GameDTO saveGame(@RequestParam(name = "gameTitle") String title) {
+        Game game =  gameService.saveGame(title);
+        gameControlService.setGameReady(game);
+        GameDTO gamedto = new GameDTO(game.getId(), game.getTitle(), game.getState());
+        return gamedto;
     }
 
-    @PutMapping(path = "/api/Games/{GameId}", consumes = "application/json", produces = "application/json")
-    public Player addPlayer(@PathVariable(name = "GameId") String gameId,
+    @PutMapping(path = "/api/Games/{GameId}")
+    public PlayerDTO addPlayer(@PathVariable(name = "GameId") String gameId,
                             @RequestHeader(name = "name") String name,
                             @RequestHeader(name = "isOrganizer") Boolean isOrganizer,
                             @RequestHeader(name = "position") int position,
                             @RequestHeader(name = "pwd") String pwd) {
-        return gameService.addPlayer(gameId, name, isOrganizer, position, pwd);
+        Player p2 = gameService.addPlayer(gameId, name, isOrganizer, position, pwd);
+        PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), p2.getPlayerReady(), p2.getAliveTimestamp());
+        return playerdto;
     }
 }
 

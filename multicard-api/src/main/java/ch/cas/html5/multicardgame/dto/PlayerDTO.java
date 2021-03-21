@@ -1,5 +1,6 @@
 package ch.cas.html5.multicardgame.dto;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,17 +8,28 @@ public class PlayerDTO {
     private String id;
     private String name;
     private Boolean isOrganizer;
+    private Boolean isAlive;
     private Boolean isPlayerReady;
     private int position;
     private HandDTO hand;
     private List<StackDTO> stacks = new ArrayList<>();
 
-    public PlayerDTO(String id, String name, Boolean isOrganizer, int position, Boolean isPlayerReady){
+    public PlayerDTO(String id, String name, Boolean isOrganizer, int position, Boolean isPlayerReady, Timestamp aliveTimestamp){
         this.id = id;
         this.name = name;
         this.isOrganizer = isOrganizer;
         this.position = position;
         this.isPlayerReady = isPlayerReady;
+        this.isAlive = checkAlive(aliveTimestamp);
+    }
+
+    long ALIVE_PERIOD_IN_MILLIS = 10000; // 10 Seconds
+
+    private Boolean checkAlive (Timestamp aliveTimestamp){
+        if (aliveTimestamp == null){
+            return true;
+        }
+        return aliveTimestamp.after(new Timestamp(System.currentTimeMillis() - ALIVE_PERIOD_IN_MILLIS));
     }
 
     public String getId() {
@@ -74,5 +86,13 @@ public class PlayerDTO {
 
     public void setPlayerReady(Boolean playerReady) {
         isPlayerReady = playerReady;
+    }
+
+    public Boolean getAlive() {
+        return isAlive;
+    }
+
+    public void setAlive(Boolean alive) {
+        isAlive = alive;
     }
 }

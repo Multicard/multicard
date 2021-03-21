@@ -11,6 +11,7 @@ import ch.cas.html5.multicardgame.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 @Service
@@ -93,7 +94,7 @@ public class GameControlService {
         for (Player p1 : game.getPlayers()) {
             for (Player p2 : game.getPlayers()) {
 
-                PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), p2.getPlayerReady());
+                PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), p2.getPlayerReady(), p2.getAliveTimestamp());
 
                 //Convert Game.Player.Hand
                 if (p2.getHand() != null && p2.getHand().getCards() != null) {
@@ -218,6 +219,22 @@ public class GameControlService {
             newPositionForPlayers(game, playersPositionMsg);
             convertAndPublishGame(game, null);
         }
+
+        if (gameMessage.getCommand().equals(Action.CLIENT_IS_ALIVE)) {
+            setPlayerAlive(game, playerId);
+            convertAndPublishGame(game, null);
+        }
+
+    }
+
+    private void setPlayerAlive(Game game, String playerId){
+        for (Player player : game.getPlayers()) {
+            if (player.getId().equals(playerId)) {
+                player.setAliveTimestamp(new Timestamp(System.currentTimeMillis()));
+                playerService.savePlayer(player);
+            }
+        }
+
     }
 
     private void newPositionForPlayers(Game game, PlayersPositionedMessage msg){

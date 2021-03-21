@@ -1,5 +1,6 @@
 package ch.cas.html5.multicardgame.controller;
 
+import ch.cas.html5.multicardgame.dto.PlayerDTO;
 import ch.cas.html5.multicardgame.entity.Player;
 import ch.cas.html5.multicardgame.services.PlayerServiceImpl;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +22,10 @@ public class PlayerRestController {
     }
 
     @GetMapping("/api/Players/{PlayerId}")
-    public Player getPlayer(@PathVariable(name="PlayerId") String playerId) {
-        return playerService.getPlayer(playerId);
+    public PlayerDTO getPlayer(@PathVariable(name="PlayerId") String playerId) {
+        Player p2 =  playerService.getPlayer(playerId);
+        PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), p2.getPlayerReady(), p2.getAliveTimestamp());
+        return playerdto;
     }
 
     @GetMapping("/api/Players/{PlayerId}/pwd")
