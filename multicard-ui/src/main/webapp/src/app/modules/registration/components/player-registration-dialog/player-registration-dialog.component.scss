@@ -23,5 +23,9 @@
   mat-dialog-actions {
     display: flex;
     justify-content: flex-end;
+
+    mat-spinner {
+      margin-left: 8px;
+    }
   }
 }
