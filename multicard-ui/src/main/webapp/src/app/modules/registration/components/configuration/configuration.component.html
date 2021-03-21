@@ -17,28 +17,30 @@
     </mat-radio-group>
   </div>
 
-  <mat-expansion-panel class="game-type-specific-config" [expanded]="true" [disabled]="true">
+  <div class="unsupported-game-tape" *ngIf="!isGameTypeSupported()">Aktuell wird als Spiel nur Schieber unterstützt</div>
+
+  <mat-expansion-panel *ngIf="isGameSpecificConfigurationVisible()" class="game-type-specific-config" [expanded]="true" [disabled]="true">
     <mat-expansion-panel-header>
       <mat-panel-title>
         spezifische Spieleinstellungen
       </mat-panel-title>
     </mat-expansion-panel-header>
     <mat-form-field appearance="fill">
-      <mat-label>Anzahl Spieler</mat-label>
+      <mat-label>Anzahl Spieler*innen</mat-label>
       <input matInput type="number" formControlName="numberOfPlayers" required>
     </mat-form-field>
     <mat-form-field appearance="fill">
-      <mat-label>Anzahl zu gebende Karten pro Spieler</mat-label>
+      <mat-label>Anzahl zu gebende Karten pro Spieler*in</mat-label>
       <input matInput type="number" formControlName="numberOfGivenCardsPerPlayer" required>
     </mat-form-field>
-    <mat-slide-toggle [checked]="false" [disabled]="true">
+    <mat-slide-toggle formControlName="oneSharedStack">
       Karten auf gemeinsamen Stappel legen
     </mat-slide-toggle>
   </mat-expansion-panel>
 
   <div class="create-game-button">
     <button type="submit" mat-raised-button color="primary" #createGameBtn="matButton"
-            [disabled]="!gameForm.valid || isGameCreationInProgress">
+            [disabled]="!gameForm.valid || isGameCreationInProgress || !isGameTypeSupported()">
       Spiel erzeugen
     </button>
     <mat-spinner [diameter]="28" *ngIf="isGameCreationInProgress"></mat-spinner>

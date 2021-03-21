@@ -18,9 +18,10 @@ export class ConfigurationComponent implements OnInit {
 
   gameForm = this.fb.group({
     gameName: ['', Validators.required],
-    numberOfPlayers: [{value: 4, disabled: true}],
-    gameType: [{value: 'Schieber', disabled: true}],
-    numberOfGivenCardsPerPlayer: [{value: 9, disabled: true}]
+    numberOfPlayers: [4],
+    gameType: ['Schieber'],
+    numberOfGivenCardsPerPlayer: [9],
+    oneSharedStack: [true]
   });
 
   gameTypes: string[] = ['Schieber', 'Tschou Sepp', 'frei konfigurierbar'];
@@ -35,6 +36,14 @@ export class ConfigurationComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  isGameTypeSupported() {
+    return this.gameForm.controls.gameType.value === 'Schieber';
+  }
+
+  isGameSpecificConfigurationVisible() {
+    return this.gameForm.controls.gameType.value === 'frei konfigurierbar';
   }
 
   createGame() {
