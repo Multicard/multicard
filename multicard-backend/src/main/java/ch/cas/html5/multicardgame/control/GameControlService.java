@@ -8,6 +8,7 @@ import ch.cas.html5.multicardgame.enums.Gamestate;
 import ch.cas.html5.multicardgame.messages.*;
 import ch.cas.html5.multicardgame.messaging.WebSocketController;
 import ch.cas.html5.multicardgame.services.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -22,9 +23,13 @@ public class GameControlService {
     private final ActionServiceImpl actionService;
     private final StackServiceImpl stackService;
     private final GameResetService gameReset;
-    private final WebSocketController webController;
 
-    public GameControlService(GameServiceImpl gameService, PlayerServiceImpl playerService, DeckServiceImpl deckService, DeckelementServiceImpl deckelementService, CardServiceImpl cardService, ActionServiceImpl actionService, StackServiceImpl stackService, GameResetService gameReset, WebSocketController webController) {
+    @Autowired
+    private WebSocketController webController;
+    public void setWebController(WebSocketController webController){ this.webController = webController; }
+
+
+    public GameControlService(GameServiceImpl gameService, PlayerServiceImpl playerService, DeckServiceImpl deckService, DeckelementServiceImpl deckelementService, CardServiceImpl cardService, ActionServiceImpl actionService, StackServiceImpl stackService, GameResetService gameReset) {
         this.gameService = gameService;
         this.playerService = playerService;
         this.deckService = deckService;
@@ -33,7 +38,6 @@ public class GameControlService {
         this.actionService = actionService;
         this.stackService = stackService;
         this.gameReset = gameReset;
-        this.webController = webController;
     }
 
 

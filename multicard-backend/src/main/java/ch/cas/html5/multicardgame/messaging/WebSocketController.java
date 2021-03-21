@@ -2,6 +2,7 @@ package ch.cas.html5.multicardgame.messaging;
 
 import ch.cas.html5.multicardgame.control.GameControlService;
 import ch.cas.html5.multicardgame.messages.GameMessage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -13,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Transactional
 public class WebSocketController {
 
-    private final GameControlService gameControlService;
     private final SimpMessagingTemplate simpMessagingTemplate;
+
+    @Autowired
+    private GameControlService gameControlService;
+    public void setGameControlService(GameControlService gameControlService){ this.gameControlService = gameControlService; }
 
     public WebSocketController(GameControlService gameControlService, SimpMessagingTemplate simpMessagingTemplate) {
         this.gameControlService = gameControlService;
