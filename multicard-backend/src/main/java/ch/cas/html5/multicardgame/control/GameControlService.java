@@ -66,7 +66,7 @@ public class GameControlService {
         }
     }
 
-    private void convertAndPublishGame(Game game, String sendOnlyToSpecificUser) {
+    private void convertAndPublishGame(Game game, String sendOnlyToSpecificUser, Boolean showPlayerStacks) {
         EntityToDtoConverter converter = new EntityToDtoConverter();
 
         GameStateMessage gameMessage = new GameStateMessage();
@@ -111,7 +111,7 @@ public class GameControlService {
                 //Convert Game.Player.Stacks
                 for (Stack stack : p2.getStacks()) {
                     StackDTO stackdto = new StackDTO(stack.getId());
-                    stackdto.setCards(converter.convertCards(stack.getCards(), true));
+                    stackdto.setCards(converter.convertCards(stack.getCards(), showPlayerStacks));
                     playerdto.getStacks().add(stackdto);
                 }
                 gamedto.getPlayers().add(playerdto);
@@ -160,12 +160,12 @@ public class GameControlService {
 
         if (gameMessage.getCommand().equals(Action.CLIENT_GAME_READY)) {
             setGameReady(game);
-            convertAndPublishGame(game, null);
+            convertAndPublishGame(game, null, false);
         }
 
         if (gameMessage.getCommand().equals(Action.CLIENT_PLAYER_READY)) {
             setPlayerReady(game, playerId);
-            convertAndPublishGame(game, null);
+            convertAndPublishGame(game, null, false);
         }
 
         if (gameMessage.getCommand().equals(Action.CLIENT_START_GAME)) {
@@ -185,7 +185,7 @@ public class GameControlService {
         }
 
         if (gameMessage.getCommand().equals(Action.CLIENT_REQUEST_STATE)) {
-            convertAndPublishGame(game, playerId);
+            convertAndPublishGame(game, playerId, false);
         }
 
         if (gameMessage.getCommand().equals(Action.CLIENT_CARD_PLAYED)) {
@@ -195,7 +195,7 @@ public class GameControlService {
             Card toPlay = cardService.getCard(cardId);
             System.out.println("Card to play: " + toPlay.getName());
             playCardFromPlayerToPlayedCards(game, playerId, toPlay);
-            convertAndPublishGame(game, null);
+            convertAndPublishGame(game, null, false);
 
         }
         if (gameMessage.getCommand().equals(Action.CLIENT_REVERT_LAST_PLAYER_ACTION)) {
@@ -204,27 +204,30 @@ public class GameControlService {
             Card toRevert = cardService.getCard(cardId);
             System.out.println("Revert Action for Card: " + toRevert.getName());
             revertPlayedCardToPlayer(game, playerId, toRevert);
-            convertAndPublishGame(game, null);
+            convertAndPublishGame(game, null, false);
         }
 
         if (gameMessage.getCommand().equals(Action.CLIENT_PLAYED_CARDS_TAKEN)) {
             System.out.println("Player take played Cars to his stack");
             takePlayedCardsToPlayerStack(game, playerId);
-            convertAndPublishGame(game, null);
+            convertAndPublishGame(game, null, false);
         }
 
         if (gameMessage.getCommand().equals(Action.CLIENT_PLAYERS_POSITIONED)){
             PlayersPositionedMessage playersPositionMsg = (PlayersPositionedMessage) gameMessage;
             System.out.println("New Positions for Players");
             newPositionForPlayers(game, playersPositionMsg);
-            convertAndPublishGame(game, null);
+            convertAndPublishGame(game, null, false);
         }
 
         if (gameMessage.getCommand().equals(Action.CLIENT_IS_ALIVE)) {
             setPlayerAlive(game, playerId);
-            convertAndPublishGame(game, null);
+            convertAndPublishGame(game, null, false);
         }
 
+        if (gameMessage.getCommand().equals(Action.CLIENT_SHOW_ALL_PLAYER_STACKS)) {
+            convertAndPublishGame(game, null, true);
+        }
     }
 
     private void setPlayerAlive(Game game, String playerId){

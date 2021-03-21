@@ -12,6 +12,7 @@ public enum Action {
     CLIENT_REVERT_LAST_PLAYER_ACTION,
     CLIENT_REVERT_ACTION,
     CLIENT_IS_ALIVE,
+    CLIENT_SHOW_ALL_PLAYER_STACKS,
 
     // Messages vom Backend ans UI
     START_GAME,
