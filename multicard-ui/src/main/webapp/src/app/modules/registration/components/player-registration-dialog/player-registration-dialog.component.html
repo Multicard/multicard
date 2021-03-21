@@ -2,6 +2,7 @@
 <h1 *ngIf="!organizerMode">Spieler*in registrieren</h1>
 
 <form #playerForm="ngForm" class="player-registration">
+  <div class="error-msg error-msg-top">{{errorMsgTop}}</div>
   <mat-form-field appearance="outline">
     <mat-label>Name</mat-label>
     <input name="playerName" matInput [(ngModel)]="player.playerName" mcCharactersRestriction="a-zA-Z0-9_" required minlength="4">
@@ -13,7 +14,7 @@
   <div class="pwd-hint">Name/Passwort gelten nur für dieses Spiel. Sie werden zur Identifikation benötigt, falls du während des
     Spiels zu einem anderen Gerät/Browser wechselst und dort weiterspielst.
   </div>
-  <div class="error-msg">{{errorMsg}}</div>
+  <div class="error-msg error-msg-bottom">{{errorMsgBottom}}</div>
 </form>
 
 <mat-dialog-actions>

@@ -13,10 +13,11 @@ export interface PlayerRegistrationParam {
   game: GameDTO;
 }
 
-const ERROR_NO_SPACE_FOR_NEW_PLAYER = `Diesem Spiel sind bereits 4 Spieler beigetreten und es können keine weiteren Spieler mitspielen.
-Bitte trage den korrekten Namen und Passwort ein, falls du dich bereits für das Spiel registriert hast und weiterspielen möchtest.`;
+const ERROR_NO_SPACE_FOR_NEW_PLAYER = `Diesem Spiel sind bereits 4 Spieler*innen beigetreten und es können keine weiteren \
+Spieler*innen mitspielen.
+Bitte trage den korrekten Namen und das Passwort ein, falls du dich bereits für das Spiel registriert hast und weiterspielen möchtest.`;
 
-const ERROR_WRONG_PASSWORD = 'Dieser Name ist mit einem anderen Passwort bereits im Spiel registriert.';
+const ERROR_WRONG_PASSWORD = 'Das eingegebene Passwort ist falsch.';
 
 const ERROR_COMMUNICATION = 'Leider ist ein unerwarteter Fehler aufgetreten. Bitte versuche es noch einmal.';
 
@@ -33,7 +34,8 @@ export class PlayerRegistrationDialogComponent implements OnInit {
   password!: string;
   noFreePLayersLeft = false;
   isRestCallInProgress = false;
-  errorMsg?: string;
+  errorMsgTop?: string;
+  errorMsgBottom?: string;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: PlayerRegistrationParam,
@@ -50,7 +52,7 @@ export class PlayerRegistrationDialogComponent implements OnInit {
   ngOnInit(): void {
     if (this.game.players?.length >= 4) {
       this.noFreePLayersLeft = true;
-      this.errorMsg = ERROR_NO_SPACE_FOR_NEW_PLAYER;
+      this.errorMsgTop = ERROR_NO_SPACE_FOR_NEW_PLAYER;
       return;
     }
   }
@@ -61,7 +63,8 @@ export class PlayerRegistrationDialogComponent implements OnInit {
 
   okButtonClicked() {
     this.isRestCallInProgress = true;
-    this.errorMsg = undefined;
+    this.errorMsgTop = undefined;
+    this.errorMsgBottom = undefined;
     if (!this.organizerMode) {
       const existingPLayer = this.game.players?.find(p => p.name === this.player.playerName);
       if (existingPLayer) {
@@ -69,7 +72,7 @@ export class PlayerRegistrationDialogComponent implements OnInit {
         return;
       } else if (this.noFreePLayersLeft) {
         this.isRestCallInProgress = false;
-        this.errorMsg = ERROR_NO_SPACE_FOR_NEW_PLAYER;
+        this.errorMsgTop = ERROR_NO_SPACE_FOR_NEW_PLAYER;
         return;
       }
     }
@@ -84,11 +87,11 @@ export class PlayerRegistrationDialogComponent implements OnInit {
         if (result) {
           this.savePlayerAndCloseDialog(player.id);
         } else {
-          this.errorMsg = ERROR_WRONG_PASSWORD;
+          this.errorMsgBottom = ERROR_WRONG_PASSWORD;
         }
       }, e => {
         console.error('error on password check', e);
-        this.errorMsg = ERROR_COMMUNICATION;
+        this.errorMsgBottom = ERROR_COMMUNICATION;
       });
   }
 
@@ -100,7 +103,7 @@ export class PlayerRegistrationDialogComponent implements OnInit {
         this.savePlayerAndCloseDialog(player.id);
       }, e => {
         console.error('error on adding player', e);
-        this.errorMsg = ERROR_COMMUNICATION;
+        this.errorMsgBottom = ERROR_COMMUNICATION;
       });
   }
 
