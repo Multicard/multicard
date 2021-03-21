@@ -1,8 +1,8 @@
 <mc-header></mc-header>
 
-<form [formGroup]="gameForm" (ngSubmit)="onSubmit()" class="game-config-form">
+<form [formGroup]="gameForm" (ngSubmit)="createGame()" class="game-config-form">
   <mat-form-field appearance="outline">
-    <mat-label>Anzeigename</mat-label>
+    <mat-label>Spielname</mat-label>
     <label>
       <input matInput formControlName="gameName" required placeholder="z.B. fröhliche Jassrunde">
     </label>
@@ -37,8 +37,14 @@
   </mat-expansion-panel>
 
   <div class="create-game-button">
-    <button type="submit" mat-raised-button color="primary" #createGameBtn="matButton" [disabled]="!gameForm.valid">
+    <button type="submit" mat-raised-button color="primary" #createGameBtn="matButton"
+            [disabled]="!gameForm.valid || isGameCreationInProgress">
       Spiel erzeugen
     </button>
+    <mat-spinner [diameter]="36" *ngIf="isGameCreationInProgress"></mat-spinner>
   </div>
 </form>
+
+<ng-template #errorDialogTemplate let-data>
+  <div>{{data.error}}</div>
+</ng-template>

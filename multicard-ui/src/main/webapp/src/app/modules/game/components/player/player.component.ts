@@ -21,10 +21,10 @@ export enum TablePosition {
 })
 export class PlayerComponent implements OnInit, OnChanges {
 
-  @Input() player!: PlayerDTO;
+  @Input() player?: PlayerDTO;
   @Input() tablePosition = TablePosition.bottom;
   handCards: CardDTO[] = [];
-  stack!: CardDTO[];
+  stack?: CardDTO[];
 
   constructor() {
   }
@@ -34,7 +34,7 @@ export class PlayerComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.handCards = createCardsForHand(this.player?.hand);
-    this.stack = this.player?.stacks?.length > 0 ? this.player.stacks[0]?.cards : [];
+    this.stack = this.player?.stacks && this.player.stacks.length > 0 ? this.player.stacks[0]?.cards : [];
   }
 
   getRotation(i: number): number {

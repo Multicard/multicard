@@ -1,0 +1,27 @@
+:host {
+  display: block;
+
+  .player-registration {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+
+    .pwd-hint {
+      font-size: 75%;
+    }
+
+    .error-msg {
+      margin: 20px 0;
+      color: red;
+      white-space: pre-line;
+      text-align: center;
+    }
+  }
+
+  mat-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

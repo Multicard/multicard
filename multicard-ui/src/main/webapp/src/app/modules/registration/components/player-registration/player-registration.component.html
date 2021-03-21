@@ -1,21 +1,7 @@
-<h1>Spieler*in registrieren</h1>
+<ng-template #errorDialogTemplate let-data>
+  <div>{{data.error}}</div>
+</ng-template>
 
-<form #playerForm="ngForm" class="player-registration">
-  <mat-form-field appearance="outline">
-    <mat-label>Name</mat-label>
-    <input name="playerName" matInput [(ngModel)]="player.playerName" mcCharactersRestriction="a-zA-Z0-9_" required minlength="4">
-  </mat-form-field>
-  <mat-form-field appearance="outline">
-    <mat-label>Passwort</mat-label>
-    <input name="password" type="password" matInput [(ngModel)]="password" required>
-  </mat-form-field>
-  <div class="pwd-hint">Name/Passwort gelten nur für dieses Spiel. Sie werden zur Identifikation benötigt, falls du während des
-    Spiels zu einem anderen Gerät/Browser wechselst und dort weiterspielst.
-  </div>
-  <div class="error-msg">{{errorMsg}}</div>
-</form>
+<h1>Mitspieler einladen bla bla bla</h1>
 
-<mat-dialog-actions>
-  <button mat-raised-button color="primary" (click)="enterGame()" [disabled]="!playerForm.valid">Spiel beitreten</button>
-  <button mat-button mat-dialog-close>Abbrechen</button>
-</mat-dialog-actions>
+<div>ID des Spiels ist: {{gameId}}</div>

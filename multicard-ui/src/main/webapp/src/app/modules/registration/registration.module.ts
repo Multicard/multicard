@@ -5,11 +5,13 @@ import {RegistrationRoutingModule} from './registration-routing.module';
 import {PlayerRegistrationComponent} from './components/player-registration/player-registration.component';
 import {SharedModule} from '../shared/shared.module';
 import {ConfigurationComponent} from './components/configuration/configuration.component';
+import {PlayerRegistrationDialogComponent} from './components/player-registration-dialog/player-registration-dialog.component';
 
 
 @NgModule({
   declarations: [
     RegistrationComponent,
+    PlayerRegistrationDialogComponent,
     PlayerRegistrationComponent,
     ConfigurationComponent
   ],
@@ -19,7 +21,7 @@ import {ConfigurationComponent} from './components/configuration/configuration.c
     SharedModule
   ],
   entryComponents: [
-    PlayerRegistrationComponent
+    PlayerRegistrationDialogComponent
   ]
 })
 export class RegistrationModule {

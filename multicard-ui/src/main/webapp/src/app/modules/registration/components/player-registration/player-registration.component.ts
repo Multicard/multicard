@@ -1,73 +1,70 @@
-import {Component, Inject, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
-import {GamePlayer, Player} from '../../../../model/game.model';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {GameDTO} from '../../../../../app-gen/generated-model';
+import {GameService} from '../../../../services/game.service';
+import {MatDialog} from '@angular/material/dialog';
+import {Player} from '../../../../model/game.model';
 import {PlayerService} from '../../../../services/player.service';
+import {
+  PlayerRegistrationDialogComponent,
+  PlayerRegistrationParam
+} from '../player-registration-dialog/player-registration-dialog.component';
 
-export interface GamePlayerParam {
-  gameId: string;
-  player: Player;
-}
-
-const ERROR_NO_PLACE_FOR_NEW_PLAYER = `Diesem Spiel sind bereits 4 Spieler beigetreten und es können keine weiteren Spieler mitspielen.
-Falls du dich bereits für das Spiel registriert hast und weiterspielen möchtest, musst du den korrekten Spielernamen eintragen.`;
+const ERROR_MSG = 'Leider ist ein unerwarteter Fehler aufgetreten. Bitte lade die Seite neu.';
 
 @Component({
   selector: 'mc-player-registration',
   templateUrl: './player-registration.component.html',
   styleUrls: ['./player-registration.component.scss']
 })
-export class PlayerRegistrationComponent implements OnInit, OnChanges {
+export class PlayerRegistrationComponent implements OnInit {
 
-  player: Player;
-  password!: string;
-  errorMsg?: string;
+  @ViewChild('errorDialogTemplate', {static: true}) errorDialogTemplate!: TemplateRef<any>;
+
+  player!: Player;
+  gameId!: string;
+  game!: GameDTO;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: GamePlayerParam,
-    private dialogRef: MatDialogRef<PlayerRegistrationComponent>,
-    private fb: FormBuilder,
-    private playerService: PlayerService
-  ) {
-    this.player = data.player;
+    private playerService: PlayerService,
+    private gameService: GameService,
+    private route: ActivatedRoute,
+    private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    this.errorMsg = undefined;
-  }
-
-  get gameId(): string {
-    return this.data.gameId;
-  }
-
-  enterGame() {
-    if (this.gameId) {
-      // TODO registriere den Player im Game (REST call)
-      // Fehlerhandling, falls Registrierung nok
-      // TODO löschen
-      const players = [
-        {id: '45BC9F58-51D0-44D4-9E66-DD40C8C2B2BD', name: 'Chefspieler'},
-        {id: '53BE4441-C575-41B9-BECD-9B2A634C771B', name: 'Spieler2'},
-        {id: '0EB0DD34-8DD9-44E6-8D21-9265E190500A', name: 'Spieler3'},
-        {id: '8EE3E68B-C9B8-41B2-BEC8-6BBE4916B817', name: 'Spieler4'}
-      ];
-      const playerId = players.find(p => p.name === this.player.playerName)?.id;
-      if (playerId === undefined) {
-        this.errorMsg = ERROR_NO_PLACE_FOR_NEW_PLAYER;
-        return;
+    this.player = this.playerService.loadPlayerFromLocalStorage();
+    this.route.paramMap.subscribe(p => {
+      const gameId = p.get('gameId');
+      if (gameId) {
+        this.gameId = gameId;
+        this.loadGameAndCreateOrganizer(this.gameId);
+      } else {
+        console.error('gameId or playerId is not set', this.route);
       }
-      this.player.registeredGames.push(new GamePlayer(this.gameId, playerId));
-      this.savePlayerAndCloseDialog();
-    } else {
-      this.savePlayerAndCloseDialog();
-    }
+    });
   }
 
-  private savePlayerAndCloseDialog() {
-    this.playerService.storePlayerInLocalStorage(this.player);
-    this.dialogRef.close(this.player);
+  private loadGameAndCreateOrganizer(gameId: string) {
+    this.gameService.loadGame(gameId).subscribe(game => {
+      this.game = game;
+      if (!game.players || !game.players.find(p => p.organizer)) {
+        this.createOrganizerPlayer(game);
+      }
+    }, e => {
+      console.error('error on game creation', e);
+      this.dialog.open(this.errorDialogTemplate, {data: {error: ERROR_MSG}, position: {top: '60px'}});
+    });
+  }
+
+  private createOrganizerPlayer(game: GameDTO) {
+    const data: PlayerRegistrationParam = {isOrganizer: true, game, player: this.player};
+    const dialogRef = this.dialog.open(PlayerRegistrationDialogComponent,
+      {data, hasBackdrop: false, position: {top: '100px'}});
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        //this.handlePlayerRegistrationResult(result as Player);
+      }
+    });
   }
 }

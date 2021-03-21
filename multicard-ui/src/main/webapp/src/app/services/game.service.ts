@@ -19,7 +19,7 @@ import {
   RevertLastPlayerActionMessage
 } from '../../app-gen/generated-model';
 
-const restApiUrl = '/api/Games';
+const GAME_REST_API_URL = '/api/Games';
 
 @Injectable({providedIn: 'root'})
 export class GameService implements OnDestroy {
@@ -33,6 +33,25 @@ export class GameService implements OnDestroy {
   private gameStartedByThisClient = false;
 
   constructor(private http: HttpClient, private rxStompService: RxStompService) {
+  }
+
+  createGame(gameName: string): Observable<GameDTO> {
+    return this.http.post<GameDTO>(GAME_REST_API_URL, {}, {params: {gameTitle: gameName}});
+  }
+
+  loadGame(gameId: string): Observable<GameDTO> {
+    return this.http.get<GameDTO>(`${GAME_REST_API_URL}/${gameId}`);
+  }
+
+  addPlayer(gameId: string, isOrganizer: boolean, playerName: string, position: number, password: string): Observable<PlayerDTO> {
+    return this.http.put<PlayerDTO>(`${GAME_REST_API_URL}/${gameId}`, {}, {
+      headers: {
+        name: playerName,
+        isOrganizer: JSON.stringify(isOrganizer),
+        position: JSON.stringify(position),
+        pwd: password
+      }
+    });
   }
 
   initGame(gameId: string, playerId: string): Observable<GameDTO> {

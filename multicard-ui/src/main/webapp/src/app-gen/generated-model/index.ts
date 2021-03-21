@@ -39,11 +39,11 @@ export interface RevertLastPlayerActionMessage extends GameMessage {
 export interface PlayerDTO {
     id: string;
     name: string;
+    organizer: boolean;
+    playerReady: boolean;
     position: number;
     hand: HandDTO;
     stacks: StackDTO[];
-    organizer: boolean;
-    playerReady: boolean;
 }
 
 export interface StackDTO {
@@ -52,8 +52,8 @@ export interface StackDTO {
 }
 
 export interface PlayedCardsDTO {
-    cards: PlayedCardDTO[];
     onSameStack: boolean;
+    cards: PlayedCardDTO[];
 }
 
 export interface ActionDTO {
@@ -65,8 +65,8 @@ export interface ActionDTO {
 export interface CardDTO extends Comparable<CardDTO> {
     id: string;
     name: string;
-    sort: number;
     faceUp: boolean;
+    sort: number;
 }
 
 export interface HandDTO {
@@ -82,7 +82,7 @@ export interface PlayedCardDTO extends CardDTO {
 export interface Comparable<T> {
 }
 
-export type GameMessageUnion = GameStateMessage | PlayedCardMessage | RevertLastPlayerActionMessage;
+export type GameMessageUnion = GameStateMessage | PlayedCardMessage | PlayersPositionedMessage | RevertLastPlayerActionMessage;
 
 export enum Gamestate {
     INITIAL = "INITIAL",
