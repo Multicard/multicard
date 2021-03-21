@@ -61,13 +61,6 @@ export class GameService implements OnDestroy {
     this.rxStompService.connected$
       .pipe(take(1))
       .subscribe(() => {
-        // TODO Senden von Game Ready zu der Konfiguration des Games verschieben
-        if (playerId === '45BC9F58-51D0-44D4-9E66-DD40C8C2B2BD') {
-          this.sendWebsocketGameMessage(Action.CLIENT_GAME_READY);
-        }
-        // this.http.put<string>(restApiUrl + '/EA9CA14C-AA81-4A62-8536-E68099975130', '').subscribe(() =>
-        //   this.sendWebsocketMessage(Action.CLIENT_PLAYER_READY)
-        // );
         this.sendWebsocketGameMessage(Action.CLIENT_PLAYER_READY);
       });
 

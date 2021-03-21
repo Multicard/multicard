@@ -8,20 +8,31 @@
     align-items: center;
     margin: 10px;
 
+    .error-msg {
+      color: red;
+      white-space: pre-line;
+      text-align: center;
+    }
+
+    .error-msg-top {
+      margin: 20px 0;
+    }
+
     .pwd-hint {
       font-size: 75%;
     }
 
-    .error-msg {
+    .error-msg-bottom {
       margin: 20px 0;
-      color: red;
-      white-space: pre-line;
-      text-align: center;
     }
   }
 
   mat-dialog-actions {
     display: flex;
     justify-content: flex-end;
+
+    mat-spinner {
+      margin-left: 8px;
+    }
   }
 }

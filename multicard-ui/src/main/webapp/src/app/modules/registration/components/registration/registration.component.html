@@ -3,7 +3,8 @@
     <mat-label>Spiel ID</mat-label>
     <input matInput [(ngModel)]="gameId">
   </mat-form-field>
-  <button mat-raised-button color="primary" (click)="joinGame()">Spiel beitreten</button>
+  <button mat-raised-button color="primary" (click)="joinGame()" [disabled]="gameLoadingInProgress">Spiel beitreten</button>
+  <mat-spinner [diameter]="28" *ngIf="gameLoadingInProgress"></mat-spinner>
 </header>
 
 <main class="multicard-app">

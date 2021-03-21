@@ -9,6 +9,7 @@ import {
 import {PlayerService} from '../../../../services/player.service';
 import {Player} from '../../../../model/game.model';
 import {GameService} from '../../../../services/game.service';
+import {finalize} from 'rxjs/operators';
 
 const MISSING_GAME_ID = `Gib bitte die ID des Spiels ein, an welchem du teilnehmen willst.
 Kontaktiere den Spielorganisator, falls du sie nicht kennst`;
@@ -28,6 +29,7 @@ export class RegistrationComponent implements OnInit {
 
   gameId!: string;
   player!: Player;
+  gameLoadingInProgress = false;
 
   constructor(
     private gameService: GameService,
@@ -47,28 +49,31 @@ export class RegistrationComponent implements OnInit {
       return;
     }
 
-    this.gameService.loadGame(this.gameId).subscribe(foundGame => {
-      if (!foundGame) {
-        this.openErrorDialog(UNKNOWN_GAME_ID);
-        return;
-      }
-      const playerId = this.player.registeredGames.find(g => g.gameId === this.gameId)?.playerId;
-      if (playerId !== undefined && foundGame.players?.find(p => p.id === playerId)) {
-        this.navigateToGame(playerId);
-      } else {
-        const data: PlayerRegistrationParam = {isOrganizer: false, game: foundGame, player: this.player};
-        const dialogRef = this.dialog.open(PlayerRegistrationDialogComponent,
-          {data, hasBackdrop: false, position: {top: '100px'}});
-        dialogRef.afterClosed().subscribe(result => {
-          if (result) {
-            this.handlePlayerRegistrationResult(result as Player);
-          }
-        });
-      }
-    }, e => {
-      console.error('error while loading game', e);
-      this.openErrorDialog(COMMUNICATION_ERROR_MSG);
-    });
+    this.gameLoadingInProgress = true;
+    this.gameService.loadGame(this.gameId)
+      .pipe(finalize(() => this.gameLoadingInProgress = false))
+      .subscribe(foundGame => {
+        if (!foundGame) {
+          this.openErrorDialog(UNKNOWN_GAME_ID);
+          return;
+        }
+        const playerId = this.player.registeredGames.find(g => g.gameId === this.gameId)?.playerId;
+        if (playerId !== undefined && foundGame.players?.find(p => p.id === playerId)) {
+          this.navigateToGame(playerId);
+        } else {
+          const data: PlayerRegistrationParam = {isOrganizer: false, game: foundGame, player: this.player};
+          const dialogRef = this.dialog.open(PlayerRegistrationDialogComponent,
+            {data, hasBackdrop: false, position: {top: '100px'}});
+          dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+              this.handlePlayerRegistrationResult(result as Player);
+            }
+          });
+        }
+      }, e => {
+        console.error('error while loading game', e);
+        this.openErrorDialog(COMMUNICATION_ERROR_MSG);
+      });
   }
 
   createGame() {

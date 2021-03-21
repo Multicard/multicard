@@ -1,7 +1,13 @@
+<mc-header></mc-header>
+
+<main class="player-registration">
+  <h1>Mitspieler einladen bla bla bla</h1>
+
+  <div>Spiel ID: {{gameId}}</div>
+
+  <button mat-raised-button color="primary" #createGameBtn="matButton" (click)="joinTable()">zum Spieltisch</button>
+</main>
+
 <ng-template #errorDialogTemplate let-data>
   <div>{{data.error}}</div>
 </ng-template>
-
-<h1>Mitspieler einladen bla bla bla</h1>
-
-<div>ID des Spiels ist: {{gameId}}</div>
