@@ -31,7 +31,7 @@ export class GameComponent implements OnInit {
   }
 
   isGameStarteable(gameState: GameDTO) {
-    return gameState.state === Gamestate.READYTOSTART && gameState.players[0]?.organizer;
+    return gameState.state === Gamestate.READYTOSTART && gameState.players?.length>=4 && gameState.players[0]?.organizer;
   }
 
   startGame() {
