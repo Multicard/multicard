@@ -29,12 +29,16 @@ public class GameRestController {
     @GetMapping("/api/Games/{GameId}")
     public GameDTO getGame(@PathVariable(name = "GameId") String gameId) {
         Game game = gameService.getGame(gameId);
-        GameDTO gamedto = new GameDTO(game.getId(), game.getTitle(), game.getState());
-        for (Player p2 : game.getPlayers()) {
-            PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), p2.getPlayerReady(), p2.getAliveTimestamp());
-            gamedto.getPlayers().add(playerdto);
+        if (game == null) {
+            return null;
+        } else {
+            GameDTO gamedto = new GameDTO(game.getId(), game.getTitle(), game.getState());
+            for (Player p2 : game.getPlayers()) {
+                PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), p2.getPlayerReady(), p2.getAliveTimestamp());
+                gamedto.getPlayers().add(playerdto);
+            }
+            return gamedto;
         }
-        return gamedto;
     }
 
     @PostMapping(path = "/api/Games")
