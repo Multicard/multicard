@@ -7,6 +7,7 @@ import {PlayerRegistrationComponent} from './components/player-registration/play
 
 const registrationRoutes: Routes = [
     { path: '', pathMatch: 'full', component: RegistrationComponent},
+    { path: 'game/:gameId', pathMatch: 'full', component: RegistrationComponent},
     { path: 'config', component: ConfigurationComponent},
     { path: 'player/:gameId', component: PlayerRegistrationComponent}
 ];

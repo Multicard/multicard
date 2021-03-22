@@ -16,6 +16,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatDialogModule} from '@angular/material/dialog';
 import {CharactersRestrictionDirective} from './directives/characters-restriction.directive';
+import {ClipboardModule} from '@angular/cdk/clipboard';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import {CharactersRestrictionDirective} from './directives/characters-restrictio
     CommonModule
   ],
   exports: [
+    ClipboardModule,
     DragDropModule,
     FormsModule,
     ReactiveFormsModule,

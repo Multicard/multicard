@@ -58,7 +58,7 @@ export class PlayerRegistrationDialogComponent implements OnInit {
   }
 
   getOkButtonText() {
-    return this.organizerMode ? 'Mitspieler*innen einladen' : 'Spiel beitreten';
+    return this.organizerMode ? 'weiter' : 'Spiel beitreten';
   }
 
   okButtonClicked() {

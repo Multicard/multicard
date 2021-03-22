@@ -9,6 +9,7 @@ import {
   PlayerRegistrationDialogComponent,
   PlayerRegistrationParam
 } from '../player-registration-dialog/player-registration-dialog.component';
+import {environment} from '../../../../../environments/environment';
 
 const ERROR_MSG = 'Leider ist ein unerwarteter Fehler aufgetreten. Bitte lade die Seite neu.';
 
@@ -24,6 +25,8 @@ export class PlayerRegistrationComponent implements OnInit {
   player!: Player;
   playerIdOfGame?: string;
   gameId!: string;
+  gameUrl = '';
+  gameEmail = '';
   game!: GameDTO;
 
   constructor(
@@ -40,6 +43,7 @@ export class PlayerRegistrationComponent implements OnInit {
       const gameId = p.get('gameId');
       if (gameId) {
         this.gameId = gameId;
+        this.gameUrl = `${environment.appUrl}/registration/game/${gameId}`;
         this.loadGameAndCreatePlayer();
       } else {
         console.error('gameId or playerId is not set', this.route);
@@ -47,13 +51,16 @@ export class PlayerRegistrationComponent implements OnInit {
     });
   }
 
-  joinTable() {
+  joinGameTable() {
     this.router.navigate([`/game/${this.gameId}/${this.playerIdOfGame}`]);
   }
 
   private loadGameAndCreatePlayer() {
     this.gameService.loadGame(this.gameId).subscribe(game => {
       this.game = game;
+      this.gameEmail = `mailto:?subject=Einladung zum Spiel ${game.title}&body=Hallo%0D%0A%0D%0AAnbei die \
+Einladung zum Spiel ${game.title}:\
+%0D%0A%0D%0A${this.gameUrl}%0D%0A%0D%0ABis bald und liebe Grüsse`;
       this.playerIdOfGame = this.player.registeredGames?.find(rg => rg.gameId === game.id)?.playerId;
       if (!this.playerIdOfGame) {
         const hasGameAlreadyAnOrganizer = game.players && game.players.find(p => p.organizer);

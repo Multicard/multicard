@@ -6,6 +6,7 @@ import {PlayerRegistrationComponent} from './components/player-registration/play
 import {SharedModule} from '../shared/shared.module';
 import {ConfigurationComponent} from './components/configuration/configuration.component';
 import {PlayerRegistrationDialogComponent} from './components/player-registration-dialog/player-registration-dialog.component';
+import {QRCodeModule} from 'angularx-qrcode';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import {PlayerRegistrationDialogComponent} from './components/player-registratio
   ],
   imports: [
     CommonModule,
+    QRCodeModule,
     RegistrationRoutingModule,
     SharedModule
   ],

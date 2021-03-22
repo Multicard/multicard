@@ -1,3 +1,5 @@
+@import "src/styles/mixins";
+
 :host {
   display: flex;
   flex-direction: column;
@@ -8,13 +10,56 @@
     flex-direction: column;
     align-items: center;
 
-    h1 {
-      margin: 50px;
+    h1, h3, div {
       text-align: center;
     }
 
-    button {
-      margin-top: 40px;
+    .share-game {
+      button {
+        margin: 0 20px 6px;
+      }
+    }
+
+    @include normal-size {
+      h1 {
+        display: none;
+        margin-top: 20px;
+        margin-bottom: 40px;
+      }
+
+      h3 {
+        margin-bottom: 40px;
+        font-weight: bold;
+      }
+
+      .game-link {
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+
+      .game-table-button {
+        margin-top: 40px;
+      }
+    }
+
+    @include small-size {
+      h1 {
+        margin: 0;
+        font-size: 1.2em;
+      }
+
+      h3 {
+        margin-bottom: 0;
+        font-size: 1em;
+      }
+
+      .game-link {
+        margin: 0;
+      }
+
+      .game-table-button {
+        margin-top: 10px;
+      }
     }
   }
 }

@@ -1,11 +1,26 @@
 <mc-header></mc-header>
 
 <main class="player-registration">
-  <h1>Mitspieler*innen einladen bla bla bla</h1>
+  <h1>Lade deine Mitspieler*innen ein</h1>
 
-  <div>Spiel ID: {{gameId}}</div>
+  <h3>Spielname: {{game.title}}, ID: {{gameId}}</h3>
 
-  <button mat-raised-button color="primary" #createGameBtn="matButton" (click)="joinTable()">zum Spieltisch</button>
+  <qrcode [qrdata]="gameUrl" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
+
+  <div class="game-link">{{gameUrl}}</div>
+
+  <div class="share-game">
+    <button mat-raised-button [cdkCopyToClipboard]="gameUrl">
+      <mat-icon>content_copy</mat-icon>
+      url kopieren
+    </button>
+    <a mat-raised-button [href]="gameEmail">
+      <mat-icon>share</mat-icon>
+      via E-Mail teilen
+    </a>
+  </div>
+
+  <button mat-raised-button color="primary" #createGameBtn="matButton" (click)="joinGameTable()" class="game-table-button">zum Spieltisch</button>
 </main>
 
 <ng-template #errorDialogTemplate let-data>

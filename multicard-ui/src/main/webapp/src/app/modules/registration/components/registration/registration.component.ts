@@ -1,5 +1,5 @@
 import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {MatButton} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {
@@ -35,12 +35,20 @@ export class RegistrationComponent implements OnInit {
     private gameService: GameService,
     private playerService: PlayerService,
     private router: Router,
+    private route: ActivatedRoute,
     private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
     this.player = this.playerService.loadPlayerFromLocalStorage();
     this.buttonRef.focus();
+    this.route.paramMap.subscribe(p => {
+      const pGameId = p.get('gameId');
+      if (pGameId) {
+        this.gameId = pGameId;
+        this.joinGame();
+      }
+    });
   }
 
   joinGame() {
