@@ -1,12 +1,23 @@
+@import "src/styles/mixins";
+
 :host {
   display: block;
+
+  h1 {
+    text-align: center;
+  }
+
+  @include small-size {
+    h1 {
+      font-size: 1.6em;
+    }
+  }
 
   .player-registration {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 10px;
 
     .error-msg {
       color: red;
@@ -14,16 +25,25 @@
       text-align: center;
     }
 
-    .error-msg-top {
-      margin: 20px 0;
-    }
-
     .pwd-hint {
       font-size: 75%;
+      text-align: center;
     }
 
-    .error-msg-bottom {
-      margin: 20px 0;
+    @include normal-size {
+      margin: 10px;
+
+      .error-msg-top, .error-msg-bottom {
+        margin: 20px 0;
+      }
+    }
+
+    @include small-size {
+      margin: 10px;
+
+      .error-msg-top, .error-msg-bottom {
+        margin: 4px 0;
+      }
     }
   }
 

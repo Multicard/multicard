@@ -1,24 +1,29 @@
-<h1 *ngIf="organizerMode">Spiel {{game.title}}: Organisator*in registrieren</h1>
-<h1 *ngIf="!organizerMode">Spiel {{game.title}}: Spieler*in registrieren</h1>
+<mat-dialog-content>
+  <h1 *ngIf="organizerMode">Spiel {{game.title}}: Organisator*in registrieren</h1>
+  <h1 *ngIf="!organizerMode">Spiel {{game.title}}: Spieler*in registrieren</h1>
 
-<form #playerForm="ngForm" class="player-registration">
-  <div class="error-msg error-msg-top">{{errorMsgTop}}</div>
-  <mat-form-field appearance="outline">
-    <mat-label>Name</mat-label>
-    <input name="playerName" matInput [(ngModel)]="player.playerName" mcCharactersRestriction="a-zA-Z0-9_" required minlength="4">
-  </mat-form-field>
-  <mat-form-field appearance="outline">
-    <mat-label>Passwort</mat-label>
-    <input name="password" type="password" matInput [(ngModel)]="password" required>
-  </mat-form-field>
-  <div class="pwd-hint">Name/Passwort gelten nur für dieses Spiel. Sie werden zur Identifikation benötigt, falls du während des
-    Spiels zu einem anderen Gerät/Browser wechselst und dort weiterspielst.
-  </div>
-  <div class="error-msg error-msg-bottom">{{errorMsgBottom}}</div>
-</form>
+  <form #playerForm="ngForm" class="player-registration">
+    <div class="error-msg error-msg-top">{{errorMsgTop}}</div>
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input name="playerName" matInput [(ngModel)]="player.playerName" mcCharactersRestriction="a-zA-Z0-9_" required
+             minlength="4">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Passwort</mat-label>
+      <input name="password" type="password" matInput [(ngModel)]="password" required>
+    </mat-form-field>
+    <div class="pwd-hint">Name/Passwort gelten nur für dieses Spiel. Sie werden zur Identifikation benötigt, falls du
+      während des
+      Spiels zu einem anderen Gerät/Browser wechselst und dort weiterspielst.
+    </div>
+    <div class="error-msg error-msg-bottom">{{errorMsgBottom}}</div>
+  </form>
+</mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-raised-button color="primary" (click)="okButtonClicked()" [disabled]="!playerForm.valid || isRestCallInProgress">{{getOkButtonText()}}</button>
+  <button mat-raised-button color="primary" (click)="okButtonClicked()"
+          [disabled]="!playerForm.valid || isRestCallInProgress">{{getOkButtonText()}}</button>
   <mat-spinner [diameter]="28" *ngIf="isRestCallInProgress"></mat-spinner>
   <button mat-button mat-dialog-close *ngIf="!organizerMode">Abbrechen</button>
 </mat-dialog-actions>

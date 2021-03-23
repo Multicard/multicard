@@ -75,7 +75,7 @@ Einladung zum Spiel ${game.title}:\
   private createPlayer(game: GameDTO, isOrganizer: boolean) {
     const data: PlayerRegistrationParam = {isOrganizer, game, player: this.player};
     const dialogRef = this.dialog.open(PlayerRegistrationDialogComponent,
-      {data, hasBackdrop: false, position: {top: '100px'}});
+      {data, hasBackdrop: true, disableClose: true, position: {top: '100px'}});
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.player = result as Player;

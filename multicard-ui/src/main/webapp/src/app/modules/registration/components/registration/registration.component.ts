@@ -71,7 +71,7 @@ export class RegistrationComponent implements OnInit {
         } else {
           const data: PlayerRegistrationParam = {isOrganizer: false, game: foundGame, player: this.player};
           const dialogRef = this.dialog.open(PlayerRegistrationDialogComponent,
-            {data, hasBackdrop: false, position: {top: '100px'}});
+            {data, hasBackdrop: true, disableClose: true, position: {top: '50px'}});
           dialogRef.afterClosed().subscribe(result => {
             if (result) {
               this.handlePlayerRegistrationResult(result as Player);
