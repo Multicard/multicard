@@ -1,40 +1,47 @@
 @import "src/styles/mixins";
 
-.user-player {
-  width: 100%;
-  height: 100%;
+:host {
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
 
   .user-player-cards {
-    flex: 1 1 85%;
+    width: 100%;
+    height: 100%;
     display: flex;
-    max-width: 85vw;
     justify-content: center;
-    align-items: center;
 
-    .card-wrapper {
-      overflow: hidden;
-      cursor: grab;
+    .hand-cards {
+      flex: 1 1 85%;
+      display: flex;
+      max-width: 85vw;
+      justify-content: center;
+      align-items: center;
+
+      .card-wrapper {
+        overflow: hidden;
+        cursor: grab;
+      }
+
+      .card-wrapper:last-child, .card-wrapper:hover {
+        overflow: visible;
+      }
     }
 
-    .card-wrapper:last-child, .card-wrapper:hover {
-      overflow: visible;
+    .stack-cards {
+      flex: 1 1 15%;
+      display: flex;
+      position: relative;
     }
-  }
 
-  .stack-cards {
-    flex: 1 1 15%;
-    display: flex;
-    position: relative;
-  }
-
-  .cdk-drop-list-receiving.stack-cards {
-    @include table-card;
-    border-color: red;
-    border-style: solid;
-    border-width: 4px;
-    background-color: rgba(255, 00, 00, 0.3);
+    .cdk-drop-list-receiving.stack-cards {
+      @include table-card;
+      border-color: red;
+      border-style: solid;
+      border-width: 4px;
+      background-color: rgba(255, 00, 00, 0.3);
+    }
   }
 }
 

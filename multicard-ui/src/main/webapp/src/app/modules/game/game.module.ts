@@ -10,6 +10,7 @@ import {CardPileComponent} from './components/card-pile/card-pile.component';
 import {GameComponent} from './components/game/game.component';
 import {GameRoutingModule} from './game-routing.module';
 import {SharedModule} from '../shared/shared.module';
+import { PlayerNameComponent } from './components/player-name/player-name.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import {SharedModule} from '../shared/shared.module';
     StackComponent,
     PlayerComponent,
     PlayedCardsComponent,
-    CardPileComponent
+    CardPileComponent,
+    PlayerNameComponent
   ],
   imports: [
     CommonModule,

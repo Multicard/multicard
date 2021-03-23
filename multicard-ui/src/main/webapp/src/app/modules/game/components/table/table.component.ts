@@ -34,7 +34,7 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   isDragAndDropOfPlayersAllowed() {
-    return this.playerIdList.length === 4
+    return this.gameState.players[0]?.organizer && this.playerIdList.length === 4
       && (this.gameState.state === Gamestate.INITIAL || this.gameState.state === Gamestate.READYTOSTART);
   }
 

@@ -5,9 +5,15 @@
   flex-direction: column;
   height: 100%;
 
+  .player-draggeable:after {
+    font-family: "Material Icons";
+    content: "\E876";
+  }
+
   .table-top {
     flex: 0 0 20%;
     margin: 8px 4px;
+    min-height: 10vh;
 
     .player-top {
       transform: rotate(180deg);

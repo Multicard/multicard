@@ -26,26 +26,25 @@
     }
   }
 
-  .player-name {
-    padding-top: 4px;
-    width: 100px;
-    text-align: center;
-    white-space: nowrap;
-    font-weight: bold;
-    margin-top: 20px;
-    z-index: 1;
-    background-color: #B2CFF5;
-  }
+  .player-wrapper {
+    position: relative;
 
-  @include normal-size {
-    .player-name.turn-around {
-      transform: rotate(180deg);
+    mat-icon {
+      position: absolute;
+      top: 23px;
+      left: -12px
     }
-  }
 
-  @include small-size {
-    .player-name {
-      transform: rotate(180deg);
+    @include normal-size {
+      mc-player-name.turn-around {
+        transform: rotate(180deg);
+      }
+    }
+
+    @include small-size {
+      mc-player-name {
+        transform: rotate(180deg);
+      }
     }
   }
 }

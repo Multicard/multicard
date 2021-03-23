@@ -7,4 +7,8 @@
   </div>
   <mc-card-pile [cards]="stack" cardCssClass="player-card" [flyInAnimation]="getStackFlyInAnimation()"></mc-card-pile>
 </div>
-<div *ngIf="player" class="player-name" [ngClass]="{'turn-around': isNameTurnedAround()}">{{player.name}}</div>
+<div class="player-wrapper">
+  <mat-icon *ngIf="isDraggable">open_with</mat-icon>
+  <mc-player-name *ngIf="player" [playerName]="player.name"
+                  [ngClass]="{'turn-around': isNameTurnedAround()}"></mc-player-name>
+</div>

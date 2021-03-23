@@ -23,6 +23,7 @@ export class PlayerComponent implements OnInit, OnChanges {
 
   @Input() player?: PlayerDTO;
   @Input() tablePosition = TablePosition.bottom;
+  @Input() isDraggable = false;
   handCards: CardDTO[] = [];
   stack?: CardDTO[];
 
