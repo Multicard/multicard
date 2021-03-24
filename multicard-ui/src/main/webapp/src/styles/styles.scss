@@ -27,6 +27,15 @@ button {
   }
 }
 
+.mat-snack-bar-container {
+  background-color: rgb(10, 43, 143, 0.75);
+  color: white;
+
+  .mat-simple-snackbar-action {
+    color: white;
+  }
+}
+
 .user-player-card {
   max-width: 150px;
   max-height: 209px;

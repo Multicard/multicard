@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {GameService} from '../../../../services/game.service';
 import {Observable} from 'rxjs';
 import {GameDTO, Gamestate} from '../../../../../app-gen/generated-model';
@@ -12,7 +12,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss']
 })
-export class GameComponent implements OnInit {
+export class GameComponent implements OnInit, OnDestroy {
   gameState$!: Observable<GameDTO>;
   private numberOfPlayers = 0;
 
@@ -40,6 +40,10 @@ export class GameComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.gameService.closeGame();
+  }
+
   isGameStarteable(game: GameDTO) {
     return game?.state === Gamestate.READYTOSTART && game?.players?.length >= 4 && game.players[0]?.organizer;
   }
@@ -52,21 +56,21 @@ export class GameComponent implements OnInit {
     const oldNumberOfPlayers = this.numberOfPlayers;
     const newNumberOfPlayer = game?.players ? game.players.length : 0;
     if (newNumberOfPlayer === 1) {
-      this.showMessage('Es sind noch keine weiteren Spieler vorhanden');
+      this.showMessage('Es sind noch keine weiteren Spieler*innen registriert');
     }
     if (oldNumberOfPlayers >= 1 && newNumberOfPlayer >= 2 && game.players.length > oldNumberOfPlayers) {
-      this.showMessage(`${game.players[game.players.length -1].name} ist zum Spiel dazugekommen`);
+      this.showMessage(`${game.players[game.players.length -1].name} hat sich im Spiel registriert`);
     }
     if (oldNumberOfPlayers < 4 && this.isGameStarteable(game)) {
-      this.showMessage(`Durch das Verschieben der Spieler kann die Positionierung am Spieltisch geändert werden.`);
+      this.showMessage(`Durch das Verschieben der Spieler*innen kann die Positionierung am Spieltisch geändert werden.`);
     }
   }
 
-  private showMessage(message: string) {
+  private showMessage(message: string, duration = 4000) {
     this.snackBar.open(message, 'X', {
-      duration: 2000,
+      duration,
       horizontalPosition: 'center',
-      verticalPosition: 'top',
+      verticalPosition: 'top'
     });
   }
 }

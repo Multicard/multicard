@@ -1,5 +1,4 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {PlayerDTO} from '../../../../../app-gen/generated-model';
 
 @Component({
   selector: 'mc-player-name',
@@ -9,10 +8,11 @@ import {PlayerDTO} from '../../../../../app-gen/generated-model';
 export class PlayerNameComponent implements OnInit {
 
   @Input() playerName?: string;
+  @Input() showState = true;
+  @Input() isAlive = false;
 
   constructor() { }
 
   ngOnInit(): void {
   }
-
 }

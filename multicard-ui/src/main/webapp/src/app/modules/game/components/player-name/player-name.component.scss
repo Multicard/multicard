@@ -6,8 +6,9 @@
   .player-name {
     display: flex;
     justify-content: center;
-    align-content: center;
+    align-items: center;
     padding-top: 4px;
+    padding-bottom: 2px;
     min-width: 100px;
     text-align: center;
     white-space: nowrap;
@@ -15,5 +16,47 @@
     margin-top: 20px;
     z-index: 1;
     background-color: rgb(37, 124, 217, 0.3);
+
+    .name-status-wrapper {
+      display: grid;
+      grid-template-columns: auto;
+      grid-template-rows: auto;
+      margin-right: 3px;
+
+      mat-icon, .player-status {
+        grid-area: 1 / 1 / 2 / 2;
+      }
+
+      .player-status {
+        border-radius: 50%;
+        display: inline-block;
+      }
+
+      @include normal-size {
+        .player-status {
+          height: 24px;
+          width: 24px;
+        }
+      }
+
+      @include small-size {
+        .player-status {
+          height: 16px;
+          width: 16px;
+        }
+      }
+
+      .online {
+        background-color: greenyellow;
+      }
+
+      .offline {
+        background-color: rgb(255, 255, 0, 0.6);
+      }
+    }
+
+    .name {
+      margin-left: 3px;
+    }
   }
 }

@@ -9,6 +9,6 @@
 </div>
 <div class="player-wrapper">
   <mat-icon *ngIf="isDraggable">open_with</mat-icon>
-  <mc-player-name *ngIf="player" [playerName]="player.name"
+  <mc-player-name *ngIf="player" [playerName]="player.name" [isAlive]="player.alive"
                   [ngClass]="{'turn-around': isNameTurnedAround()}"></mc-player-name>
 </div>
