@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --base-href /app/",
-    "build": "ng build --base-href /app/",
-    "build-prod": "ng build --prod --base-href /app/",
+    "start": "ng serve",
+    "build": "ng build",
+    "build-prod": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
