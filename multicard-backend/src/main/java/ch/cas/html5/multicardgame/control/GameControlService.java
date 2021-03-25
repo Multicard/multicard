@@ -120,7 +120,11 @@ public class GameControlService {
                     //Convert Game.Player.Stacks
                     for (Stack stack : p2.getStacks()) {
                         StackDTO stackdto = new StackDTO(stack.getId());
-                        stackdto.setCards(converter.convertCards(stack.getCards(), !showPlayerStacks));
+                        Boolean showStackCardsAnonymous = !showPlayerStacks;
+                        if (game.getState().equals(Gamestate.ENDED)){
+                            showStackCardsAnonymous = false;
+                        }
+                        stackdto.setCards(converter.convertCards(stack.getCards(), showStackCardsAnonymous));
                         playerdto.getStacks().add(stackdto);
                     }
                     gamedto.getPlayers().add(playerdto);
@@ -212,14 +216,9 @@ public class GameControlService {
 
         }
         if (gameMessage.getCommand().equals(Action.CLIENT_REVERT_LAST_PLAYER_ACTION)) {
-            RevertLastPlayerActionMessage revertAvtioMsg = (RevertLastPlayerActionMessage) gameMessage;
-            /*
-            String cardId = revertAvtioMsg.getCard().getId();
-            Card toRevert = cardService.getCard(cardId);
-            System.out.println("Revert Action for Card: " + toRevert.getName());
-            revertPlayedCardToPlayer(game, playerId, toRevert);
+            RevertLastPlayerActionMessage revertLastActionMsg = (RevertLastPlayerActionMessage) gameMessage;
+            revertLastAction(game, revertLastActionMsg.getActionId());
             convertAndPublishGame(game, null, false);
-             */
         }
 
         if (gameMessage.getCommand().equals(Action.CLIENT_PLAYED_CARDS_TAKEN)) {
@@ -354,33 +353,56 @@ public class GameControlService {
     }
 
 
-    private void revertPlayedCardToPlayer(Game game, String playerId, Card playedCard) {
-        Player player = playerService.getPlayer(playerId);
-
-        //check revert action = last game action
+    private void revertLastAction(Game game, String actionId) {
+        List<ch.cas.html5.multicardgame.entity.Action> actionList = actionService.getActionsSorted(game.getId());
+        if (actionList.size() < 1) {
+            return;
+        }
         ch.cas.html5.multicardgame.entity.Action lastAction = actionService.getActionsSorted(game.getId()).get(0);
-        if (lastAction != null && lastAction.getCards_id().stream().findFirst().isPresent() && lastAction.getCards_id().size() == 1) {
-            if (!lastAction.getCards_id().stream().findFirst().get().equals(playedCard.getId()) || !lastAction.getPlayer().getId().equals(playerId)) {
-                System.out.println("Revert Action declined: " + playedCard.getHand());
-                return;
-            }
+        //check revert action = last game action
+        if (!lastAction.getId().equals(actionId)) {
+            System.out.println("Revert Action declined!");
+            return;
         }
 
+        Player player = playerService.getPlayer(lastAction.getPlayer().getId());
+        if (lastAction.getCards_id().size() == 1) {
+            //revert one Card from PlayedCards to Player
+            Card playedCard = cardService.getCard(lastAction.getCards_id().stream().findFirst().get());
 
-        player.getPlayedCards().remove(playedCard);
-        playedCard.setPlayedcards(null);
+            player.getPlayedCards().remove(playedCard);
+            playedCard.setPlayedcards(null);
 
-        player.getHand().getCards().add(playedCard);
-        playedCard.setHand(player.getHand());
+            player.getHand().getCards().add(playedCard);
+            playedCard.setHand(player.getHand());
 
-        //remove card from Game.PlayedCards
-        if (game.getPlayedcards() != null) {
-            game.getPlayedcards().getPlayedcards().remove(playedCard);
+            player.getActions().remove(lastAction);
+
+            //remove card from Game.PlayedCards
+            if (game.getPlayedcards() != null) {
+                game.getPlayedcards().getPlayedcards().remove(playedCard);
+            }
+        } else {
+            //revert 4 Cards from PlayerStack to PlayedCards
+            Stack playerStack = player.getStacks().stream().findFirst().get();
+            Set<Card> cardToMove = new HashSet<>(playerStack.getCards());
+
+            for (Card card : cardToMove) {
+
+                playerStack.getCards().remove(card);
+                card.getStack().getCards().remove(card);
+                card.setStack(null);
+
+                game.getPlayedcards().getPlayedcards().add(card);
+                card.setPlayer(player);
+                card.getPlayer().getPlayedCards().add(card);
+                card.setPlayedcards(game.getPlayedcards());
+                card.getPlayedcards().getPlayedcards().add(card);
+            }
         }
 
         //remove action
         game.getActions().remove(lastAction);
-        player.getActions().remove(lastAction);
         if (lastAction != null) {
             lastAction.setGame(null);
             lastAction.setPlayer(null);
