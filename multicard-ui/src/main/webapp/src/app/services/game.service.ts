@@ -105,6 +105,10 @@ export class GameService implements OnDestroy {
     this.giveCards(0, 9, 3, game.players.length);
   }
 
+  endGame(initiationFromOtherPlayer = false) {
+    this.sendWebsocketGameMessage(Action.CLIENT_SHOW_ALL_PLAYER_STACKS);
+  }
+
   cardPlayed(card: CardDTO) {
     let game = this.gameSubject.getValue();
     if (!game.playedCards) {
@@ -261,7 +265,11 @@ export class GameService implements OnDestroy {
 
   private sendWebsocketRevertLastPlayerActionMessage(lastAction: ActionDTO) {
     const message: RevertLastPlayerActionMessage =
-      {command: Action.CLIENT_REVERT_LAST_PLAYER_ACTION, actionId: lastAction.id, messageName: 'RevertLastPlayerActionMessage'};
+      {
+        command: Action.CLIENT_REVERT_LAST_PLAYER_ACTION,
+        actionId: lastAction.id,
+        messageName: 'RevertLastPlayerActionMessage'
+      };
     this.sendWebsocketMessage(message);
   }
 
