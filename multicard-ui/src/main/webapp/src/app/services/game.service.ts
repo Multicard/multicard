@@ -34,7 +34,9 @@ export class GameService implements OnDestroy {
   private gameStartedByThisClient = false;
   private unsubscribe = new Subject();
 
-  constructor(private http: HttpClient, private rxStompService: RxStompService) {
+  constructor(
+    private http: HttpClient,
+    private rxStompService: RxStompService) {
   }
 
   createGame(gameName: string): Observable<GameDTO> {
@@ -105,7 +107,7 @@ export class GameService implements OnDestroy {
     this.giveCards(0, 9, 3, game.players.length);
   }
 
-  endGame(initiationFromOtherPlayer = false) {
+  endGame() {
     this.sendWebsocketGameMessage(Action.CLIENT_SHOW_ALL_PLAYER_STACKS);
   }
 
