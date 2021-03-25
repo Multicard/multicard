@@ -120,7 +120,11 @@ public class GameControlService {
                     //Convert Game.Player.Stacks
                     for (Stack stack : p2.getStacks()) {
                         StackDTO stackdto = new StackDTO(stack.getId());
-                        stackdto.setCards(converter.convertCards(stack.getCards(), !showPlayerStacks));
+                        Boolean showStackCardsAnonymous = !showPlayerStacks;
+                        if (game.getState().equals(Gamestate.ENDED)){
+                            showStackCardsAnonymous = false;
+                        }
+                        stackdto.setCards(converter.convertCards(stack.getCards(), showStackCardsAnonymous));
                         playerdto.getStacks().add(stackdto);
                     }
                     gamedto.getPlayers().add(playerdto);
