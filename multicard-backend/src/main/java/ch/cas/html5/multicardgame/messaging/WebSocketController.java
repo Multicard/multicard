@@ -34,7 +34,7 @@ public class WebSocketController {
 
     @MessageMapping("/{gameId}/{playerId}")
     public void handleMessage(@DestinationVariable String gameId, @DestinationVariable String playerId, @RequestBody GameMessage gameMessage) {
-        System.out.println("Message received: " + gameMessage.getCommand() + " - from: " + gameId + "/" + playerId);
+//        System.out.println("Message received: " + gameMessage.getCommand() + " - from: " + gameId + "/" + playerId);
         gameControlService.handleMessage(gameMessage, gameId, playerId);
     }
 

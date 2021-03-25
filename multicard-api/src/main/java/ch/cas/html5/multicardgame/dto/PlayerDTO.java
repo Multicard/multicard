@@ -23,7 +23,7 @@ public class PlayerDTO {
         this.isAlive = checkAlive(aliveTimestamp);
     }
 
-    long ALIVE_PERIOD_IN_MILLIS = 10000; // 10 Seconds
+    long ALIVE_PERIOD_IN_MILLIS = 5000; // 5 Seconds
 
     private Boolean checkAlive (Timestamp aliveTimestamp){
         if (aliveTimestamp == null){
