@@ -33,7 +33,7 @@ export interface PlayedCardMessage extends GameMessage {
 
 export interface RevertLastPlayerActionMessage extends GameMessage {
     messageName: "RevertLastPlayerActionMessage";
-    card: CardDTO;
+    actionId: string;
 }
 
 export interface PlayerDTO {
@@ -42,8 +42,8 @@ export interface PlayerDTO {
     position: number;
     hand: HandDTO;
     stacks: StackDTO[];
-    organizer: boolean;
     playerReady: boolean;
+    organizer: boolean;
     alive: boolean;
 }
 
@@ -93,7 +93,6 @@ export enum Gamestate {
 }
 
 export enum Action {
-    CLIENT_GAME_READY = "CLIENT_GAME_READY",
     CLIENT_PLAYER_READY = "CLIENT_PLAYER_READY",
     CLIENT_PLAYERS_POSITIONED = "CLIENT_PLAYERS_POSITIONED",
     CLIENT_START_GAME = "CLIENT_START_GAME",
@@ -104,6 +103,7 @@ export enum Action {
     CLIENT_REVERT_ACTION = "CLIENT_REVERT_ACTION",
     CLIENT_IS_ALIVE = "CLIENT_IS_ALIVE",
     CLIENT_SHOW_ALL_PLAYER_STACKS = "CLIENT_SHOW_ALL_PLAYER_STACKS",
+    CLIENT_GAME_RESET = "CLIENT_GAME_RESET",
     START_GAME = "START_GAME",
     GAME_STATE = "GAME_STATE",
 }

@@ -28,6 +28,9 @@ public class Player {
     @Column(name = "aliveTimestamp")
     private Timestamp aliveTimestamp = new Timestamp(System.currentTimeMillis());;
 
+    @Column(name = "lastStateChange")
+    private Timestamp lastStateChange = new Timestamp(System.currentTimeMillis());;
+
     @Column(name = "position")
     private Integer position;
 
@@ -143,5 +146,13 @@ public class Player {
 
     public void setAliveTimestamp(Timestamp aliveTimestamp) {
         this.aliveTimestamp = aliveTimestamp;
+    }
+
+    public Timestamp getLastStateChange() {
+        return lastStateChange;
+    }
+
+    public void setLastStateChange(Timestamp lastStateChange) {
+        this.lastStateChange = lastStateChange;
     }
 }

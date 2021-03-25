@@ -8,6 +8,10 @@
   </div>
   <div class="stack-cards" cdkDropList id="user-stack-drop-target"
        (cdkDropListDropped)="tableCardsDroppedOnStack($event)">
+    <button mat-mini-fab color="primary" *ngIf="isStackTakenByUserAndLastAction" class="undo-button"
+            (click)="redoStackTakenAction()" aria-label="Karte zurücknehmen" title="genommene Karten zurücklegen">
+      <mat-icon>undo</mat-icon>
+    </button>
     <mc-card-pile [cards]="player.stacks[0]?.cards" cardCssClass="user-player-card"></mc-card-pile>
   </div>
 </div>

@@ -48,8 +48,18 @@ export class GameComponent implements OnInit, OnDestroy {
     return game?.state === Gamestate.READYTOSTART && game?.players?.length >= 4 && game.players[0]?.organizer;
   }
 
+  isGameEndable(game: GameDTO) {
+    return game?.state === Gamestate.STARTED
+      && game.players[0]?.organizer
+      && game.players.reduce((unplayedCards, player) => unplayedCards + (player?.hand?.cards?.length || 0), 0) === 0;
+  }
+
   startGame() {
     this.gameService.startGame();
+  }
+
+  endGame() {
+    this.gameService.endGame();
   }
 
   private showMessagesOnStateChanges(game: GameDTO) {

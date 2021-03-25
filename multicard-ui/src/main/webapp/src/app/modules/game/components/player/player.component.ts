@@ -53,11 +53,11 @@ export class PlayerComponent implements OnInit, OnChanges {
   getStackFlyInAnimation() {
     switch (this.tablePosition) {
       case TablePosition.left:
-        return FlyInAnimation.fromLeft;
+        return FlyInAnimation.fromTop;
       case TablePosition.top:
         return FlyInAnimation.fromTop;
       case TablePosition.right:
-        return FlyInAnimation.fromRight;
+        return FlyInAnimation.fromTop;
       case TablePosition.bottom:
         return FlyInAnimation.noAnimation;
     }

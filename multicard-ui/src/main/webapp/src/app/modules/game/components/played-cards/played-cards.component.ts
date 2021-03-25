@@ -65,7 +65,7 @@ export class PlayedCardsComponent implements OnInit, OnChanges {
   redoLastCardAction() {
     const lastCard = this.cards[0]?.pop();
     if (lastCard !== undefined) {
-      this.gameService.revertLastAction(lastCard);
+      this.gameService.revertLastAction();
       this.cards[0] = [...this.cards[0]];
       this.isLastCardPLayedByUser = false;
     }

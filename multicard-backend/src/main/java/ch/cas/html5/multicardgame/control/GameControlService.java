@@ -25,9 +25,14 @@ public class GameControlService {
     private final StackServiceImpl stackService;
     private final GameResetService gameReset;
 
+    private final long ALIVE_PERIOD_IN_MILLIS = 5000; // 5 Seconds
+
     @Autowired
     private WebSocketController webController;
-    public void setWebController(WebSocketController webController){ this.webController = webController; }
+
+    public void setWebController(WebSocketController webController) {
+        this.webController = webController;
+    }
 
 
     public GameControlService(GameServiceImpl gameService, PlayerServiceImpl playerService, DeckServiceImpl deckService, DeckelementServiceImpl deckelementService, CardServiceImpl cardService, ActionServiceImpl actionService, StackServiceImpl stackService, GameResetService gameReset) {
@@ -92,48 +97,54 @@ public class GameControlService {
 
         //Convert Game.Players
         for (Player p1 : game.getPlayers()) {
-            for (Player p2 : game.getPlayers()) {
 
-                PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), p2.getPlayerReady(), p2.getAliveTimestamp());
+            //publish only to active users
+            if (!isExpired(p1.getAliveTimestamp())) {
 
-                //Convert Game.Player.Hand
-                if (p2.getHand() != null && p2.getHand().getCards() != null) {
-                    HandDTO handdto = new HandDTO();
-                    handdto.setId(p2.getHand().getId());
-                    if (p1.getId().equals(p2.getId())) {
-                        //own hand - generate handcards
-                        handdto.setCards(converter.convertCards(p2.getHand().getCards(), false));
+                for (Player p2 : game.getPlayers()) {
+
+                    PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), p2.getPlayerReady(), p2.getAliveTimestamp());
+
+                    //Convert Game.Player.Hand
+                    if (p2.getHand() != null && p2.getHand().getCards() != null) {
+                        HandDTO handdto = new HandDTO();
+                        handdto.setId(p2.getHand().getId());
+                        if (p1.getId().equals(p2.getId())) {
+                            //own hand - generate handcards
+                            handdto.setCards(converter.convertCards(p2.getHand().getCards(), false));
+                        }
+                        handdto.setCardCount(p2.getHand().getCards().size());
+                        playerdto.setHand(handdto);
                     }
-                    handdto.setCardCount(p2.getHand().getCards().size());
-                    playerdto.setHand(handdto);
+
+                    //Convert Game.Player.Stacks
+                    for (Stack stack : p2.getStacks()) {
+                        StackDTO stackdto = new StackDTO(stack.getId());
+                        stackdto.setCards(converter.convertCards(stack.getCards(), !showPlayerStacks));
+                        playerdto.getStacks().add(stackdto);
+                    }
+                    gamedto.getPlayers().add(playerdto);
+
+                    //Convert Game.Action
+                    List<ch.cas.html5.multicardgame.entity.Action> actions = actionService.getActionsSorted(game.getId());
+                    if (actions.size() > 0) {
+                        ActionDTO actiondto = new ActionDTO();
+                        actiondto.setId(actions.get(0).getId());
+                        actiondto.setPlayerId(actions.get(0).getPlayer().getId());
+                        actiondto.setAction(actions.get(0).getAction());
+                        gamedto.setLastAction(actiondto);
+                    }
                 }
 
-                //Convert Game.Player.Stacks
-                for (Stack stack : p2.getStacks()) {
-                    StackDTO stackdto = new StackDTO(stack.getId());
-                    stackdto.setCards(converter.convertCards(stack.getCards(), !showPlayerStacks));
-                    playerdto.getStacks().add(stackdto);
+                //send to Player p1
+                if (sendOnlyToSpecificUser == null) {
+                    System.out.println("Convert and Publish Game for Player: " + p1.getName());
+                    publishGameToPlayer(gamedto.getId(), p1.getId(), gameMessage);
+                } else if (sendOnlyToSpecificUser.equals(p1.getId())) {
+                    System.out.println("Convert and Publish Game for Player: " + p1.getName());
+                    publishGameToPlayer(gamedto.getId(), p1.getId(), gameMessage);
                 }
-                gamedto.getPlayers().add(playerdto);
 
-                //Convert Game.Action
-                List<ch.cas.html5.multicardgame.entity.Action> actions = actionService.getActionsSorted(game.getId());
-                if (actions.size() > 0) {
-                    ActionDTO actiondto = new ActionDTO();
-                    actiondto.setId(actions.get(0).getId());
-                    actiondto.setPlayerId(actions.get(0).getPlayer().getId());
-                    actiondto.setAction(actions.get(0).getAction());
-                    gamedto.setLastAction(actiondto);
-                }
-            }
-
-            //send to Player p1
-            if (sendOnlyToSpecificUser == null) {
-                System.out.println("Convert and Publish Game for Player: " + p1.getName());
-                publishGameToPlayer(gamedto.getId(), p1.getId(), gameMessage);
-            } else if (sendOnlyToSpecificUser.equals(p1.getId())) {
-                System.out.println("Convert and Publish Game for Player: " + p1.getName());
-                publishGameToPlayer(gamedto.getId(), p1.getId(), gameMessage);
             }
 
             //delete users and build them new
@@ -155,10 +166,12 @@ public class GameControlService {
     }
 
     public void handleMessage(GameMessage gameMessage, String gameId, String playerId) {
-        System.out.println("handle incoming message: " + gameMessage.getCommand());
+        if (!gameMessage.getCommand().equals(Action.CLIENT_IS_ALIVE)) {
+            System.out.println("handle incoming message: " + gameMessage.getCommand());
+        }
         Game game = gameService.getGame(gameId);
 
-        if (gameMessage.getCommand().equals(Action.CLIENT_GAME_READY)) {
+        if (gameMessage.getCommand().equals(Action.CLIENT_GAME_RESET)) {
             setGameReady(game);
             convertAndPublishGame(game, null, false);
         }
@@ -176,8 +189,8 @@ public class GameControlService {
             }
             GameMessage response = new GameMessage();
             response.setCommand(Action.START_GAME);
-            for (Player publishPlayer : game.getPlayers()){
-                if (!publishPlayer.getId().equals(playerId)){
+            for (Player publishPlayer : game.getPlayers()) {
+                if (!publishPlayer.getId().equals(playerId)) {
                     publishGameToPlayer(gameId, publishPlayer.getId(), response);
                 }
             }
@@ -200,11 +213,13 @@ public class GameControlService {
         }
         if (gameMessage.getCommand().equals(Action.CLIENT_REVERT_LAST_PLAYER_ACTION)) {
             RevertLastPlayerActionMessage revertAvtioMsg = (RevertLastPlayerActionMessage) gameMessage;
+            /*
             String cardId = revertAvtioMsg.getCard().getId();
             Card toRevert = cardService.getCard(cardId);
             System.out.println("Revert Action for Card: " + toRevert.getName());
             revertPlayedCardToPlayer(game, playerId, toRevert);
             convertAndPublishGame(game, null, false);
+             */
         }
 
         if (gameMessage.getCommand().equals(Action.CLIENT_PLAYED_CARDS_TAKEN)) {
@@ -213,7 +228,7 @@ public class GameControlService {
             convertAndPublishGame(game, null, false);
         }
 
-        if (gameMessage.getCommand().equals(Action.CLIENT_PLAYERS_POSITIONED)){
+        if (gameMessage.getCommand().equals(Action.CLIENT_PLAYERS_POSITIONED)) {
             PlayersPositionedMessage playersPositionMsg = (PlayersPositionedMessage) gameMessage;
             System.out.println("New Positions for Players");
             newPositionForPlayers(game, playersPositionMsg);
@@ -221,29 +236,54 @@ public class GameControlService {
         }
 
         if (gameMessage.getCommand().equals(Action.CLIENT_IS_ALIVE)) {
-            setPlayerAlive(game, playerId);
-            convertAndPublishGame(game, null, false);
+            if (hasPlayerStateChangedAndSetState(game, playerId)) {
+                convertAndPublishGame(game, null, false);
+            }
         }
 
         if (gameMessage.getCommand().equals(Action.CLIENT_SHOW_ALL_PLAYER_STACKS)) {
+            game.setState(Gamestate.ENDED);
+            gameService.updateGame(game);
             convertAndPublishGame(game, null, true);
         }
     }
 
-    private void setPlayerAlive(Game game, String playerId){
+    private Boolean isExpired(Timestamp ts) {
+        return ts.before(new Timestamp(System.currentTimeMillis() - ALIVE_PERIOD_IN_MILLIS));
+    }
+
+    private Boolean hasPlayerStateChangedAndSetState(Game game, String playerId) {
+        Boolean isChanged = false;
+
+        // check state from inactiv to activ for specific player
         for (Player player : game.getPlayers()) {
             if (player.getId().equals(playerId)) {
+                if (isExpired(player.getAliveTimestamp()) && isExpired(player.getLastStateChange())) {
+                    player.setLastStateChange(new Timestamp(System.currentTimeMillis()));
+                    System.out.println("PLayer is online again: " + player.getName());
+                    isChanged = true;
+                }
                 player.setAliveTimestamp(new Timestamp(System.currentTimeMillis()));
                 playerService.savePlayer(player);
             }
         }
 
+        // check state from activ to inactiv for all players
+        for (Player player : game.getPlayers()) {
+            if (isExpired(player.getAliveTimestamp()) && player.getLastStateChange().before(player.getAliveTimestamp())) {
+                player.setLastStateChange(new Timestamp(System.currentTimeMillis()));
+                System.out.println("IsAlive failed for Player: " + player.getName());
+                playerService.savePlayer(player);
+                isChanged = true;
+            }
+        }
+        return isChanged;
     }
 
-    private void newPositionForPlayers(Game game, PlayersPositionedMessage msg){
-        for (Player player : game.getPlayers()){
-            for (PlayerDTO p2 : msg.getPlayers()){
-                if (p2.getId().equals(player.getId())){
+    private void newPositionForPlayers(Game game, PlayersPositionedMessage msg) {
+        for (Player player : game.getPlayers()) {
+            for (PlayerDTO p2 : msg.getPlayers()) {
+                if (p2.getId().equals(player.getId())) {
                     player.setPosition(p2.getPosition());
                 }
             }
@@ -254,21 +294,21 @@ public class GameControlService {
     private void takePlayedCardsToPlayerStack(Game game, String playerId) {
         Player player = playerService.getPlayer(playerId);
 
-        if (player.getStacks().size() == 0){
+        if (player.getStacks().size() == 0) {
             Stack newStack = new Stack();
             player.getStacks().add(newStack);
             newStack.setPlayer(player);
         }
         Set<Card> cardToMove = new HashSet<>(game.getPlayedcards().getPlayedcards());
 
-        for (Card card : cardToMove){
+        for (Card card : cardToMove) {
             game.getPlayedcards().getPlayedcards().remove(card);
             card.getPlayer().getPlayedCards().remove(card);
             card.getPlayedcards().getPlayedcards().remove(card);
             card.setPlayer(null);
             card.setPlayedcards(null);
 
-            if (player.getStacks().stream().findFirst().isPresent()){
+            if (player.getStacks().stream().findFirst().isPresent()) {
                 player.getStacks().stream().findFirst().get().getCards().add(card);
                 card.setStack(player.getStacks().stream().findFirst().get());
             }
