@@ -7,6 +7,7 @@ import {HttpClient} from '@angular/common/http';
 import {take, takeUntil} from 'rxjs/operators';
 import {
   Action,
+  ActionDTO,
   CardDTO,
   GameDTO,
   GameMessage,
@@ -63,9 +64,9 @@ export class GameService implements OnDestroy {
       .pipe(take(1))
       .subscribe(() => {
         this.sendWebsocketGameMessage(Action.CLIENT_PLAYER_READY);
+        this.createIsAliveTimer();
       });
 
-    this.createIsAliveTimer();
 
     return this.gameSubject.asObservable();
   }
@@ -140,8 +141,8 @@ export class GameService implements OnDestroy {
     this.sendWebsocketGameMessage(Action.CLIENT_PLAYED_CARDS_TAKEN);
   }
 
-  revertLastAction(card: CardDTO) {
-    this.sendWebsocketRevertLastPlayerActionMessage(card);
+  revertLastAction() {
+    this.sendWebsocketRevertLastPlayerActionMessage(this.gameSubject.getValue().lastAction);
   }
 
   changePlayerPosition(oldIndex: number, newIndex: number) {
@@ -161,6 +162,11 @@ export class GameService implements OnDestroy {
 
   haveAllPlayersPlayed(playedCards: PlayedCardsDTO | undefined) {
     return new Set(playedCards?.cards?.map(c => c.playerId)).size >= 4;
+  }
+
+  isStackTakenByUserAndLastAction() {
+    const game = this.gameSubject.getValue();
+    return game.lastAction?.action === Action.CLIENT_PLAYED_CARDS_TAKEN && game.lastAction.playerId === game.players[0].id;
   }
 
   ngOnDestroy(): void {
@@ -253,9 +259,9 @@ export class GameService implements OnDestroy {
     this.sendWebsocketMessage(message);
   }
 
-  private sendWebsocketRevertLastPlayerActionMessage(card: CardDTO) {
+  private sendWebsocketRevertLastPlayerActionMessage(lastAction: ActionDTO) {
     const message: RevertLastPlayerActionMessage =
-      {command: Action.CLIENT_REVERT_LAST_PLAYER_ACTION, card, messageName: 'RevertLastPlayerActionMessage'};
+      {command: Action.CLIENT_REVERT_LAST_PLAYER_ACTION, actionId: lastAction.id, messageName: 'RevertLastPlayerActionMessage'};
     this.sendWebsocketMessage(message);
   }
 

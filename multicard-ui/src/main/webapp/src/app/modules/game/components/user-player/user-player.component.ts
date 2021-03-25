@@ -14,6 +14,7 @@ export class UserPlayerComponent implements OnInit, OnChanges {
 
   @Input() player!: PlayerDTO;
   handCards: CardDTO[] = [];
+  isStackTakenByUserAndLastAction = false;
 
   constructor(
     private gameService: GameService) {
@@ -24,6 +25,7 @@ export class UserPlayerComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.handCards = createCardsForHand(this.player?.hand);
+    this.isStackTakenByUserAndLastAction = this.gameService.isStackTakenByUserAndLastAction();
   }
 
   getCardImage(card: CardDTO) {
@@ -41,5 +43,9 @@ export class UserPlayerComponent implements OnInit, OnChanges {
 
   trackByCardId(index: number, card: CardDTO) {
     return card.id;
+  }
+
+  redoStackTakenAction() {
+    this.gameService.revertLastAction();
   }
 }

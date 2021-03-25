@@ -31,8 +31,38 @@
 
     .stack-cards {
       flex: 1 1 15%;
-      display: flex;
       position: relative;
+
+      .undo-button {
+        position: absolute;
+        bottom: 0;
+      }
+
+      @include normal-size {
+        .undo-button {
+          width: 40px;
+          height: 40px;
+
+          mat-icon {
+            font-size: 20px !important;
+          }
+        }
+      }
+
+      @include small-size {
+        .undo-button {
+          width: 20px;
+          height: 20px;
+
+          span.mat-button-wrapper {
+            padding: 100px;
+          }
+
+          mat-icon {
+            font-size: 10px !important;
+          }
+        }
+      }
     }
 
     .cdk-drop-list-receiving.stack-cards {
