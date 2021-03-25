@@ -20,8 +20,7 @@ public class WebSocketController {
     private GameControlService gameControlService;
     public void setGameControlService(GameControlService gameControlService){ this.gameControlService = gameControlService; }
 
-    public WebSocketController(GameControlService gameControlService, SimpMessagingTemplate simpMessagingTemplate) {
-        this.gameControlService = gameControlService;
+    public WebSocketController(SimpMessagingTemplate simpMessagingTemplate) {
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 

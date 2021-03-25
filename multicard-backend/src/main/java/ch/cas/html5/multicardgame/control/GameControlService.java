@@ -254,6 +254,10 @@ public class GameControlService {
     private Boolean hasPlayerStateChangedAndSetState(Game game, String playerId) {
         Boolean isChanged = false;
 
+        if (game == null){
+            return false;
+        }
+
         // check state from inactiv to activ for specific player
         for (Player player : game.getPlayers()) {
             if (player.getId().equals(playerId)) {
@@ -300,12 +304,14 @@ public class GameControlService {
         }
         Set<Card> cardToMove = new HashSet<>(game.getPlayedcards().getPlayedcards());
 
+        Set<String> cardIdList = new HashSet<>();
         for (Card card : cardToMove) {
             game.getPlayedcards().getPlayedcards().remove(card);
             card.getPlayer().getPlayedCards().remove(card);
             card.getPlayedcards().getPlayedcards().remove(card);
             card.setPlayer(null);
             card.setPlayedcards(null);
+            cardIdList.add(card.getId());
 
             if (player.getStacks().stream().findFirst().isPresent()) {
                 player.getStacks().stream().findFirst().get().getCards().add(card);
@@ -317,6 +323,7 @@ public class GameControlService {
         ch.cas.html5.multicardgame.entity.Action action = new ch.cas.html5.multicardgame.entity.Action();
         action.setGame(game);
         action.setPlayer(player);
+        action.setCards_id(cardIdList);
         action.setAction(Action.CLIENT_PLAYED_CARDS_TAKEN);
         action.setSort(actionService.getNextValFromSeq());
         game.getActions().add(action);
@@ -365,9 +372,9 @@ public class GameControlService {
             return;
         }
 
-        Player player = playerService.getPlayer(lastAction.getPlayer().getId());
         if (lastAction.getCards_id().size() == 1) {
             //revert one Card from PlayedCards to Player
+            Player player = playerService.getPlayer(lastAction.getPlayer().getId());
             Card playedCard = cardService.getCard(lastAction.getCards_id().stream().findFirst().get());
 
             player.getPlayedCards().remove(playedCard);
@@ -384,10 +391,11 @@ public class GameControlService {
             }
         } else {
             //revert 4 Cards from PlayerStack to PlayedCards
-            Stack playerStack = player.getStacks().stream().findFirst().get();
-            Set<Card> cardToMove = new HashSet<>(playerStack.getCards());
+            for (String cardId : lastAction.getCards_id()) {
 
-            for (Card card : cardToMove) {
+                Card card = cardService.getCard(cardId);
+                Player player = getLastPlayerFromActions(card, actionList);
+                Stack playerStack = lastAction.getPlayer().getStacks().stream().findFirst().get();
 
                 playerStack.getCards().remove(card);
                 card.getStack().getCards().remove(card);
@@ -408,6 +416,19 @@ public class GameControlService {
             lastAction.setPlayer(null);
             actionService.deleteAction(lastAction.getId());
         }
+    }
+
+    private Player getLastPlayerFromActions(Card card, List<ch.cas.html5.multicardgame.entity.Action> actionList){
+        for (int i=0; i < actionList.size(); i = i + 1){
+            if (actionList.get(i).getAction().equals(Action.CLIENT_CARD_PLAYED)){
+                for (String id : actionList.get(i).getCards_id()){
+                    if (id.equals(card.getId())){
+                        return actionList.get(i).getPlayer();
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     private void handOutCards(Game game) {
