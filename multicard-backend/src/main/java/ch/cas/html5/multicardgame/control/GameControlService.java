@@ -158,7 +158,7 @@ public class GameControlService {
         System.out.println("handle incoming message: " + gameMessage.getCommand());
         Game game = gameService.getGame(gameId);
 
-        if (gameMessage.getCommand().equals(Action.CLIENT_GAME_READY)) {
+        if (gameMessage.getCommand().equals(Action.CLIENT_GAME_RESET)) {
             setGameReady(game);
             convertAndPublishGame(game, null, false);
         }
@@ -200,11 +200,13 @@ public class GameControlService {
         }
         if (gameMessage.getCommand().equals(Action.CLIENT_REVERT_LAST_PLAYER_ACTION)) {
             RevertLastPlayerActionMessage revertAvtioMsg = (RevertLastPlayerActionMessage) gameMessage;
+            /*
             String cardId = revertAvtioMsg.getCard().getId();
             Card toRevert = cardService.getCard(cardId);
             System.out.println("Revert Action for Card: " + toRevert.getName());
             revertPlayedCardToPlayer(game, playerId, toRevert);
             convertAndPublishGame(game, null, false);
+             */
         }
 
         if (gameMessage.getCommand().equals(Action.CLIENT_PLAYED_CARDS_TAKEN)) {

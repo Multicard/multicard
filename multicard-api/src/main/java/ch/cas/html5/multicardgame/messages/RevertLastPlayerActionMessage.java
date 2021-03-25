@@ -1,15 +1,13 @@
 package ch.cas.html5.multicardgame.messages;
 
-import ch.cas.html5.multicardgame.dto.CardDTO;
-
 public class RevertLastPlayerActionMessage extends GameMessage{
-    private CardDTO card;
+    private String actionId;
 
-    public CardDTO getCard() {
-        return card;
+    public String getActionId() {
+        return actionId;
     }
 
-    public void setCard(CardDTO card) {
-        this.card = card;
+    public void setActionId(String actionId) {
+        this.actionId = actionId;
     }
 }

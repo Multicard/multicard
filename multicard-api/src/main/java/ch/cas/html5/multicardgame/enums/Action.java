@@ -2,7 +2,6 @@ package ch.cas.html5.multicardgame.enums;
 
 public enum Action {
     // Messages vom UI ans Backend
-    CLIENT_GAME_READY,
     CLIENT_PLAYER_READY,
     CLIENT_PLAYERS_POSITIONED,
     CLIENT_START_GAME,
@@ -13,6 +12,7 @@ public enum Action {
     CLIENT_REVERT_ACTION,
     CLIENT_IS_ALIVE,
     CLIENT_SHOW_ALL_PLAYER_STACKS,
+    CLIENT_GAME_RESET,
 
     // Messages vom Backend ans UI
     START_GAME,
