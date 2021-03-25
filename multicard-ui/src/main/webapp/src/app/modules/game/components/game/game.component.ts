@@ -59,10 +59,12 @@ export class GameComponent implements OnInit, OnDestroy {
       this.showMessage('Es sind noch keine weiteren Spieler*innen registriert');
     }
     if (oldNumberOfPlayers >= 1 && newNumberOfPlayer >= 2 && game.players.length > oldNumberOfPlayers) {
-      this.showMessage(`${game.players[game.players.length -1].name} hat sich im Spiel registriert`);
+      const newPlayer = game.players.reduce((acc, cur) => acc.position > cur.position ? acc : cur);
+      this.showMessage(`${newPlayer.name} hat sich im Spiel registriert`);
     }
     if (oldNumberOfPlayers < 4 && this.isGameStarteable(game)) {
-      this.showMessage(`Durch das Verschieben der Spieler*innen kann die Positionierung am Spieltisch geändert werden.`);
+      setTimeout(() =>
+        this.showMessage(`Durch das Verschieben der Spieler*innen kann die Positionierung am Spieltisch geändert werden.`), 4000);
     }
   }
 
