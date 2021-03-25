@@ -254,6 +254,10 @@ public class GameControlService {
     private Boolean hasPlayerStateChangedAndSetState(Game game, String playerId) {
         Boolean isChanged = false;
 
+        if (game == null){
+            return false;
+        }
+
         // check state from inactiv to activ for specific player
         for (Player player : game.getPlayers()) {
             if (player.getId().equals(playerId)) {
@@ -391,7 +395,7 @@ public class GameControlService {
 
                 Card card = cardService.getCard(cardId);
                 Player player = getLastPlayerFromActions(card, actionList);
-                Stack playerStack = player.getStacks().stream().findFirst().get();
+                Stack playerStack = lastAction.getPlayer().getStacks().stream().findFirst().get();
 
                 playerStack.getCards().remove(card);
                 card.getStack().getCards().remove(card);
