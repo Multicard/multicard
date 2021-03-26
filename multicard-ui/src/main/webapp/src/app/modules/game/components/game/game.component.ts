@@ -5,7 +5,7 @@ import {GameDTO, Gamestate} from '../../../../../app-gen/generated-model';
 import {ActivatedRoute} from '@angular/router';
 import {tap} from 'rxjs/operators';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {MatDialog, MatDialogRef, MatDialogState} from '@angular/material/dialog';
 import {UncoveredCardsDialogComponent} from '../uncovered-cards/uncovered-cards-dialog.component';
 
 @Component({
@@ -89,7 +89,9 @@ export class GameComponent implements OnInit, OnDestroy {
     }
 
     // öffne den aufgedeckte Karten Dialog (falls nicht bereits geöffnet)
-    if (game?.state === Gamestate.ENDED && this.uncoveredCardsDialogRef === undefined) {
+    if (game?.state === Gamestate.ENDED
+      && (this.uncoveredCardsDialogRef === undefined || this.uncoveredCardsDialogRef.getState() !== MatDialogState.OPEN)) {
+
       this.uncoveredCardsDialogRef = this.dialog.open(UncoveredCardsDialogComponent,
         {data: game, hasBackdrop: true, disableClose: true});
       this.uncoveredCardsDialogRef.afterClosed().subscribe(() => {

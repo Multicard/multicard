@@ -174,9 +174,11 @@ export class GameService implements OnDestroy {
     return new Set(playedCards?.cards?.map(c => c.playerId)).size >= 4;
   }
 
-  isStackTakenByUserAndLastAction() {
+  isRevertStackTakenAllowed() {
     const game = this.gameSubject.getValue();
-    return game.lastAction?.action === Action.CLIENT_PLAYED_CARDS_TAKEN && game.lastAction.playerId === game.players[0].id;
+    return game.state === Gamestate.STARTED
+      && game.lastAction?.action === Action.CLIENT_PLAYED_CARDS_TAKEN
+      && game.lastAction.playerId === game.players[0].id;
   }
 
   ngOnDestroy(): void {
