@@ -1,5 +1,4 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
 import {GamePlayer, Player} from '../../../../model/game.model';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {PlayerService} from '../../../../services/player.service';
@@ -43,7 +42,6 @@ export class PlayerRegistrationDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: PlayerRegistrationParam,
     private dialogRef: MatDialogRef<PlayerRegistrationDialogComponent>,
-    private fb: FormBuilder,
     private gameService: GameService,
     private playerService: PlayerService
   ) {
