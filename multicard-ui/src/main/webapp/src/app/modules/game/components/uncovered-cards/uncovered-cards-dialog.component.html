@@ -1,0 +1,20 @@
+<mat-dialog-content>
+  <h1>aufgedeckte Karten</h1>
+
+  <div class="uncovered-cards">
+    <div *ngFor="let player of sortedPLayers; trackBy: trackByPlayerId" class="player">
+      <h2 class="player-name">{{player.name}}</h2>
+      <div *ngIf="!player.stacks[0]?.cards" class="no-cards">-</div>
+      <div *ngIf="player.stacks[0]?.cards" class="player-cards">
+        <div *ngFor="let card of player.stacks[0]?.cards; trackBy: trackByCardId" class="table-card">
+          <img [src]="getCardImage(card)" [alt]="getCardImage(card)">
+        </div>
+      </div>
+    </div>
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="startNewRound()">neue Runde</button>
+</mat-dialog-actions>

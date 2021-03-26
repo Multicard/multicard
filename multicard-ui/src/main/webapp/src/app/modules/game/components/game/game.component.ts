@@ -5,6 +5,8 @@ import {GameDTO, Gamestate} from '../../../../../app-gen/generated-model';
 import {ActivatedRoute} from '@angular/router';
 import {tap} from 'rxjs/operators';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {UncoveredCardsDialogComponent} from '../uncovered-cards/uncovered-cards-dialog.component';
 
 @Component({
   selector: 'mc-game',
@@ -15,11 +17,14 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 export class GameComponent implements OnInit, OnDestroy {
   gameState$!: Observable<GameDTO>;
   private numberOfPlayers = 0;
+  private uncoveredCardsDialogRef?: MatDialogRef<any>;
+  private isFirstRound = true;
 
   constructor(
     private route: ActivatedRoute,
     private gameService: GameService,
-    private snackBar: MatSnackBar) {
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -30,8 +35,7 @@ export class GameComponent implements OnInit, OnDestroy {
         this.gameState$ = this.gameService.initGame(gameId, playerId)
           .pipe(
             tap<GameDTO>(game => {
-              this.showMessagesOnStateChanges(game);
-              this.numberOfPlayers = game?.players ? game.players.length : 0;
+              this.handleGameStateChanges(game);
             })
           );
       } else {
@@ -45,12 +49,15 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   isGameStarteable(game: GameDTO) {
-    return game?.state === Gamestate.READYTOSTART && game?.players?.length >= 4 && game.players[0]?.organizer;
+    return game?.state === Gamestate.READYTOSTART
+      //&& game.players[0]?.organizer
+      && game?.players?.length >= 4;
   }
 
   isGameEndable(game: GameDTO) {
     return game?.state === Gamestate.STARTED
-      && game.players[0]?.organizer
+      //&& game.players[0]?.organizer
+      && game?.playedCards && game.playedCards?.cards && game.playedCards.cards.length === 0
       && game.players.reduce((unplayedCards, player) => unplayedCards + (player?.hand?.cards?.length || 0), 0) === 0;
   }
 
@@ -58,24 +65,44 @@ export class GameComponent implements OnInit, OnDestroy {
     this.gameService.startGame();
   }
 
-  endGame() {
-    this.gameService.endGame();
+  endRound() {
+    this.isFirstRound = false;
+    this.gameService.endRound();
   }
 
-  private showMessagesOnStateChanges(game: GameDTO) {
+  private handleGameStateChanges(game: GameDTO) {
     const oldNumberOfPlayers = this.numberOfPlayers;
     const newNumberOfPlayer = game?.players ? game.players.length : 0;
+
     if (newNumberOfPlayer === 1) {
       this.showMessage('Es sind noch keine weiteren Spieler*innen registriert');
     }
+
     if (oldNumberOfPlayers >= 1 && newNumberOfPlayer >= 2 && game.players.length > oldNumberOfPlayers) {
       const newPlayer = game.players.reduce((acc, cur) => acc.position > cur.position ? acc : cur);
       this.showMessage(`${newPlayer.name} hat sich im Spiel registriert`);
     }
-    if (oldNumberOfPlayers < 4 && this.isGameStarteable(game)) {
+
+    if (this.isFirstRound && oldNumberOfPlayers < 4 && this.isGameStarteable(game) && game.players[0]?.organizer) {
       setTimeout(() =>
         this.showMessage(`Durch das Verschieben der Spieler*innen kann die Positionierung am Spieltisch geändert werden.`), 4000);
     }
+
+    // öffne den aufgedeckte Karten Dialog (falls nicht bereits geöffnet)
+    if (game?.state === Gamestate.ENDED && this.uncoveredCardsDialogRef === undefined) {
+      this.uncoveredCardsDialogRef = this.dialog.open(UncoveredCardsDialogComponent,
+        {data: game, hasBackdrop: true, disableClose: true});
+      this.uncoveredCardsDialogRef.afterClosed().subscribe(() => {
+        this.gameService.startNewRound();
+      });
+    }
+
+    // schliesse den aufgedeckte Karten Dialog, falls das Spiel von einem anderen Player neu gestartet wurde
+    if ((game?.state === Gamestate.READYTOSTART || game?.state === Gamestate.STARTED) && this.uncoveredCardsDialogRef !== undefined) {
+      this.uncoveredCardsDialogRef.close();
+    }
+
+    this.numberOfPlayers = game?.players ? game.players.length : 0;
   }
 
   private showMessage(message: string, duration = 4000) {

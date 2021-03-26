@@ -10,7 +10,8 @@ import {CardPileComponent} from './components/card-pile/card-pile.component';
 import {GameComponent} from './components/game/game.component';
 import {GameRoutingModule} from './game-routing.module';
 import {SharedModule} from '../shared/shared.module';
-import { PlayerNameComponent } from './components/player-name/player-name.component';
+import {PlayerNameComponent} from './components/player-name/player-name.component';
+import {UncoveredCardsDialogComponent} from './components/uncovered-cards/uncovered-cards-dialog.component';
 
 
 @NgModule({
@@ -23,12 +24,16 @@ import { PlayerNameComponent } from './components/player-name/player-name.compon
     PlayerComponent,
     PlayedCardsComponent,
     CardPileComponent,
-    PlayerNameComponent
+    PlayerNameComponent,
+    UncoveredCardsDialogComponent
   ],
   imports: [
     CommonModule,
     GameRoutingModule,
     SharedModule
+  ],
+  entryComponents: [
+    UncoveredCardsDialogComponent
   ]
 })
 export class GameModule { }

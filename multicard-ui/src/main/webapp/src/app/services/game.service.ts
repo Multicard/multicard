@@ -93,22 +93,26 @@ export class GameService implements OnDestroy {
         return;
       }
 
-      if (!this.isUserGameOrganizer(game)) {
-        console.error('der Spieler ist nicht der Organisator des Spiels und kann das Spiel deshalb nicht starten');
-        return;
-      }
+      // if (!this.isUserGameOrganizer(game)) {
+      //   console.error('der Spieler ist nicht der Organisator des Spiels und kann das Spiel deshalb nicht starten');
+      //   return;
+      // }
 
-      game.state = Gamestate.STARTED;
       this.gameStartedByThisClient = true;
       this.sendWebsocketGameMessage(Action.CLIENT_START_GAME);
     }
 
 
+    game.state = Gamestate.STARTED;
     this.giveCards(0, 9, 3, game.players.length);
   }
 
-  endGame() {
+  endRound() {
     this.sendWebsocketGameMessage(Action.CLIENT_SHOW_ALL_PLAYER_STACKS);
+  }
+
+  startNewRound() {
+    this.sendWebsocketGameMessage(Action.CLIENT_GAME_RESET);
   }
 
   cardPlayed(card: CardDTO) {

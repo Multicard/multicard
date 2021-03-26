@@ -6,9 +6,9 @@
       Spiel starten
     </button>
     <button *ngIf="isGameEndable(gameState)" class="toolbar-button" color="primary" mat-raised-button
-            (click)="endGame()">
+            (click)="endRound()">
       <mat-icon>stop</mat-icon>
-      Spiel beenden
+      Karten zeigen
     </button>
   </div>
   <mc-table class="table" [gameState]="gameState"></mc-table>
