@@ -1,6 +1,7 @@
 <mat-dialog-content>
   <h1 *ngIf="organizerMode">Spiel {{game.title}}: Organisator*in registrieren</h1>
-  <h1 *ngIf="!organizerMode">Spiel {{game.title}}: Spieler*in registrieren</h1>
+  <h1 *ngIf="!organizerMode && !isRelogin">Spiel {{game.title}}: Spieler*in registrieren</h1>
+  <h1 *ngIf="isRelogin">Spiel {{game.title}}: Willkommen zurück {{reloginPlayerName}}</h1>
 
   <form #playerForm="ngForm" class="player-registration">
     <div class="error-msg error-msg-top">{{errorMsgTop}}</div>

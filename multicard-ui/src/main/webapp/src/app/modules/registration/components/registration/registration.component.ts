@@ -66,18 +66,15 @@ export class RegistrationComponent implements OnInit {
           return;
         }
         const playerId = this.player.registeredGames.find(g => g.gameId === this.gameId)?.playerId;
-        if (playerId !== undefined && foundGame.players?.find(p => p.id === playerId)) {
-          this.navigateToGame(playerId);
-        } else {
-          const data: PlayerRegistrationParam = {isOrganizer: false, game: foundGame, player: this.player};
-          const dialogRef = this.dialog.open(PlayerRegistrationDialogComponent,
-            {data, hasBackdrop: true, disableClose: true, position: {top: '50px'}});
-          dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-              this.handlePlayerRegistrationResult(result as Player);
-            }
-          });
-        }
+        const isRelogin = playerId !== undefined && foundGame.players?.find(p => p.id === playerId) !== undefined;
+        const data: PlayerRegistrationParam = {isOrganizer: false, isRelogin, game: foundGame, player: this.player};
+        const dialogRef = this.dialog.open(PlayerRegistrationDialogComponent,
+          {data, hasBackdrop: true, disableClose: true, position: {top: '50px'}});
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            this.handlePlayerRegistrationResult(result as Player);
+          }
+        });
       }, e => {
         console.error('error while loading game', e);
         this.openErrorDialog(COMMUNICATION_ERROR_MSG);
@@ -89,7 +86,7 @@ export class RegistrationComponent implements OnInit {
   }
 
   private handlePlayerRegistrationResult(player: Player) {
-    const playerId = this.findPLayerIdForGame(this.player)?.playerId;
+    const playerId = this.findPLayerIdForGame(player)?.playerId;
     if (playerId) {
       this.navigateToGame(playerId);
     } else {

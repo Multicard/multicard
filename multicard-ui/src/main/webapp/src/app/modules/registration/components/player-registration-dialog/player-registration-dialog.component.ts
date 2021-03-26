@@ -9,6 +9,7 @@ import {finalize} from 'rxjs/operators';
 
 export interface PlayerRegistrationParam {
   isOrganizer: boolean;
+  isRelogin: boolean;
   player: Player;
   game: GameDTO;
 }
@@ -31,6 +32,8 @@ export class PlayerRegistrationDialogComponent implements OnInit {
   game: GameDTO;
   player: Player;
   organizerMode = false;
+  isRelogin = false;
+  reloginPlayerName!: string;
   password!: string;
   noFreePLayersLeft = false;
   isRestCallInProgress = false;
@@ -47,12 +50,16 @@ export class PlayerRegistrationDialogComponent implements OnInit {
     this.game = data.game;
     this.player = data.player;
     this.organizerMode = data.isOrganizer;
+    this.isRelogin = data.isRelogin;
+    this.reloginPlayerName = data.player.playerName;
   }
 
   ngOnInit(): void {
     if (this.game.players?.length >= 4) {
       this.noFreePLayersLeft = true;
-      this.errorMsgTop = ERROR_NO_SPACE_FOR_NEW_PLAYER;
+      if (!this.isRelogin) {
+        this.errorMsgTop = ERROR_NO_SPACE_FOR_NEW_PLAYER;
+      }
       return;
     }
   }
@@ -108,7 +115,12 @@ export class PlayerRegistrationDialogComponent implements OnInit {
   }
 
   private savePlayerAndCloseDialog(playerId: string) {
-    this.player.registeredGames.push(new GamePlayer(this.game.id, playerId));
+    const alreadyRegisteredGamePlayer = this.player.registeredGames.find(rg => rg.gameId === this.game.id);
+    if (alreadyRegisteredGamePlayer !== undefined) {
+      alreadyRegisteredGamePlayer.playerId = playerId;
+    } else {
+      this.player.registeredGames.push(new GamePlayer(this.game.id, playerId));
+    }
     this.playerService.storePlayerInLocalStorage(this.player);
     this.dialogRef.close(this.player);
   }
