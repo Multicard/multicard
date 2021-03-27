@@ -1,9 +1,10 @@
 import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {CardDTO, GameDTO, PlayerDTO} from '../../../../../app-gen/generated-model';
+import {CardDTO, GameDTO, PlayerDTO, PlayerScoreDTO} from '../../../../../app-gen/generated-model';
 import {getCardImage} from '../../../../model/cardHelper';
 import {Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
+import {GameService} from '../../../../services/game.service';
 
 @Component({
   selector: 'mc-uncovered-cards-dialog',
@@ -19,7 +20,8 @@ export class UncoveredCardsDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: Observable<GameDTO>,
-    private dialogRef: MatDialogRef<UncoveredCardsDialogComponent>) {
+    private dialogRef: MatDialogRef<UncoveredCardsDialogComponent>,
+    private gameService: GameService) {
   }
 
   ngOnInit(): void {
@@ -30,7 +32,11 @@ export class UncoveredCardsDialogComponent implements OnInit {
       }));
   }
 
-  submitScore() {
+  submitScore(game: GameDTO) {
+    const playerScores: PlayerScoreDTO[] = [];
+    this.playersScore.forEach((score, playerId) => playerScores.push({playerId, score: score ? score : 0}));
+    const scoreIdCurrentRound = game.scores?.find(s => s.round === game.currentRound)?.id;
+    this.gameService.setScore({id: scoreIdCurrentRound ? scoreIdCurrentRound : '', round: game.currentRound, playerScores});
   }
 
   startNewRound() {

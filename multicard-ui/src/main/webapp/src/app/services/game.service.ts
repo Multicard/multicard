@@ -17,7 +17,9 @@ import {
   PlayedCardsDTO,
   PlayerDTO,
   PlayersPositionedMessage,
-  RevertLastPlayerActionMessage
+  RevertLastPlayerActionMessage,
+  ScoreDTO,
+  SetScoreMessage
 } from '../../app-gen/generated-model';
 
 const GAME_REST_API_URL = '/api/Games';
@@ -108,6 +110,10 @@ export class GameService implements OnDestroy {
 
   endRound() {
     this.sendWebsocketGameMessage(Action.CLIENT_SHOW_ALL_PLAYER_STACKS);
+  }
+
+  setScore(score: ScoreDTO) {
+    this.sendWebsocketSetScoreMessage(score);
   }
 
   startNewRound() {
@@ -271,6 +277,11 @@ export class GameService implements OnDestroy {
         actionId: lastAction.id,
         messageName: 'RevertLastPlayerActionMessage'
       };
+    this.sendWebsocketMessage(message);
+  }
+
+  private sendWebsocketSetScoreMessage(score: ScoreDTO) {
+    const message: SetScoreMessage = {command: Action.CLIENT_SET_SCORE, score, messageName: 'SetScoreMessage'};
     this.sendWebsocketMessage(message);
   }
 

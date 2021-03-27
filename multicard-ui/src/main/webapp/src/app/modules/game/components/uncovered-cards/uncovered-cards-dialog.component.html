@@ -1,7 +1,7 @@
 <div *ngIf="game$ | async as game">
 <form #scoreForm="ngForm">
   <mat-dialog-content >
-    <h1>aufgedeckte Karten Runde {{game.currentRound}}</h1>
+    <h1>Punkte erfassen Runde {{game.currentRound}}</h1>
 
     <div class="uncovered-cards">
       <div *ngFor="let player of sortedPLayers; let iPlayer = index; trackBy: trackByPlayerId" class="player">
@@ -21,7 +21,7 @@
 </form>
 
 <mat-dialog-actions>
-  <button mat-raised-button color="primary" (click)="submitScore()">Punkte in Spieltafel übertragen</button>
+  <button mat-raised-button color="primary" [disabled]="scoreForm.invalid || scoreForm.pristine" (click)="submitScore(game)">Punkte in Spieltafel übertragen</button>
   <button mat-raised-button color="primary" [disabled]="!isScoreRegistered(game)" (click)="startNewRound()">neue Runde</button>
 </mat-dialog-actions>
 </div>
