@@ -10,14 +10,14 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name="game")
+@Table(name = "game")
 public class Game {
 
     @Id
     @Column(unique = true, name = "id", nullable = false)
     private String id = UUID.randomUUID().toString().toUpperCase();
 
-    @Column(name="title")
+    @Column(name = "title")
     private String title;
 
     //https://stackoverflow.com/questions/49130173/how-to-fix-spring-boot-one-to-many-bidirectional-infinity-loop
@@ -42,6 +42,9 @@ public class Game {
     @JsonIgnoreProperties("action")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "game", cascade = CascadeType.ALL)
     private Set<Action> actions = new HashSet<>();
+
+    @Column(name = "round")
+    private Integer round = 1;
 
     public String getId() {
         return id;
@@ -72,9 +75,13 @@ public class Game {
         player.setGame(this);
     }
 
-    public Gamestate getState() { return state; }
+    public Gamestate getState() {
+        return state;
+    }
 
-    public void setState(Gamestate state) {this.state = state;  }
+    public void setState(Gamestate state) {
+        this.state = state;
+    }
 
     public Set<Stack> getGameStacks() {
         return stacks;
@@ -98,5 +105,16 @@ public class Game {
 
     public void setActions(Set<Action> actions) {
         this.actions = actions;
+    }
+
+    public Integer getRound() {
+        if (round == null) {
+            return 0;
+        }
+        return round;
+    }
+
+    public void setRound(Integer round) {
+        this.round = round;
     }
 }

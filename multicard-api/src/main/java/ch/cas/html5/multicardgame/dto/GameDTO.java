@@ -16,10 +16,11 @@ public class GameDTO {
     private Integer currentRound;
     private List<ScoreDTO> scores = new ArrayList<>();
 
-    public GameDTO(String id, String title, Gamestate state){
+    public GameDTO(String id, String title, Gamestate state, int currentRound){
         this.id = id;
         this.title = title;
         this.state = state;
+        this.currentRound = currentRound;
     }
 
     public String getId() {

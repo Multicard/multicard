@@ -32,7 +32,7 @@ public class GameRestController {
         if (game == null) {
             return null;
         } else {
-            GameDTO gamedto = new GameDTO(game.getId(), game.getTitle(), game.getState());
+            GameDTO gamedto = new GameDTO(game.getId(), game.getTitle(), game.getState(), game.getRound());
             for (Player p2 : game.getPlayers()) {
                 PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), true);
                 gamedto.getPlayers().add(playerdto);
@@ -45,7 +45,7 @@ public class GameRestController {
     public GameDTO saveGame(@RequestParam(name = "gameTitle") String title) {
         Game game =  gameService.saveGame(title);
         gameControlService.setGameReady(game);
-        GameDTO gamedto = new GameDTO(game.getId(), game.getTitle(), game.getState());
+        GameDTO gamedto = new GameDTO(game.getId(), game.getTitle(), game.getState(), game.getRound());
         return gamedto;
     }
 

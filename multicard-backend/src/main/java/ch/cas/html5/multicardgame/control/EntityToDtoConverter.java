@@ -2,7 +2,10 @@ package ch.cas.html5.multicardgame.control;
 
 import ch.cas.html5.multicardgame.dto.CardDTO;
 import ch.cas.html5.multicardgame.dto.PlayedCardDTO;
+import ch.cas.html5.multicardgame.dto.PlayerScoreDTO;
+import ch.cas.html5.multicardgame.dto.ScoreDTO;
 import ch.cas.html5.multicardgame.entity.Card;
+import ch.cas.html5.multicardgame.entity.Score;
 import ch.cas.html5.multicardgame.enums.Action;
 
 import java.util.ArrayList;
@@ -48,5 +51,31 @@ public final class EntityToDtoConverter {
             }
         }
         return null;
+    }
+
+    public List<ScoreDTO> convertGameScore(List<Score> scores){
+        if (scores.size() < 1) { return null; }
+        int currentRound = scores.get(0).getRound();
+        ArrayList<ScoreDTO> dtoList = new ArrayList<>();
+        for (int i=1; i == currentRound; i = i + 1){
+            ScoreDTO scoredto = new ScoreDTO();
+            scoredto.setRound(i);
+            scoredto.setPlayerScores(getPLayerScore(scores, i));
+            dtoList.add(scoredto);
+        }
+        return dtoList;
+    }
+
+    private List<PlayerScoreDTO> getPLayerScore(List<Score> scores, int round){
+        ArrayList<PlayerScoreDTO> playerScoreList = new ArrayList<>();
+        for (Score score : scores){
+            if (score.getRound().intValue() == round){
+                PlayerScoreDTO newdto = new PlayerScoreDTO();
+                newdto.setScore(score.getScore());
+                newdto.setPlayerId(score.getPlayerId());
+                playerScoreList.add(newdto);
+            }
+        }
+        return playerScoreList;
     }
 }

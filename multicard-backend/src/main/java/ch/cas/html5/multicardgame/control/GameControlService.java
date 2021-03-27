@@ -24,6 +24,7 @@ public class GameControlService {
     private final StackServiceImpl stackService;
     private final GameResetService gameReset;
     private final ConnectionServiceImpl connectionService;
+    private final ScoreServiceImpl scoreService;
 
     @Autowired
     private WebSocketController webController;
@@ -33,7 +34,7 @@ public class GameControlService {
     }
 
 
-    public GameControlService(GameServiceImpl gameService, PlayerServiceImpl playerService, DeckServiceImpl deckService, DeckelementServiceImpl deckelementService, CardServiceImpl cardService, ActionServiceImpl actionService, StackServiceImpl stackService, GameResetService gameReset, ConnectionServiceImpl connectionService) {
+    public GameControlService(GameServiceImpl gameService, PlayerServiceImpl playerService, DeckServiceImpl deckService, DeckelementServiceImpl deckelementService, CardServiceImpl cardService, ActionServiceImpl actionService, StackServiceImpl stackService, GameResetService gameReset, ConnectionServiceImpl connectionService, ScoreServiceImpl scoreService) {
         this.gameService = gameService;
         this.playerService = playerService;
         this.deckService = deckService;
@@ -43,6 +44,7 @@ public class GameControlService {
         this.stackService = stackService;
         this.gameReset = gameReset;
         this.connectionService = connectionService;
+        this.scoreService = scoreService;
     }
 
 
@@ -77,8 +79,15 @@ public class GameControlService {
         gameMessage.setCommand(Action.GAME_STATE);
 
         // Convert Game
-        GameDTO gamedto = new GameDTO(game.getId(), game.getTitle(), game.getState());
+        GameDTO gamedto = new GameDTO(game.getId(), game.getTitle(), game.getState(), game.getRound());
         gameMessage.setGame(gamedto);
+
+        // Convert Score
+        ArrayList<String> playerIds= new ArrayList<>();
+        for (Player player : game.getPlayers()){
+            playerIds.add(player.getId());
+        }
+        gamedto.setScores(converter.convertGameScore(scoreService.getScoresByPlayers(playerIds)));
 
         //Convert Game.Stacks
         for (Stack stack : game.getGameStacks()) {
@@ -168,10 +177,11 @@ public class GameControlService {
 
         if (gameMessage.getCommand().equals(Action.CLIENT_GAME_RESET)) {
             setGameReady(game);
+            game.setRound(game.getRound() + 1);
             convertAndPublishGame(game, null, false);
         }
 
-        if (gameMessage.getCommand().equals(Action.CLIENT_START_GAME)) {
+        if (gameMessage.getCommand().equals(Action.CLIENT_START_GAME) && game.getState().equals(Gamestate.READYTOSTART)) {
             game.setState(Gamestate.STARTED);
             gameService.updateGame(game);
             if (getFirstGameStack(game).getCards().size() == 36) {
@@ -224,6 +234,27 @@ public class GameControlService {
             game.setState(Gamestate.ENDED);
             gameService.updateGame(game);
             convertAndPublishGame(game, null, true);
+        }
+
+        if (gameMessage.getCommand().equals(Action.CLIENT_SET_SCORE)) {
+            SetScoreMessage setScoreMessage = (SetScoreMessage) gameMessage;
+            System.out.println("Set Scores for Players");
+            saveScore(game, setScoreMessage);
+            convertAndPublishGame(game, null, false);
+        }
+    }
+
+    private void saveScore(Game game, SetScoreMessage msg){
+        int currentRound = msg.getScore().getRound();
+        for (PlayerScoreDTO playerScoredto : msg.getScore().getPlayerScores()){
+            Score score = scoreService.getScoresByPlayerAndRound(playerScoredto.getPlayerId(), currentRound);
+            if (score == null){
+                Score newScore = new Score();
+                newScore.setScore(playerScoredto.getScore());
+                newScore.setRound(currentRound);
+                newScore.setPlayerId(playerScoredto.getPlayerId());
+                scoreService.saveScore(newScore);
+            }
         }
     }
 
