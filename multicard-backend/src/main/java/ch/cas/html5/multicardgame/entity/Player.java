@@ -4,7 +4,6 @@ package ch.cas.html5.multicardgame.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -24,12 +23,6 @@ public class Player {
 
     @Column(name = "isPlayerReady")
     private Boolean isPlayerReady = false;
-
-    @Column(name = "aliveTimestamp")
-    private Timestamp aliveTimestamp = new Timestamp(System.currentTimeMillis());;
-
-    @Column(name = "lastStateChange")
-    private Timestamp lastStateChange = new Timestamp(System.currentTimeMillis());;
 
     @Column(name = "position")
     private Integer position;
@@ -140,19 +133,4 @@ public class Player {
         this.pwd = pwd;
     }
 
-    public Timestamp getAliveTimestamp() {
-        return aliveTimestamp;
-    }
-
-    public void setAliveTimestamp(Timestamp aliveTimestamp) {
-        this.aliveTimestamp = aliveTimestamp;
-    }
-
-    public Timestamp getLastStateChange() {
-        return lastStateChange;
-    }
-
-    public void setLastStateChange(Timestamp lastStateChange) {
-        this.lastStateChange = lastStateChange;
-    }
 }

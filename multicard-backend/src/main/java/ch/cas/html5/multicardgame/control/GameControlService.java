@@ -11,7 +11,6 @@ import ch.cas.html5.multicardgame.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 @Service
@@ -24,8 +23,7 @@ public class GameControlService {
     private final ActionServiceImpl actionService;
     private final StackServiceImpl stackService;
     private final GameResetService gameReset;
-
-    private final long ALIVE_PERIOD_IN_MILLIS = 5000; // 5 Seconds
+    private final ConnectionServiceImpl connectionService;
 
     @Autowired
     private WebSocketController webController;
@@ -35,7 +33,7 @@ public class GameControlService {
     }
 
 
-    public GameControlService(GameServiceImpl gameService, PlayerServiceImpl playerService, DeckServiceImpl deckService, DeckelementServiceImpl deckelementService, CardServiceImpl cardService, ActionServiceImpl actionService, StackServiceImpl stackService, GameResetService gameReset) {
+    public GameControlService(GameServiceImpl gameService, PlayerServiceImpl playerService, DeckServiceImpl deckService, DeckelementServiceImpl deckelementService, CardServiceImpl cardService, ActionServiceImpl actionService, StackServiceImpl stackService, GameResetService gameReset, ConnectionServiceImpl connectionService) {
         this.gameService = gameService;
         this.playerService = playerService;
         this.deckService = deckService;
@@ -44,6 +42,7 @@ public class GameControlService {
         this.actionService = actionService;
         this.stackService = stackService;
         this.gameReset = gameReset;
+        this.connectionService = connectionService;
     }
 
 
@@ -99,11 +98,11 @@ public class GameControlService {
         for (Player p1 : game.getPlayers()) {
 
             //publish only to active users
-            if (!isExpired(p1.getAliveTimestamp())) {
+            if (isPlayerOnline(p1)) {
 
                 for (Player p2 : game.getPlayers()) {
 
-                    PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), p2.getPlayerReady(), p2.getAliveTimestamp());
+                    PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), p2.getPlayerReady(), isPlayerOnline(p2));
 
                     //Convert Game.Player.Hand
                     if (p2.getHand() != null && p2.getHand().getCards() != null) {
@@ -170,10 +169,11 @@ public class GameControlService {
     }
 
     public void handleMessage(GameMessage gameMessage, String gameId, String playerId) {
-        if (!gameMessage.getCommand().equals(Action.CLIENT_IS_ALIVE)) {
-            System.out.println("handle incoming message: " + gameMessage.getCommand());
-        }
+        System.out.println("handle incoming message: " + gameMessage.getCommand());
         Game game = gameService.getGame(gameId);
+        if (game == null){
+            return;
+        }
 
         if (gameMessage.getCommand().equals(Action.CLIENT_GAME_RESET)) {
             setGameReady(game);
@@ -234,12 +234,6 @@ public class GameControlService {
             convertAndPublishGame(game, null, false);
         }
 
-        if (gameMessage.getCommand().equals(Action.CLIENT_IS_ALIVE)) {
-            if (hasPlayerStateChangedAndSetState(game, playerId)) {
-                convertAndPublishGame(game, null, false);
-            }
-        }
-
         if (gameMessage.getCommand().equals(Action.CLIENT_SHOW_ALL_PLAYER_STACKS)) {
             game.setState(Gamestate.ENDED);
             gameService.updateGame(game);
@@ -247,40 +241,8 @@ public class GameControlService {
         }
     }
 
-    private Boolean isExpired(Timestamp ts) {
-        return ts.before(new Timestamp(System.currentTimeMillis() - ALIVE_PERIOD_IN_MILLIS));
-    }
-
-    private Boolean hasPlayerStateChangedAndSetState(Game game, String playerId) {
-        Boolean isChanged = false;
-
-        if (game == null){
-            return false;
-        }
-
-        // check state from inactiv to activ for specific player
-        for (Player player : game.getPlayers()) {
-            if (player.getId().equals(playerId)) {
-                if (isExpired(player.getAliveTimestamp()) && isExpired(player.getLastStateChange())) {
-                    player.setLastStateChange(new Timestamp(System.currentTimeMillis()));
-                    System.out.println("PLayer is online again: " + player.getName());
-                    isChanged = true;
-                }
-                player.setAliveTimestamp(new Timestamp(System.currentTimeMillis()));
-                playerService.savePlayer(player);
-            }
-        }
-
-        // check state from activ to inactiv for all players
-        for (Player player : game.getPlayers()) {
-            if (isExpired(player.getAliveTimestamp()) && player.getLastStateChange().before(player.getAliveTimestamp())) {
-                player.setLastStateChange(new Timestamp(System.currentTimeMillis()));
-                System.out.println("IsAlive failed for Player: " + player.getName());
-                playerService.savePlayer(player);
-                isChanged = true;
-            }
-        }
-        return isChanged;
+    private Boolean isPlayerOnline(Player player) {
+        return (connectionService.getConnectionByPlayer(player.getId()).size() > 0);
     }
 
     private void newPositionForPlayers(Game game, PlayersPositionedMessage msg) {
@@ -514,5 +476,49 @@ public class GameControlService {
         }
     }
 
+    private String extractUserId(String queue){
+        return queue.substring(queue.lastIndexOf("/") + 1, queue.length());
+    }
+
+    public void addConnection(String queue, String sessionId){
+        if (connectionService.getConnection(sessionId) != null){
+            return;
+        }
+        String playerId = extractUserId(queue);
+        Game game = getGameForConnection(playerId);
+        if (game == null){
+            return;
+        }
+        Connection connection = new Connection();
+        connection.setSession_id(sessionId);
+        connection.setPlayer_id(playerId);
+        connectionService.saveConnection(connection);
+        convertAndPublishGame(game, null, false);
+    }
+
+    public void removeConnection(String queue, String sessionId){
+        Connection connection = connectionService.getConnection(sessionId);
+        if (connection == null){
+            return;
+        }
+        connectionService.deleteConnection(connection);
+        Game game = getGameForConnection(connection.getPlayer_id());
+        if (game == null){
+            return;
+        }
+        convertAndPublishGame(game, null, false);
+    }
+
+    public void playerOff(String sessionId){
+        removeConnection(null, sessionId);
+    }
+
+    private Game getGameForConnection(String playerId){
+        Player player = playerService.getPlayer(playerId);
+        if (player != null && player.getGame() != null){
+            return player.getGame();
+        }
+        return null;
+    }
 
 }

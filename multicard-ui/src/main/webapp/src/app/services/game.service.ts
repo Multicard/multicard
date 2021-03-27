@@ -66,7 +66,6 @@ export class GameService implements OnDestroy {
       .pipe(take(1))
       .subscribe(() => {
         this.sendWebsocketGameMessage(Action.CLIENT_PLAYER_READY);
-        this.createIsAliveTimer();
       });
 
 
@@ -215,12 +214,6 @@ export class GameService implements OnDestroy {
         }
         break;
     }
-  }
-
-  private createIsAliveTimer() {
-    interval(2000)
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(() => this.sendWebsocketGameMessage(Action.CLIENT_IS_ALIVE));
   }
 
   private giveCards(i: number = 0, numberOfTotalCardsPerPlayer: number, numberOfPLayerCardsPerTurn: number, numberOfPLayers: number) {
