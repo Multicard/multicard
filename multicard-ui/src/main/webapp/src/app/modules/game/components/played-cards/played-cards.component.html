@@ -1,6 +1,7 @@
 <div class="played-cards" cdkDropList cdkDropListConnectedTo="user-stack-drop-target"
      [cdkDropListDisabled]="!isDragAndDropOfCardsAllowed()">
-  <div class="played-cards-drag-area" cdkDrag [cdkDragData]="playedCards?.cards">
+  <div class="played-cards-drag-area" cdkDrag [cdkDragData]="playedCards?.cards"
+       (cdkDragStarted)="onDragStarted()" (cdkDragEnded)="onDragEnded()">
     <div class="played-cards-area-top">
       <div *ngIf="!playedCards?.onSameStack" class="played-area-cards" (dblclick)="takePlayedCards()">
         <mc-card-pile [cards]="cards[2]" cardCssClass="table-card" cdkDragHandle
@@ -18,7 +19,8 @@
       </div>
       <div class="played-cards-area-middle">
         <div *ngIf="playedCards?.onSameStack" class="played-cards-drop-target played-area-cards" cdkDropList
-             [id]="'played-cards-drop-target'" (cdkDropListDropped)="cardDroppedMiddle($event)">
+             [id]="'played-cards-drop-target'" (cdkDropListDropped)="cardDroppedMiddle($event)"
+             [ngClass]="{'player-card-drag-in-progress': playerCardDragAndDropOntoTableInProgress$ | async}">
           <div class="pile-with-undo-button" (dblclick)="takePlayedCards()">
             <button mat-mini-fab color="primary" *ngIf="isLastCardPLayedByUser" class="undo-button" mat-raised-button
                     (click)="redoLastCardAction()" aria-label="Karte zurücknehmen" title="Karte zurücknehmen">
@@ -50,7 +52,8 @@
     </div>
     <div class="played-cards-area-bottom">
       <div *ngIf="!playedCards?.onSameStack" class="played-cards-drop-target played-area-cards" cdkDropList
-           [id]="'played-cards-drop-target'" (cdkDropListDropped)="cardDroppedBottom($event)">
+           [id]="'played-cards-drop-target'" (cdkDropListDropped)="cardDroppedBottom($event)"
+           [ngClass]="{'player-card-drag-in-progress': playerCardDragAndDropOntoTableInProgress$ | async}">
         <div class="pile-with-undo-button" (dblclick)="takePlayedCards()">
           <button mat-mini-fab color="primary" *ngIf="isLastCardPLayedByUser" class="undo-button"
                   (click)="redoLastCardAction()" aria-label="Karte zurücknehmen" title="Karte zurücknehmen">

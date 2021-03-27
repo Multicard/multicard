@@ -32,7 +32,7 @@ export class StackComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.gameService.registerStackObserver()
+    this.gameService.getStackObservable()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((action) => this.triggerAction(action));
   }

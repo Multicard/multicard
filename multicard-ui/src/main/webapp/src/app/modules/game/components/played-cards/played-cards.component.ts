@@ -3,6 +3,7 @@ import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {PlayedCardDTO, PlayedCardsDTO} from '../../../../../app-gen/generated-model';
 import {GameService} from '../../../../services/game.service';
 import {FlyInAnimation} from '../card-pile/card-pile.component';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'mc-played-cards',
@@ -18,6 +19,7 @@ export class PlayedCardsComponent implements OnInit, OnChanges {
   indexOfLastPLayer = 0;
   isLastCardPLayedByUser = false;
   haveAllPlayersPlayed = false;
+  playerCardDragAndDropOntoTableInProgress$!: Observable<boolean>;
   readonly noFlyInAnimation = FlyInAnimation.noAnimation;
   readonly flyInAnimationFromTop = FlyInAnimation.fromTop;
   readonly flyInAnimationFromLeft = FlyInAnimation.fromLeft;
@@ -28,6 +30,7 @@ export class PlayedCardsComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    this.playerCardDragAndDropOntoTableInProgress$ = this.gameService.getPlayerCardDragAndDropOntoTableInProgressObservable();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -69,5 +72,13 @@ export class PlayedCardsComponent implements OnInit, OnChanges {
       this.cards[0] = [...this.cards[0]];
       this.isLastCardPLayedByUser = false;
     }
+  }
+
+  onDragStarted() {
+    this.gameService.setTableStackDragAndDropInProgress(true);
+  }
+
+  onDragEnded() {
+    this.gameService.setTableStackDragAndDropInProgress(false);
   }
 }
