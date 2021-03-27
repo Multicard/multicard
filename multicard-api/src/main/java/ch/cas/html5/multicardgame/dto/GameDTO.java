@@ -13,6 +13,8 @@ public class GameDTO {
     private List<StackDTO> stacks = new ArrayList<>();
     private PlayedCardsDTO playedCards;
     private ActionDTO lastAction;
+    private Integer currentRound;
+    private List<ScoreDTO> scores = new ArrayList<>();
 
     public GameDTO(String id, String title, Gamestate state){
         this.id = id;
@@ -74,5 +76,21 @@ public class GameDTO {
 
     public void setLastAction(ActionDTO lastAction) {
         this.lastAction = lastAction;
+    }
+
+    public Integer getCurrentRound() {
+        return currentRound;
+    }
+
+    public void setCurrentRound(Integer currentRound) {
+        this.currentRound = currentRound;
+    }
+
+    public List<ScoreDTO> getScores() {
+        return scores;
+    }
+
+    public void setScores(List<ScoreDTO> scores) {
+        this.scores = scores;
     }
 }

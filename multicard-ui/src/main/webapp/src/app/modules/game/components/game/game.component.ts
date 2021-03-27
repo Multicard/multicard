@@ -93,7 +93,7 @@ export class GameComponent implements OnInit, OnDestroy {
       && (this.uncoveredCardsDialogRef === undefined || this.uncoveredCardsDialogRef.getState() !== MatDialogState.OPEN)) {
 
       this.uncoveredCardsDialogRef = this.dialog.open(UncoveredCardsDialogComponent,
-        {data: game, hasBackdrop: true, disableClose: true});
+        {data: this.gameState$, hasBackdrop: true, disableClose: true});
       this.uncoveredCardsDialogRef.afterClosed().subscribe(() => {
         this.gameService.startNewRound();
       });

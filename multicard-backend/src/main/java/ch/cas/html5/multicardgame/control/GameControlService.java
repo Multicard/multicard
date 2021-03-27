@@ -102,7 +102,7 @@ public class GameControlService {
 
                 for (Player p2 : game.getPlayers()) {
 
-                    PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), p2.getPlayerReady(), isPlayerOnline(p2));
+                    PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), isPlayerOnline(p2));
 
                     //Convert Game.Player.Hand
                     if (p2.getHand() != null && p2.getHand().getCards() != null) {
@@ -155,15 +155,6 @@ public class GameControlService {
         }
     }
 
-    private void setPlayerReady(Game game, String playerId) {
-        for (Player player : game.getPlayers()) {
-            if (player.getId().equals(playerId)) {
-                player.setPlayerReady(Boolean.TRUE);
-                playerService.savePlayer(player);
-            }
-        }
-    }
-
     private void publishGameToPlayer(String gameId, String playerId, GameMessage gameMessage) {
         webController.sendToUser(gameId, playerId, gameMessage);
     }
@@ -177,11 +168,6 @@ public class GameControlService {
 
         if (gameMessage.getCommand().equals(Action.CLIENT_GAME_RESET)) {
             setGameReady(game);
-            convertAndPublishGame(game, null, false);
-        }
-
-        if (gameMessage.getCommand().equals(Action.CLIENT_PLAYER_READY)) {
-            setPlayerReady(game, playerId);
             convertAndPublishGame(game, null, false);
         }
 

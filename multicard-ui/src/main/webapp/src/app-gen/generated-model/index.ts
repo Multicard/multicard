@@ -9,10 +9,12 @@ export interface GameDTO {
     stacks: StackDTO[];
     playedCards: PlayedCardsDTO;
     lastAction: ActionDTO;
+    currentRound: number;
+    scores: ScoreDTO[];
 }
 
 export interface GameMessage {
-    messageName: "GameMessage" | "GameStateMessage" | "PlayersPositionedMessage" | "PlayedCardMessage" | "RevertLastPlayerActionMessage";
+    messageName: "GameMessage" | "GameStateMessage" | "PlayersPositionedMessage" | "PlayedCardMessage" | "RevertLastPlayerActionMessage" | "SetScoreMessage";
     command: Action;
 }
 
@@ -42,7 +44,6 @@ export interface PlayerDTO {
     position: number;
     hand: HandDTO;
     stacks: StackDTO[];
-    playerReady: boolean;
     organizer: boolean;
     alive: boolean;
 }
@@ -63,6 +64,17 @@ export interface ActionDTO {
     action: Action;
 }
 
+export interface ScoreDTO {
+    id: string;
+    round: number;
+    playerScores: PlayerScoreDTO[];
+}
+
+export interface SetScoreMessage extends GameMessage {
+    messageName: "SetScoreMessage";
+    score: ScoreDTO;
+}
+
 export interface CardDTO extends Comparable<CardDTO> {
     id: string;
     name: string;
@@ -80,10 +92,15 @@ export interface PlayedCardDTO extends CardDTO {
     playerId: string;
 }
 
+export interface PlayerScoreDTO {
+    playerId: string;
+    score: number;
+}
+
 export interface Comparable<T> {
 }
 
-export type GameMessageUnion = GameStateMessage | PlayedCardMessage | PlayersPositionedMessage | RevertLastPlayerActionMessage;
+export type GameMessageUnion = GameStateMessage | PlayedCardMessage | PlayersPositionedMessage | RevertLastPlayerActionMessage | SetScoreMessage;
 
 export enum Gamestate {
     INITIAL = "INITIAL",
@@ -93,7 +110,6 @@ export enum Gamestate {
 }
 
 export enum Action {
-    CLIENT_PLAYER_READY = "CLIENT_PLAYER_READY",
     CLIENT_PLAYERS_POSITIONED = "CLIENT_PLAYERS_POSITIONED",
     CLIENT_START_GAME = "CLIENT_START_GAME",
     CLIENT_REQUEST_STATE = "CLIENT_REQUEST_STATE",
@@ -104,6 +120,7 @@ export enum Action {
     CLIENT_IS_ALIVE = "CLIENT_IS_ALIVE",
     CLIENT_SHOW_ALL_PLAYER_STACKS = "CLIENT_SHOW_ALL_PLAYER_STACKS",
     CLIENT_GAME_RESET = "CLIENT_GAME_RESET",
+    CLIENT_SET_SCORE = "CLIENT_SET_SCORE",
     START_GAME = "START_GAME",
     GAME_STATE = "GAME_STATE",
 }

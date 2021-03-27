@@ -9,7 +9,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = GameStateMessage.class, name = "GameStateMessage"),
         @JsonSubTypes.Type(value = PlayedCardMessage.class, name = "PlayedCardMessage"),
         @JsonSubTypes.Type(value = PlayersPositionedMessage.class, name = "PlayersPositionedMessage"),
-        @JsonSubTypes.Type(value = RevertLastPlayerActionMessage.class, name = "RevertLastPlayerActionMessage")
+        @JsonSubTypes.Type(value = RevertLastPlayerActionMessage.class, name = "RevertLastPlayerActionMessage"),
+        @JsonSubTypes.Type(value = SetScoreMessage.class, name = "SetScoreMessage")
 })
 public class GameMessage {
     private Action command;

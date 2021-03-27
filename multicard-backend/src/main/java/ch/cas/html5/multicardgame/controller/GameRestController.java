@@ -34,7 +34,7 @@ public class GameRestController {
         } else {
             GameDTO gamedto = new GameDTO(game.getId(), game.getTitle(), game.getState());
             for (Player p2 : game.getPlayers()) {
-                PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), p2.getPlayerReady(), true);
+                PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), true);
                 gamedto.getPlayers().add(playerdto);
             }
             return gamedto;
@@ -56,7 +56,7 @@ public class GameRestController {
                             @RequestHeader(name = "position") int position,
                             @RequestHeader(name = "pwd") String pwd) {
         Player p2 = gameService.addPlayer(gameId, name, isOrganizer, position, pwd);
-        PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), p2.getPlayerReady(), false);
+        PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), false);
         return playerdto;
     }
 }

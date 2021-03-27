@@ -65,7 +65,7 @@ export class GameService implements OnDestroy {
     this.rxStompService.connected$
       .pipe(take(1))
       .subscribe(() => {
-        this.sendWebsocketGameMessage(Action.CLIENT_PLAYER_READY);
+        console.log('subscription to stomp queue established');
       });
 
 
