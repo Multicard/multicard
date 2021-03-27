@@ -24,7 +24,7 @@ public class PlayerRestController {
     @GetMapping("/api/Players/{PlayerId}")
     public PlayerDTO getPlayer(@PathVariable(name="PlayerId") String playerId) {
         Player p2 =  playerService.getPlayer(playerId);
-        PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), p2.getPlayerReady(), p2.getAliveTimestamp());
+        PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), p2.getPlayerReady(), true);
         return playerdto;
     }
 

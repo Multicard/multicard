@@ -1,6 +1,5 @@
 package ch.cas.html5.multicardgame.dto;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,22 +13,13 @@ public class PlayerDTO {
     private HandDTO hand;
     private List<StackDTO> stacks = new ArrayList<>();
 
-    public PlayerDTO(String id, String name, Boolean isOrganizer, int position, Boolean isPlayerReady, Timestamp aliveTimestamp){
+    public PlayerDTO(String id, String name, Boolean isOrganizer, int position, Boolean isPlayerReady, Boolean isOnline){
         this.id = id;
         this.name = name;
         this.isOrganizer = isOrganizer;
         this.position = position;
         this.isPlayerReady = isPlayerReady;
-        this.isAlive = checkAlive(aliveTimestamp);
-    }
-
-    long ALIVE_PERIOD_IN_MILLIS = 5000; // 5 Seconds
-
-    private Boolean checkAlive (Timestamp aliveTimestamp){
-        if (aliveTimestamp == null){
-            return true;
-        }
-        return aliveTimestamp.after(new Timestamp(System.currentTimeMillis() - ALIVE_PERIOD_IN_MILLIS));
+        this.isAlive = isOnline;
     }
 
     public String getId() {
