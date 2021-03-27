@@ -1,10 +1,10 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {ActionType, DirectionType, StackAction} from '../model/game.model';
-import {BehaviorSubject, interval, Observable, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
 import {RxStompService} from '@stomp/ng2-stompjs';
 import {Message} from '@stomp/stompjs';
 import {HttpClient} from '@angular/common/http';
-import {take, takeUntil} from 'rxjs/operators';
+import {take} from 'rxjs/operators';
 import {
   Action,
   ActionDTO,
