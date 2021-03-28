@@ -68,7 +68,7 @@ export class GameService implements OnDestroy {
     });
   }
 
-  initGame(gameId: string, playerId: string): Observable<GameDTO> {
+  initWebsocketCommunication(gameId: string, playerId: string): Observable<GameDTO> {
     this.gameId = gameId;
     this.playerId = playerId;
     this.stompQueueSubscription = this.subscribeToTopic();

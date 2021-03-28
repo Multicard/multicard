@@ -6,7 +6,10 @@ import {ActivatedRoute} from '@angular/router';
 import {tap} from 'rxjs/operators';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatDialog, MatDialogRef, MatDialogState} from '@angular/material/dialog';
-import {UncoveredCardsDialogComponent} from '../uncovered-cards/uncovered-cards-dialog.component';
+import {
+  UncoveredCardsDialogComponent,
+  UncoveredCardsReturnType
+} from '../uncovered-cards/uncovered-cards-dialog.component';
 
 @Component({
   selector: 'mc-game',
@@ -17,7 +20,7 @@ import {UncoveredCardsDialogComponent} from '../uncovered-cards/uncovered-cards-
 export class GameComponent implements OnInit, OnDestroy {
   gameState$!: Observable<GameDTO>;
   private numberOfPlayers = 0;
-  private uncoveredCardsDialogRef?: MatDialogRef<any>;
+  private uncoveredCardsDialogRef?: MatDialogRef<any, UncoveredCardsReturnType>;
   private isFirstRound = true;
 
   constructor(
@@ -32,7 +35,7 @@ export class GameComponent implements OnInit, OnDestroy {
       const gameId = p.get('gameId');
       const playerId = p.get('playerId');
       if (gameId !== null && playerId !== null) {
-        this.gameState$ = this.gameService.initGame(gameId, playerId)
+        this.gameState$ = this.gameService.initWebsocketCommunication(gameId, playerId)
           .pipe(
             tap<GameDTO>(game => {
               this.handleGameStateChanges(game);
@@ -94,8 +97,10 @@ export class GameComponent implements OnInit, OnDestroy {
 
       this.uncoveredCardsDialogRef = this.dialog.open(UncoveredCardsDialogComponent,
         {data: this.gameState$, hasBackdrop: true, disableClose: true});
-      this.uncoveredCardsDialogRef.afterClosed().subscribe(() => {
-        this.gameService.startNewRound();
+      this.uncoveredCardsDialogRef.afterClosed().subscribe((retVal) => {
+        if (retVal?.initiateNewGame) {
+          this.gameService.startNewRound();
+        }
       });
     }
 
