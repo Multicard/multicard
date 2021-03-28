@@ -14,12 +14,52 @@
 
     .toolbar {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      padding-left: 8px;
+      padding: 0 8px;
+      background-color: rgba(111, 128, 207, 0.5);
 
-      .toolbar-button {
-        margin: 4px 0;
-        height: 80%;
+      .toolbar-button-wrapper {
+        @include normal-size {
+          width: 148px !important;
+          min-width: 148px !important;
+        }
+
+        @include small-size {
+          width: 114px !important;
+          min-width: 114px !important;
+
+          .toolbar-button {
+            height: 20px;
+            line-height: 20px;
+          }
+        }
+
+        .toolbar-button {
+          margin: 4px 0;
+        }
+      }
+
+      .game-info {
+        padding: 0 4px;
+        font-weight: bold;
+        text-align: center;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+
+      .game-menu {
+        text-align: end;
+
+        @include normal-size {
+          width: 148px;
+          min-width: 20px;
+        }
+
+        @include small-size {
+          width: 114px;
+          min-width: 20px;
+        }
       }
     }
 
