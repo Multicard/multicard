@@ -57,7 +57,7 @@ public final class EntityToDtoConverter {
         if (scores.size() < 1) { return null; }
         int currentRound = scores.get(0).getRound();
         ArrayList<ScoreDTO> dtoList = new ArrayList<>();
-        for (int i=1; i == currentRound; i = i + 1){
+        for (int i=1; i <= currentRound; i = i + 1){
             ScoreDTO scoredto = new ScoreDTO();
             scoredto.setRound(i);
             scoredto.setPlayerScores(getPLayerScore(scores, i));
