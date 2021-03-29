@@ -21,11 +21,13 @@
 
       .toolbar-button-wrapper {
         @include normal-size {
+          flex: 0 0 148px;
           width: 148px !important;
           min-width: 148px !important;
         }
 
         @include small-size {
+          flex: 0 0 114px;
           width: 114px !important;
           min-width: 114px !important;
 
@@ -41,25 +43,28 @@
       }
 
       .game-info {
+        flex: 1 1;
         padding: 0 4px;
         font-weight: bold;
         text-align: center;
         text-overflow: ellipsis;
         overflow: hidden;
+
+        @include normal-size {
+          padding: 0 64px;
+          transform: translateX(-64px);
+        }
+
+        @include small-size {
+          padding: 0 48px;
+          transform: translateX(-48px);
+        }
       }
 
       .game-menu {
         text-align: end;
-
-        @include normal-size {
-          width: 148px;
-          min-width: 20px;
-        }
-
-        @include small-size {
-          width: 114px;
-          min-width: 20px;
-        }
+        flex: 0 0 20px;
+        min-width: 20px;
       }
     }
 
