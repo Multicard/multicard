@@ -32,6 +32,7 @@
     .stack-cards {
       flex: 1 1 15%;
       position: relative;
+      @include table-card;
 
       .undo-button {
         position: absolute;
@@ -65,12 +66,9 @@
       }
     }
 
-    .cdk-drop-list-receiving.stack-cards {
+    .stack-cards-drag-in-progress {
       @include table-card;
-      border-color: red;
-      border-style: solid;
-      border-width: 4px;
-      background-color: rgba(255, 00, 00, 0.3);
+      @include drag-and-drop-target-area;
     }
   }
 }
@@ -80,8 +78,6 @@
   position: absolute;
 
   img {
-    border-color: red;
-    border-style: solid;
-    border-width: 2px;
+    @include drop-target-placeholder;
   }
 }

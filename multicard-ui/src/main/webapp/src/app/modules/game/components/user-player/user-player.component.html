@@ -1,12 +1,14 @@
 <div class="user-player-cards" >
   <div class="hand-cards" cdkDropList cdkDropListConnectedTo="played-cards-drop-target">
     <div class="card-wrapper" *ngFor="let card of handCards; trackBy: trackByCardId">
-      <div class="user-player-card" cdkDrag [cdkDragData]="card" (dblclick)="handOutCard(card)">
+      <div class="user-player-card" cdkDrag [cdkDragData]="card" (dblclick)="handOutCard(card)"
+           (cdkDragStarted)="onDragStarted()" (cdkDragEnded)="onDragEnded()">
         <img [src]="getCardImage(card)">
       </div>
     </div>
   </div>
   <div class="stack-cards" cdkDropList id="user-stack-drop-target"
+       [ngClass]="{'stack-cards-drag-in-progress': tableStackDragAndDropInProgress$ | async}"
        (cdkDropListDropped)="tableCardsDroppedOnStack($event)">
     <button mat-mini-fab color="primary" *ngIf="isRevertStackTakenAllowed" class="undo-button"
             (click)="redoStackTakenAction()" aria-label="Karte zurücknehmen" title="genommene Karten zurücklegen">

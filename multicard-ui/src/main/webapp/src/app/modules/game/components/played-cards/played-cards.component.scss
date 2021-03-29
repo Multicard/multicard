@@ -30,11 +30,8 @@
         }
       }
 
-      .cdk-drop-list-receiving {
-        border-color: red;
-        border-style: solid;
-        border-width: 4px;
-        background-color: rgba(255, 00, 00, 0.3);
+      .player-card-drag-in-progress {
+        @include drag-and-drop-target-area;
       }
 
       .table-cards-draggeable {
@@ -79,8 +76,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  border-color: red;
-  border-style: solid;
-  border-width: 2px;
   overflow: visible;
+
+  @include drop-target-placeholder;
 }

@@ -1,15 +1,19 @@
 <div class="game-wrapper" *ngIf="gameState$ | async as gameState; else loading">
   <div class="toolbar">
-    <button *ngIf="isGameStarteable(gameState)" class="toolbar-button" color="primary" mat-raised-button
-            (click)="startGame()">
-      <mat-icon>play_arrow</mat-icon>
-      Runde starten
-    </button>
-    <button *ngIf="isGameEndable(gameState)" class="toolbar-button" color="primary" mat-raised-button
-            (click)="endRound()">
-      <mat-icon>remove_red_eye</mat-icon>
-      Karten zeigen
-    </button>
+    <div class="toolbar-button-wrapper">
+      <button *ngIf="isGameStarteable(gameState)" class="toolbar-button" color="primary" mat-raised-button
+              (click)="startGame()">
+        <mat-icon>play_arrow</mat-icon>
+        Runde starten
+      </button>
+      <button *ngIf="isGameEndable(gameState)" class="toolbar-button" color="primary" mat-raised-button
+              (click)="endRound()">
+        <mat-icon>remove_red_eye</mat-icon>
+        Karten zeigen
+      </button>
+    </div>
+    <div class="game-info">{{gameState.title}} Runde {{gameState.currentRound}}</div>
+    <mat-icon class="game-menu">menu</mat-icon>
   </div>
   <mc-table class="table" [gameState]="gameState"></mc-table>
 </div>

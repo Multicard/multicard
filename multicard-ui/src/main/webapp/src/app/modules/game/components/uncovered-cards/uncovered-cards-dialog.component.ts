@@ -6,6 +6,16 @@ import {Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {GameService} from '../../../../services/game.service';
 
+export class UncoveredCardsReturnType {
+  initiateNewGame = false;
+  showScore = false;
+
+  constructor(initiateNewGame: boolean, showScore: boolean) {
+    this.initiateNewGame = initiateNewGame;
+    this.showScore = showScore;
+  }
+}
+
 @Component({
   selector: 'mc-uncovered-cards-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,7 +50,7 @@ export class UncoveredCardsDialogComponent implements OnInit {
   }
 
   startNewRound() {
-    this.dialogRef.close();
+    this.dialogRef.close(new UncoveredCardsReturnType(true,  false));
   }
 
   trackByPlayerId(index: number, player: PlayerDTO) {

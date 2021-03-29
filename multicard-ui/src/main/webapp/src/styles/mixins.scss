@@ -53,3 +53,23 @@
 
   @include card-image;
 }
+
+@mixin drag-and-drop-target-area {
+  border-color: #2c4ed0;
+  border-style: solid;
+  border-width: 4px;
+  background-color: rgb(44, 78, 208, 0.3);
+}
+
+@mixin drag-and-drop-source-area {
+  border-color: green;
+  border-style: solid;
+  border-width: 4px;
+  background-color: rgba(00, 128, 00, 0.3);
+}
+
+@mixin drop-target-placeholder {
+  border-color: green;
+  border-style: solid;
+  border-width: 2px;
+}

@@ -254,7 +254,12 @@ public class GameControlService {
                 newScore.setRound(currentRound);
                 newScore.setPlayerId(playerScoredto.getPlayerId());
                 scoreService.saveScore(newScore);
+            }else{
+                score.setScore(playerScoredto.getScore());
+                score.setRound(currentRound);
+                score.setPlayerId(playerScoredto.getPlayerId());
             }
+
         }
     }
 

@@ -3,6 +3,7 @@ import {CardDTO, PlayerDTO} from '../../../../../app-gen/generated-model';
 import {createCardsForHand, getCardImage} from '../../../../model/cardHelper';
 import {GameService} from '../../../../services/game.service';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'mc-user-player',
@@ -15,12 +16,14 @@ export class UserPlayerComponent implements OnInit, OnChanges {
   @Input() player!: PlayerDTO;
   handCards: CardDTO[] = [];
   isRevertStackTakenAllowed = false;
+  tableStackDragAndDropInProgress$!: Observable<boolean>;
 
   constructor(
     private gameService: GameService) {
   }
 
   ngOnInit(): void {
+    this.tableStackDragAndDropInProgress$ = this.gameService.getTableStackDragAndDropInProgressObservable();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -47,5 +50,13 @@ export class UserPlayerComponent implements OnInit, OnChanges {
 
   redoStackTakenAction() {
     this.gameService.revertLastAction();
+  }
+
+  onDragStarted() {
+    this.gameService.setPlayerCardDragAndDropOntoTableInProgress(true);
+  }
+
+  onDragEnded() {
+    this.gameService.setPlayerCardDragAndDropOntoTableInProgress(false);
   }
 }

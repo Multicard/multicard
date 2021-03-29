@@ -35,6 +35,14 @@ export class GameService implements OnDestroy {
   private stackSubject: Subject<StackAction> = new Subject();
   private gameStartedByThisClient = false;
   private unsubscribe = new Subject();
+  /*
+   * Umgehungslösung, da bei ChangeDetection = OnPush beim drag and drop über Komponentengrenzen die Notifikation im cdkDropList
+   * nicht mehr korrekt funktionierte.
+   * Die Klasse cdk-drop-list-receiving wurde in der Zielkomponente nicht korrekt gesetzt. Deshalb wird die Zielkomponente
+   * jetzt mittels Observable auf diese Subjects über ein ongoing drag and drop notifziert.
+   */
+  private playerCardDragAndDropOntoTableInProgress: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private tableStackDragAndDropInProgress: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
     private http: HttpClient,
@@ -60,7 +68,7 @@ export class GameService implements OnDestroy {
     });
   }
 
-  initGame(gameId: string, playerId: string): Observable<GameDTO> {
+  initWebsocketCommunication(gameId: string, playerId: string): Observable<GameDTO> {
     this.gameId = gameId;
     this.playerId = playerId;
     this.stompQueueSubscription = this.subscribeToTopic();
@@ -81,8 +89,24 @@ export class GameService implements OnDestroy {
     this.unsubscribe.next();
   }
 
-  registerStackObserver(): Observable<StackAction> {
+  getStackObservable() {
     return this.stackSubject.asObservable();
+  }
+
+  getPlayerCardDragAndDropOntoTableInProgressObservable() {
+    return this.playerCardDragAndDropOntoTableInProgress.asObservable();
+  }
+
+  setPlayerCardDragAndDropOntoTableInProgress(inProgress: boolean) {
+    this.playerCardDragAndDropOntoTableInProgress.next(inProgress);
+  }
+
+  getTableStackDragAndDropInProgressObservable() {
+    return this.tableStackDragAndDropInProgress.asObservable();
+  }
+
+  setTableStackDragAndDropInProgress(inProgress: boolean) {
+    this.tableStackDragAndDropInProgress.next(inProgress);
   }
 
   startGame(initiationFromOtherPlayer = false) {
