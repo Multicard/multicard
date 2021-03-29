@@ -1,0 +1,17 @@
+<mat-dialog-content>
+  <div class="board">
+    <h1 *ngIf="!game.scores?.length > 0">Zu diesem Spiel wurden noch keine Resultate erfasst</h1>
+    <div *ngIf="game.scores?.length > 0" class="score">
+      <div *ngFor="let roundScore of scores" class="round-score">
+        <div class="round">{{'Runde ' + roundScore.round}}</div>
+        <div class="player-score" *ngFor="let playerScore of roundScore.playerScores">
+          {{playerScore.score}}
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" mat-dialog-close>zurück</button>
+</mat-dialog-actions>

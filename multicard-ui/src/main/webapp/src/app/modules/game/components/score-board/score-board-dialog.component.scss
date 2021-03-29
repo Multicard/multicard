@@ -1,0 +1,49 @@
+:host {
+  display: block;
+
+  mat-dialog-content {
+    padding: 0 20px;
+
+    .board {
+      min-height: 50vh;
+      border-style: solid;
+      border-width: 5px;
+      border-color: burlywood;
+      padding: 10px;
+      background-image: url("../../../../../assets/board-background.jpg");
+      background-color: black;
+
+      h1, div {
+        font-family: "Just Another Hand", Helvetica, sans-serif;
+        color: white;
+      }
+
+      h1 {
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 26.4px;
+      }
+
+      div {
+        font-size: 1.2em;
+      }
+
+      .score {
+        padding: 10px;
+
+        .round-score {
+          display: flex;
+
+          div {
+            padding: 10px;
+          }
+        }
+      }
+    }
+  }
+
+  mat-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
