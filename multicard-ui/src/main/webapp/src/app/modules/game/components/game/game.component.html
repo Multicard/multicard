@@ -13,7 +13,17 @@
       </button>
     </div>
     <div class="game-info">{{gameState.title}} Runde {{gameState.currentRound}}</div>
-    <mat-icon class="game-menu">menu</mat-icon>
+    <mat-icon class="game-menu" [matMenuTriggerFor]="gameMenu">menu</mat-icon>
+    <mat-menu #gameMenu="matMenu">
+      <button mat-menu-item (click)="showScore()">
+        <mat-icon>grid_4x4</mat-icon>
+        <span>Spieltafel anzeigen</span>
+      </button>
+      <button mat-menu-item [disabled]="!isRoundAbortable(gameState)" (click)="abortRound()">
+        <mat-icon>restart_alt</mat-icon>
+        <span>Runde abbrechen</span>
+      </button>
+    </mat-menu>
   </div>
   <mc-table class="table" [gameState]="gameState"></mc-table>
 </div>
