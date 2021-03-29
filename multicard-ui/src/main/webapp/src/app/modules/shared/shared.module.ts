@@ -17,6 +17,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatDialogModule} from '@angular/material/dialog';
 import {CharactersRestrictionDirective} from './directives/characters-restriction.directive';
 import {ClipboardModule} from '@angular/cdk/clipboard';
+import {MatMenuModule} from '@angular/material/menu';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import {ClipboardModule} from '@angular/cdk/clipboard';
     MatExpansionModule,
     MatIconModule,
     MatInputModule,
+    MatMenuModule,
     MatProgressSpinnerModule,
     MatRadioModule,
     MatSelectModule,

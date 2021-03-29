@@ -21,7 +21,6 @@ export class GameComponent implements OnInit, OnDestroy {
   gameState$!: Observable<GameDTO>;
   private numberOfPlayers = 0;
   private uncoveredCardsDialogRef?: MatDialogRef<any, UncoveredCardsReturnType>;
-  private isFirstRound = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -64,13 +63,23 @@ export class GameComponent implements OnInit, OnDestroy {
       && game.players.reduce((unplayedCards, player) => unplayedCards + (player?.hand?.cards?.length || 0), 0) === 0;
   }
 
+  isRoundAbortable(game: GameDTO) {
+    return game?.state === Gamestate.STARTED;
+  }
+
   startGame() {
     this.gameService.startGame();
   }
 
   endRound() {
-    this.isFirstRound = false;
     this.gameService.endRound();
+  }
+
+  abortRound() {
+    this.gameService.startNewRound();
+  }
+
+  showScore() {
   }
 
   private handleGameStateChanges(game: GameDTO) {
@@ -86,7 +95,7 @@ export class GameComponent implements OnInit, OnDestroy {
       this.showMessage(`${newPlayer.name} hat sich im Spiel registriert`);
     }
 
-    if (this.isFirstRound && oldNumberOfPlayers < 4 && this.isGameStarteable(game) && game.players[0]?.organizer) {
+    if (game?.currentRound <= 1 && oldNumberOfPlayers < 4 && this.isGameStarteable(game) && game.players[0]?.organizer) {
       setTimeout(() =>
         this.showMessage(`Durch das Verschieben der Spieler*innen kann die Positionierung am Spieltisch geändert werden.`), 4000);
     }
