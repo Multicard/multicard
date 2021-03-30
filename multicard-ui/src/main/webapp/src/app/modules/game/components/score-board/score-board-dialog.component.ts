@@ -1,9 +1,10 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {GameDTO, ScoreDTO} from '../../../../../app-gen/generated-model';
 
 @Component({
   selector: 'mc-score-board-dialog',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './score-board-dialog.component.html',
   styleUrls: ['./score-board-dialog.component.scss']
 })
@@ -30,4 +31,7 @@ export class ScoreBoardDialogComponent implements OnInit {
     });
   }
 
+  hasScore() {
+    return this.game.scores?.length > 0;
+  }
 }

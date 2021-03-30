@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
 import {GamePlayer, Player} from '../../../../model/game.model';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {PlayerService} from '../../../../services/player.service';
@@ -23,6 +23,7 @@ const ERROR_COMMUNICATION = 'Leider ist ein unerwarteter Fehler aufgetreten. Bit
 
 @Component({
   selector: 'mc-player-registration-dialog',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './player-registration-dialog.component.html',
   styleUrls: ['./player-registration-dialog.component.scss']
 })
