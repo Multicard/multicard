@@ -6,9 +6,9 @@
 ## Frontend
 
 ###start Frontend: 
-install:    ./multicard-ui/src/main/webapp/npm install
+install:    npm install --prefix ./multicard-ui/src/main/webapp/
 
-run:        ./multicard-ui/src/main/webapp/npm run
+run:        npm start --prefix ./multicard-ui/src/main/webapp/
 
 URL:        http://localhost:4200/app 
 
@@ -20,10 +20,11 @@ run prod build: ./multicard-ui/src/main/webapp/npm build--prd
 The build artifacts will be stored in the `dist/` directory
 
 
-## Backend
-compile:      ./multicard-backend/mvn clean install
+## Backend with Interface
+compile:      mvn clean install -f ./multicard-api
+compile:      mvn clean install -f ./multicard-backend/
 
-run:          ./multicard-backend/?
+run:          mvn spring-boot:run -f ./multicard-backend/
 
 
 ## running instance in Cloud - Heroku
