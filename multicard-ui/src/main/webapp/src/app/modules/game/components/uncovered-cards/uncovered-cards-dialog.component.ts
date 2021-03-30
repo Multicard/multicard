@@ -5,6 +5,7 @@ import {getCardImage} from '../../../../model/cardHelper';
 import {Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {GameService} from '../../../../services/game.service';
+import {NgForm} from '@angular/forms';
 
 export class UncoveredCardsReturnType {
   initiateNewGame = false;
@@ -42,15 +43,20 @@ export class UncoveredCardsDialogComponent implements OnInit {
       }));
   }
 
-  submitScore(game: GameDTO) {
+  submitScore(game: GameDTO, scoreForm: NgForm) {
     const playerScores: PlayerScoreDTO[] = [];
     this.playersScore.forEach((score, playerId) => playerScores.push({playerId, score: score ? score : 0}));
     const scoreIdCurrentRound = game.scores?.find(s => s.round === game.currentRound)?.id;
-    this.gameService.setScore({id: scoreIdCurrentRound ? scoreIdCurrentRound : '', round: game.currentRound, playerScores});
+    this.gameService.setScore({
+      id: scoreIdCurrentRound ? scoreIdCurrentRound : '',
+      round: game.currentRound,
+      playerScores
+    });
+    scoreForm.resetForm();
   }
 
   startNewRound() {
-    this.dialogRef.close(new UncoveredCardsReturnType(true,  false));
+    this.dialogRef.close(new UncoveredCardsReturnType(true, false));
   }
 
   trackByPlayerId(index: number, player: PlayerDTO) {
