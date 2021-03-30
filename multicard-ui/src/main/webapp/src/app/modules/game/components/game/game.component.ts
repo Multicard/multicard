@@ -10,6 +10,7 @@ import {
   UncoveredCardsDialogComponent,
   UncoveredCardsReturnType
 } from '../uncovered-cards/uncovered-cards-dialog.component';
+import {ScoreBoardDialogComponent} from '../score-board/score-board-dialog.component';
 
 @Component({
   selector: 'mc-game',
@@ -79,7 +80,9 @@ export class GameComponent implements OnInit, OnDestroy {
     this.gameService.startNewRound();
   }
 
-  showScore() {
+  showScore(game: GameDTO) {
+    this.dialog.open(ScoreBoardDialogComponent,
+      {data: game, hasBackdrop: true});
   }
 
   private handleGameStateChanges(game: GameDTO) {

@@ -12,6 +12,7 @@ import {GameRoutingModule} from './game-routing.module';
 import {SharedModule} from '../shared/shared.module';
 import {PlayerNameComponent} from './components/player-name/player-name.component';
 import {UncoveredCardsDialogComponent} from './components/uncovered-cards/uncovered-cards-dialog.component';
+import {ScoreBoardDialogComponent} from './components/score-board/score-board-dialog.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import {UncoveredCardsDialogComponent} from './components/uncovered-cards/uncove
     PlayedCardsComponent,
     CardPileComponent,
     PlayerNameComponent,
-    UncoveredCardsDialogComponent
+    UncoveredCardsDialogComponent,
+    ScoreBoardDialogComponent
   ],
   imports: [
     CommonModule,
@@ -33,7 +35,8 @@ import {UncoveredCardsDialogComponent} from './components/uncovered-cards/uncove
     SharedModule
   ],
   entryComponents: [
-    UncoveredCardsDialogComponent
+    UncoveredCardsDialogComponent,
+    ScoreBoardDialogComponent
   ]
 })
 export class GameModule { }
