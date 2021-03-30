@@ -34,8 +34,10 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   isDragAndDropOfPlayersAllowed() {
-    return this.gameState.players[0]?.organizer && this.playerIdList.length === 4
-      && (this.gameState.state === Gamestate.INITIAL || this.gameState.state === Gamestate.READYTOSTART);
+    return this.gameState.players[0]?.organizer
+      && this.playerIdList.length === 4
+      && (this.gameState.state === Gamestate.INITIAL || this.gameState.state === Gamestate.READYTOSTART)
+      && this.gameState.currentRound <= 1;
   }
 
   playerDroppedLeft(event: CdkDragDrop<number>) {
