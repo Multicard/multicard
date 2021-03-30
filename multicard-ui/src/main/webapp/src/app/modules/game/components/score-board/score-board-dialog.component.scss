@@ -1,6 +1,15 @@
+@import "src/styles/mixins";
+
 :host {
   display: block;
-  width: 40vw;
+
+  @include normal-size {
+    min-width: 800px;
+  }
+
+  @include small-size {
+    width: 70vw;
+  }
 
   mat-dialog-content {
     padding: 0 20px;
@@ -21,6 +30,8 @@
       }
 
       h1 {
+        margin-top: 20px;
+        text-align: center;
         font-size: 24px;
         font-weight: 700;
         line-height: 26.4px;
@@ -36,8 +47,18 @@
         }
 
         .score-table-header {
+          font-weight: bold;
+
           .score-table-cell {
-            border-bottom: solid 1px white;
+            @include normal-size {
+              border-bottom: solid 1px white;
+            }
+
+            @include small-size {
+              &:last-child {
+                border-bottom: solid 1px white;
+              }
+            }
           }
         }
 
@@ -51,17 +72,43 @@
           }
 
           .score-table-cell {
-            width: calc(100% / 3);
             text-align: center;
             padding: 0.5em 0.5em;
+
+            &:last-child {
+              border-right: 0;
+            }
+
+            @include normal-size {
+              width: calc(100% / 3);
+              border-right: solid 1px white;
+            }
+
+            @include small-size {
+              width: 100%;
+              &:last-child {
+                border-bottom: solid 1px white;
+              }
+            }
+          }
+        }
+
+        .score-table-footer {
+          font-weight: bold;
+
+          .score-table-cell {
+            @include normal-size {
+              border-top: solid 1px white;
+            }
+
+            @include small-size {
+              &:first-child {
+                border-top: solid 1px white;
+              }
+            }
           }
         }
       }
     }
-  }
-
-  mat-dialog-actions {
-    display: flex;
-    justify-content: flex-end;
   }
 }

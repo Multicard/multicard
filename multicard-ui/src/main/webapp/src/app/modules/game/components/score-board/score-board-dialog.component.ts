@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {GameDTO, ScoreDTO} from '../../../../../app-gen/generated-model';
+import {GameDTO, PlayerDTO, ScoreDTO} from '../../../../../app-gen/generated-model';
 
 @Component({
   selector: 'mc-score-board-dialog',
@@ -11,6 +11,7 @@ import {GameDTO, ScoreDTO} from '../../../../../app-gen/generated-model';
 export class ScoreBoardDialogComponent implements OnInit {
 
   game: GameDTO;
+  sortedPLayers!: PlayerDTO[];
   scores: ScoreDTO[] = [];
   total: number[] = [];
 
@@ -21,6 +22,8 @@ export class ScoreBoardDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.sortedPLayers = [...this.game.players].sort((p1, p2) => p1.position - p2.position);
+
     this.game.scores?.forEach(roundScore => {
       this.scores.push({
         id: '',
@@ -29,9 +32,14 @@ export class ScoreBoardDialogComponent implements OnInit {
           {playerId: '', score: roundScore.playerScores[1].score + roundScore.playerScores[3].score}]
       });
     });
+
+    this.total = this.game.scores?.reduce((sum, score) =>
+        [sum[0] + score.playerScores[0].score + score.playerScores[2].score,
+          sum[1] + score.playerScores[1].score + score.playerScores[3].score],
+      [0, 0]);
   }
 
   hasScore() {
-    return this.game.scores?.length > 0;
+    return this.scores.length > 0;
   }
 }
