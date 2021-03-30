@@ -1,0 +1,22 @@
+<mat-dialog-content>
+  <div class="board">
+    <h1 *ngIf="!hasScore()">Zu diesem Spiel wurden noch keine Resultate erfasst</h1>
+    <div *ngIf="hasScore" class="score-table">
+      <div class="score-table-row score-table-header">
+        <div class="score-table-cell first"></div>
+        <div class="score-table-cell">{{game.players[0].name + ' und ' + game.players[2].name}}</div>
+        <div class="score-table-cell">{{game.players[1].name + ' und ' + game.players[3].name}}</div>
+      </div>
+      <div *ngFor="let roundScore of scores" class="score-table-row">
+        <div class="score-table-cell first">{{'Runde ' + roundScore.round}}</div>
+        <div class="score-table-cell" *ngFor="let playerScore of roundScore.playerScores">
+          {{playerScore.score}}
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" mat-dialog-close>zurück</button>
+</mat-dialog-actions>
