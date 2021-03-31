@@ -136,6 +136,12 @@ export class GameService implements OnDestroy {
     this.sendWebsocketGameMessage(Action.CLIENT_END_ROUND);
   }
 
+  endGame() {
+    this.sendWebsocketGameMessage(Action.CLIENT_END_GAME);
+    // TODO Code löschen sobald GAME_ENDED im backend unterstützt ist
+    this.gameSubject.next({...this.gameSubject.getValue(), state: Gamestate.GAME_ENDED});
+  }
+
   setScore(score: ScoreDTO) {
     this.sendWebsocketSetScoreMessage(score);
   }

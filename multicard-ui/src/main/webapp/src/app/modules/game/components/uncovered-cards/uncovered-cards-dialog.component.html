@@ -1,27 +1,40 @@
 <div *ngIf="game$ | async as game">
-<form #scoreForm="ngForm">
-  <mat-dialog-content >
-    <h1>Punkte erfassen Runde {{game.currentRound}}</h1>
+  <div mat-dialog-title class="title-bar">
+    <button mat-button (click)="showScore()">
+      <mat-icon class="score-board-icon">grid_4x4</mat-icon>
+      <span>Spieltafel anzeigen</span>
+    </button>
+  </div>
 
-    <div class="uncovered-cards">
-      <div *ngFor="let player of sortedPLayers; let iPlayer = index; trackBy: trackByPlayerId" class="player">
-        <h2 class="player-name">{{player.name}}</h2>
-        <div *ngIf="player.stacks[0]?.cards" class="player-cards">
-          <div *ngFor="let card of player.stacks[0]?.cards; trackBy: trackByCardId" class="table-card">
-            <img [src]="getCardImage(card)" [alt]="getCardImage(card)">
+  <form #scoreForm="ngForm">
+    <mat-dialog-content>
+      <h1>Punkte erfassen Runde {{game.currentRound}}</h1>
+
+      <div class="uncovered-cards">
+        <div *ngFor="let player of sortedPLayers; let iPlayer = index; trackBy: trackByPlayerId" class="player">
+          <h2 class="player-name">{{player.name}}</h2>
+          <div *ngIf="player.stacks[0]?.cards" class="player-cards">
+            <div *ngFor="let card of player.stacks[0]?.cards; trackBy: trackByCardId" class="table-card">
+              <img [src]="getCardImage(card)" [alt]="getCardImage(card)">
+            </div>
           </div>
-        </div>
           <mat-form-field appearance="outline">
             <mat-label>Anzahl Punkte {{player.name}}</mat-label>
-            <input matInput [name]="player.name" type="number" [ngModel]="playersScore.get(player.id)" (ngModelChange)="playersScore.set(player.id, $event)" required>
+            <input matInput [name]="player.name" type="number" [ngModel]="playersScore.get(player.id)"
+                   (ngModelChange)="playersScore.set(player.id, $event)" required>
           </mat-form-field>
+        </div>
       </div>
-    </div>
-  </mat-dialog-content>
-</form>
+    </mat-dialog-content>
+  </form>
 
-<mat-dialog-actions>
-  <button mat-raised-button color="primary" [disabled]="scoreForm.invalid || scoreForm.pristine" (click)="submitScore(game, scoreForm)">Punkte in Spieltafel übertragen</button>
-  <button mat-raised-button color="primary" [disabled]="!isScoreRegistered(game)" (click)="startNewRound()">neue Runde</button>
-</mat-dialog-actions>
+  <mat-dialog-actions>
+    <button mat-raised-button color="primary" [disabled]="scoreForm.invalid || scoreForm.pristine"
+            (click)="submitScore(game, scoreForm)">Punkte in Spieltafel übertragen
+    </button>
+    <button mat-raised-button color="primary" [disabled]="!isScoreRegistered(game)" (click)="startNewRound()">neue
+      Runde
+    </button>
+    <button mat-raised-button color="primary" (click)="endGame()">Spiel beenden</button>
+  </mat-dialog-actions>
 </div>

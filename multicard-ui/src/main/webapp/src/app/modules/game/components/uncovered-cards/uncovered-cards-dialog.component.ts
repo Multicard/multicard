@@ -1,20 +1,16 @@
 import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {CardDTO, GameDTO, PlayerDTO, PlayerScoreDTO} from '../../../../../app-gen/generated-model';
 import {getCardImage} from '../../../../model/cardHelper';
 import {Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {GameService} from '../../../../services/game.service';
 import {NgForm} from '@angular/forms';
+import {ScoreBoardDialogComponent} from '../score-board/score-board-dialog.component';
 
 export class UncoveredCardsReturnType {
-  initiateNewGame = false;
-  showScore = false;
-
-  constructor(initiateNewGame: boolean, showScore: boolean) {
-    this.initiateNewGame = initiateNewGame;
-    this.showScore = showScore;
-  }
+  initiateNewRound = false;
+  endGame = false;
 }
 
 @Component({
@@ -30,9 +26,10 @@ export class UncoveredCardsDialogComponent implements OnInit {
   playersScore!: Map<string, number | undefined>;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: Observable<GameDTO>,
+    @Inject(MAT_DIALOG_DATA) private data: Observable<GameDTO>,
     private dialogRef: MatDialogRef<UncoveredCardsDialogComponent>,
-    private gameService: GameService) {
+    private gameService: GameService,
+    private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -55,8 +52,21 @@ export class UncoveredCardsDialogComponent implements OnInit {
     scoreForm.resetForm();
   }
 
+  showScore() {
+    this.dialog.open(ScoreBoardDialogComponent,
+      {data: this.game$, hasBackdrop: true});
+  }
+
   startNewRound() {
-    this.dialogRef.close(new UncoveredCardsReturnType(true, false));
+    const ret = new UncoveredCardsReturnType();
+    ret.initiateNewRound = true;
+    this.dialogRef.close(ret);
+  }
+
+  endGame() {
+    const ret = new UncoveredCardsReturnType();
+    ret.endGame = true;
+    this.dialogRef.close(ret);
   }
 
   trackByPlayerId(index: number, player: PlayerDTO) {

@@ -1,5 +1,5 @@
 <mat-dialog-content>
-  <div class="board">
+  <div class="board" *ngIf="game$ | async as game">
     <h1 *ngIf="!hasScore()">Zu diesem Spiel wurden noch keine Resultate erfasst</h1>
     <div *ngIf="hasScore()" class="score-table">
       <div class="score-table-row score-table-header">
