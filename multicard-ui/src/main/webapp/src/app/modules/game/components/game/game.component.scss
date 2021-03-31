@@ -20,6 +20,7 @@
       background-color: rgba(111, 128, 207, 0.5);
 
       .toolbar-button-wrapper {
+        z-index: 10;
         @include normal-size {
           flex: 0 0 148px;
           width: 148px !important;
@@ -43,6 +44,7 @@
       }
 
       .game-info {
+        z-index: 1;
         flex: 1 1;
         padding: 0 4px;
         font-weight: bold;
