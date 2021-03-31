@@ -4,7 +4,8 @@ public enum Gamestate {
     INITIAL,
     READYTOSTART,
     STARTED,
-    ENDED;
+    ROUND_ENDED,
+    GAME_ENDED;
 
 //    INITIAL("initial"),READYTOSTART("readyToStart"),STARTED("started"), ENDED("ended");
 //

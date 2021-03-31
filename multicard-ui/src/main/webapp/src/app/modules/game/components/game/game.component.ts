@@ -69,7 +69,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   startGame() {
-    this.gameService.startGame();
+    this.gameService.startRound();
   }
 
   endRound() {
@@ -104,7 +104,7 @@ export class GameComponent implements OnInit, OnDestroy {
     }
 
     // öffne den aufgedeckte Karten Dialog (falls nicht bereits geöffnet)
-    if (game?.state === Gamestate.ENDED
+    if (game?.state === Gamestate.ROUND_ENDED
       && (this.uncoveredCardsDialogRef === undefined || this.uncoveredCardsDialogRef.getState() !== MatDialogState.OPEN)) {
 
       this.uncoveredCardsDialogRef = this.dialog.open(UncoveredCardsDialogComponent,

@@ -109,7 +109,7 @@ export class GameService implements OnDestroy {
     this.tableStackDragAndDropInProgress.next(inProgress);
   }
 
-  startGame(initiationFromOtherPlayer = false) {
+  startRound(initiationFromOtherPlayer = false) {
     const game = this.gameSubject.getValue();
 
     if (!initiationFromOtherPlayer) {
@@ -124,7 +124,7 @@ export class GameService implements OnDestroy {
       // }
 
       this.gameStartedByThisClient = true;
-      this.sendWebsocketGameMessage(Action.CLIENT_START_GAME);
+      this.sendWebsocketGameMessage(Action.CLIENT_START_ROUND);
     }
 
 
@@ -133,7 +133,7 @@ export class GameService implements OnDestroy {
   }
 
   endRound() {
-    this.sendWebsocketGameMessage(Action.CLIENT_SHOW_ALL_PLAYER_STACKS);
+    this.sendWebsocketGameMessage(Action.CLIENT_END_ROUND);
   }
 
   setScore(score: ScoreDTO) {
@@ -240,7 +240,7 @@ export class GameService implements OnDestroy {
 
       case Action.START_GAME:
         if (!this.gameStartedByThisClient) {
-          this.startGame(true);
+          this.startRound(true);
         }
         break;
     }
