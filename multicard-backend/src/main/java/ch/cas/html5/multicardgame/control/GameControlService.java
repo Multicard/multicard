@@ -129,7 +129,7 @@ public class GameControlService {
                     for (Stack stack : p2.getStacks()) {
                         StackDTO stackdto = new StackDTO(stack.getId());
                         Boolean showStackCardsAnonymous = !showPlayerStacks;
-                        if (game.getState().equals(Gamestate.ENDED)){
+                        if (game.getState().equals(Gamestate.ROUND_ENDED)){
                             showStackCardsAnonymous = false;
                         }
                         stackdto.setCards(converter.convertCards(stack.getCards(), showStackCardsAnonymous));
@@ -181,7 +181,7 @@ public class GameControlService {
             convertAndPublishGame(game, null, false);
         }
 
-        if (gameMessage.getCommand().equals(Action.CLIENT_START_GAME) && game.getState().equals(Gamestate.READYTOSTART)) {
+        if (gameMessage.getCommand().equals(Action.CLIENT_START_ROUND) && game.getState().equals(Gamestate.READYTOSTART)) {
             game.setState(Gamestate.STARTED);
             gameService.updateGame(game);
             if (getFirstGameStack(game).getCards().size() == 36) {
@@ -230,8 +230,8 @@ public class GameControlService {
             convertAndPublishGame(game, null, false);
         }
 
-        if (gameMessage.getCommand().equals(Action.CLIENT_SHOW_ALL_PLAYER_STACKS)) {
-            game.setState(Gamestate.ENDED);
+        if (gameMessage.getCommand().equals(Action.CLIENT_END_ROUND)) {
+            game.setState(Gamestate.ROUND_ENDED);
             gameService.updateGame(game);
             convertAndPublishGame(game, null, true);
         }

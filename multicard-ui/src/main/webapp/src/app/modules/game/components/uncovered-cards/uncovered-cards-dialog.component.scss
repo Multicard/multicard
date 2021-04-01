@@ -1,6 +1,17 @@
 :host {
   display: block;
 
+  .title-bar {
+    display: flex;
+    justify-content: flex-end;
+
+    .score-board-icon {
+      border-style: solid;
+      border-color: black;
+      border-width: 1px;
+    }
+  }
+
   mat-dialog-content {
     max-height: calc(98vh - 116px);
 

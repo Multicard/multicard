@@ -22,6 +22,7 @@ export class GameComponent implements OnInit, OnDestroy {
   gameState$!: Observable<GameDTO>;
   private numberOfPlayers = 0;
   private uncoveredCardsDialogRef?: MatDialogRef<any, UncoveredCardsReturnType>;
+  private scoreBoardDialogRef?: MatDialogRef<any, any>;
 
   constructor(
     private route: ActivatedRoute,
@@ -69,7 +70,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   startGame() {
-    this.gameService.startGame();
+    this.gameService.startRound();
   }
 
   endRound() {
@@ -80,9 +81,9 @@ export class GameComponent implements OnInit, OnDestroy {
     this.gameService.startNewRound();
   }
 
-  showScore(game: GameDTO) {
+  showScore() {
     this.dialog.open(ScoreBoardDialogComponent,
-      {data: game, hasBackdrop: true});
+      {data: this.gameState$, hasBackdrop: true});
   }
 
   private handleGameStateChanges(game: GameDTO) {
@@ -104,21 +105,34 @@ export class GameComponent implements OnInit, OnDestroy {
     }
 
     // öffne den aufgedeckte Karten Dialog (falls nicht bereits geöffnet)
-    if (game?.state === Gamestate.ENDED
+    if (game?.state === Gamestate.ROUND_ENDED
       && (this.uncoveredCardsDialogRef === undefined || this.uncoveredCardsDialogRef.getState() !== MatDialogState.OPEN)) {
 
       this.uncoveredCardsDialogRef = this.dialog.open(UncoveredCardsDialogComponent,
         {data: this.gameState$, hasBackdrop: true, disableClose: true});
       this.uncoveredCardsDialogRef.afterClosed().subscribe((retVal) => {
-        if (retVal?.initiateNewGame) {
+        if (retVal?.initiateNewRound) {
           this.gameService.startNewRound();
+        } else if (retVal?.endGame) {
+          this.gameService.endGame();
         }
       });
     }
-
-    // schliesse den aufgedeckte Karten Dialog, falls das Spiel von einem anderen Player neu gestartet wurde
-    if ((game?.state === Gamestate.READYTOSTART || game?.state === Gamestate.STARTED) && this.uncoveredCardsDialogRef !== undefined) {
+    // schliesse den aufgedeckte Karten Dialog, falls der GameState von einem anderen Spieler geändert wurde
+    else if (game?.state !== Gamestate.ROUND_ENDED && this.uncoveredCardsDialogRef !== undefined) {
       this.uncoveredCardsDialogRef.close();
+    }
+
+    // öffne den Spieltafel Dialog (falls nicht bereits geöffnet)
+    if (game?.state === Gamestate.GAME_ENDED
+      && (this.scoreBoardDialogRef === undefined || this.scoreBoardDialogRef.getState() !== MatDialogState.OPEN)) {
+
+      this.scoreBoardDialogRef = this.dialog.open(ScoreBoardDialogComponent,
+        {data: this.gameState$, hasBackdrop: false, disableClose: true});
+    }
+    // schliesse den Spieltafel Dialog, falls der GameState von einem anderen Spieler geändert wurde
+    else if (game?.state !== Gamestate.GAME_ENDED && this.scoreBoardDialogRef !== undefined) {
+      this.scoreBoardDialogRef.close();
     }
 
     this.numberOfPlayers = game?.players ? game.players.length : 0;

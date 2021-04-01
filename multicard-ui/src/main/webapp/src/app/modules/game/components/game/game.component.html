@@ -15,8 +15,8 @@
     <div class="game-info">{{gameState.title}} Runde {{gameState.currentRound}}</div>
     <mat-icon class="game-menu" [matMenuTriggerFor]="gameMenu">menu</mat-icon>
     <mat-menu #gameMenu="matMenu">
-      <button mat-menu-item (click)="showScore(gameState)">
-        <mat-icon>grid_4x4</mat-icon>
+      <button mat-menu-item (click)="showScore()">
+        <mat-icon class="score-board-menu-icon">grid_4x4</mat-icon>
         <span>Spieltafel anzeigen</span>
       </button>
       <button mat-menu-item [disabled]="!isRoundAbortable(gameState)" (click)="abortRound()">
