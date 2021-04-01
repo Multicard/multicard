@@ -242,6 +242,12 @@ public class GameControlService {
             saveScore(game, setScoreMessage);
             convertAndPublishGame(game, null, false);
         }
+        if (gameMessage.getCommand().equals(Action.CLIENT_END_GAME)) {
+            game.setState(Gamestate.GAME_ENDED);
+            gameService.updateGame(game);
+            convertAndPublishGame(game, null, true);
+        }
+
     }
 
     private void saveScore(Game game, SetScoreMessage msg){
