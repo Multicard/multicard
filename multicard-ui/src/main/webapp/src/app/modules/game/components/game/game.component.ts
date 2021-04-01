@@ -22,7 +22,7 @@ export class GameComponent implements OnInit, OnDestroy {
   gameState$!: Observable<GameDTO>;
   private numberOfPlayers = 0;
   private uncoveredCardsDialogRef?: MatDialogRef<any, UncoveredCardsReturnType>;
-  private scoreBoardDialogRef?: MatDialogRef<any, any>;
+  private scoreBoardDialogRef?: MatDialogRef<any>;
 
   constructor(
     private route: ActivatedRoute,
@@ -37,7 +37,7 @@ export class GameComponent implements OnInit, OnDestroy {
       const gameId = p.get('gameId');
       const playerId = p.get('playerId');
       if (gameId !== null && playerId !== null) {
-        this.gameState$ = this.gameService.initWebsocketCommunication(gameId, playerId)
+        this.gameState$ = this.gameService.initGame(gameId, playerId)
           .pipe(
             tap<GameDTO>(game => {
               this.handleGameStateChanges(game);

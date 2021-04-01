@@ -3,7 +3,7 @@
 <main class="player-registration">
   <h1>Lade deine Mitspieler*innen ein</h1>
 
-  <h3>Spielname: {{game.title}}, ID: {{gameId}}</h3>
+  <h3>Spielname: {{game?.title}}, ID: {{gameId}}</h3>
 
   <qrcode [qrdata]="gameUrl" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
 

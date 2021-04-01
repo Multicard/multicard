@@ -15,7 +15,7 @@ const MISSING_GAME_ID = `Gib bitte die ID des Spiels ein, an welchem du teilnehm
 Kontaktiere den Spielorganisator, falls du sie nicht kennst`;
 const UNKNOWN_GAME_ID = `Die eingegene Spiel ID ist unbekannt. Bitte prüfe den eingegebenen Wert und
 kontaktiere den Spielorganisator, falls du die Spiel ID richtig eingegeben hast`;
-const COMMUNICATION_ERROR_MSG = 'Leider ist ein unerwarteter Fehler aufgetreten. Bitte lade die Seite neu.';
+const COMMUNICATION_ERROR_MSG = 'Leider ist ein unerwarteter Fehler aufgetreten. Bitte versuche es noch einmal.';
 
 @Component({
   selector: 'mc-registration',

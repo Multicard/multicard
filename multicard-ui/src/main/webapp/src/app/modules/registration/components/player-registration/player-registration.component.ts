@@ -11,7 +11,7 @@ import {
 } from '../player-registration-dialog/player-registration-dialog.component';
 import {environment} from '../../../../../environments/environment';
 
-const ERROR_MSG = 'Leider ist ein unerwarteter Fehler aufgetreten. Bitte lade die Seite neu.';
+const ERROR_MSG = 'Leider ist ein unerwarteter Fehler aufgetreten. Bitte aktualisiere die Seite.';
 
 @Component({
   selector: 'mc-player-registration',
@@ -47,6 +47,7 @@ export class PlayerRegistrationComponent implements OnInit {
         this.loadGameAndCreatePlayer();
       } else {
         console.error('gameId or playerId is not set', this.route);
+        this.router.navigate(['/registration']);
       }
     });
   }
@@ -57,6 +58,12 @@ export class PlayerRegistrationComponent implements OnInit {
 
   private loadGameAndCreatePlayer() {
     this.gameService.loadGame(this.gameId).subscribe(game => {
+      if (!game) {
+        console.error(`game with id=${this.gameId} not found`);
+        this.router.navigate(['/registration']);
+        return;
+      }
+
       this.game = game;
       this.gameEmail = `mailto:?subject=Einladung zum Spiel ${game.title}&body=Hallo%0D%0A%0D%0AAnbei die \
 Einladung zum Spiel ${game.title}:\
@@ -67,7 +74,7 @@ Einladung zum Spiel ${game.title}:\
         this.createPlayer(game, !hasGameAlreadyAnOrganizer);
       }
     }, e => {
-      console.error('error on game creation', e);
+      console.error('error on game loading', e);
       this.dialog.open(this.errorDialogTemplate, {data: {error: ERROR_MSG}, position: {top: '60px'}});
     });
   }

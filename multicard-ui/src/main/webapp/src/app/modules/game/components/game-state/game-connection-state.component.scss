@@ -1,0 +1,19 @@
+:host {
+  .game-connection-state {
+    position: absolute;
+    width: 100vw;
+    height: 80px;
+    background-color: rgb(209 57 66);
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+    box-sizing: border-box;
+
+    div {
+      font-weight: bold;
+    }
+  }
+}

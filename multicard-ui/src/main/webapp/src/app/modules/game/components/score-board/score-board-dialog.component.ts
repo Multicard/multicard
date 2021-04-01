@@ -25,7 +25,12 @@ export class ScoreBoardDialogComponent implements OnInit {
       .pipe(tap(game => {
         this.sortedPLayers = [...game.players].sort((p1, p2) => p1.position - p2.position);
 
-        game.scores?.forEach(roundScore => {
+        const scoresWithSortedPlayers = game.scores?.map(roundScore => ({
+          ...roundScore,
+          playerScores: roundScore.playerScores.sort(
+            (ps1, ps2) => this.getIndexOfSortedPlayer(ps1.playerId) - this.getIndexOfSortedPlayer(ps2.playerId))
+        }));
+        scoresWithSortedPlayers?.forEach(roundScore => {
           this.scores.push({
             id: '',
             round: roundScore.round,
@@ -34,7 +39,7 @@ export class ScoreBoardDialogComponent implements OnInit {
           });
         });
 
-        this.total = game.scores?.reduce((sum, score) =>
+        this.total = scoresWithSortedPlayers?.reduce((sum, score) =>
             [sum[0] + score.playerScores[0].score + score.playerScores[2].score,
               sum[1] + score.playerScores[1].score + score.playerScores[3].score],
           [0, 0]);
@@ -51,5 +56,9 @@ export class ScoreBoardDialogComponent implements OnInit {
     } else {
       return 'Das Spiel wurde ohne Resultate beendet';
     }
+  }
+
+  private getIndexOfSortedPlayer(playerId: string) {
+    return this.sortedPLayers.findIndex(p => p.id === playerId);
   }
 }

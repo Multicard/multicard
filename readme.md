@@ -1,26 +1,23 @@
 # Multicard
 
 
-## local development
+## setup local environment
 
 ## Frontend
 
 ### start Frontend: 
-install:    npm install --prefix ./multicard-ui/src/main/webapp/
 
-run:        npm start --prefix ./multicard-ui/src/main/webapp/
+cd ./multicard-ui/src/main/webapp/
+
+install:    npm install
+
+run:        npm start
 
 URL:        http://localhost:4200/app 
 
-### build Frontend
-run build:      ./multicard-ui/src/main/webapp/npm build
-
-run prod build: ./multicard-ui/src/main/webapp/npm build--prd
-
-The build artifacts will be stored in the `dist/` directory
 
 
-## Backend with Interface
+## Backend
 compile:      mvn clean install
 
 run:          mvn spring-boot:run -f ./multicard-backend/
@@ -28,6 +25,7 @@ run:          mvn spring-boot:run -f ./multicard-backend/
 swagger:      http://localhost:8080/swagger-ui/index.html#/
 
 database:     http://localhost:8080/h2 (url: jdbc:h2:./db/h2_db; user: sa and pwd is empty)
+
 
 
 ## running instance in Cloud - Heroku
