@@ -66,6 +66,10 @@ export class GameService {
     return this.gameSubject.asObservable();
   }
 
+  get connectionActive$() {
+    return this.gameWebsocketService.connectionActive$;
+  }
+
   closeGame() {
     this.gameWebsocketService.unsubsribeFromQueue();
   }

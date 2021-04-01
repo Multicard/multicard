@@ -13,6 +13,7 @@ import {SharedModule} from '../shared/shared.module';
 import {PlayerNameComponent} from './components/player-name/player-name.component';
 import {UncoveredCardsDialogComponent} from './components/uncovered-cards/uncovered-cards-dialog.component';
 import {ScoreBoardDialogComponent} from './components/score-board/score-board-dialog.component';
+import {GameConnectionStateComponent} from './components/game-state/game-connection-state.component';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import {ScoreBoardDialogComponent} from './components/score-board/score-board-di
     CardPileComponent,
     PlayerNameComponent,
     UncoveredCardsDialogComponent,
-    ScoreBoardDialogComponent
+    ScoreBoardDialogComponent,
+    GameConnectionStateComponent
   ],
   imports: [
     CommonModule,

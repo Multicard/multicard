@@ -1,16 +1,21 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {RxStompService} from '@stomp/ng2-stompjs';
-import {Subscription} from 'rxjs';
+import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 import {
-  Action, ActionDTO,
+  Action,
+  ActionDTO,
   CardDTO,
   GameMessage,
   PlayedCardMessage,
   PlayerDTO,
-  PlayersPositionedMessage, RevertLastPlayerActionMessage, ScoreDTO, SetScoreMessage
+  PlayersPositionedMessage,
+  RevertLastPlayerActionMessage,
+  ScoreDTO,
+  SetScoreMessage
 } from '../../app-gen/generated-model';
-import {take} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {Message} from '@stomp/stompjs';
+import {RxStompState} from '@stomp/rx-stomp';
 
 @Injectable({
   providedIn: 'root'
@@ -20,15 +25,19 @@ export class GameWebsocketService implements OnDestroy {
   private gameId!: string;
   private playerId!: string;
   private stompQueueSubscription!: Subscription;
+  private unsubscribe = new Subject();
+  private connectionActiveSubject = new BehaviorSubject<boolean>(false);
 
   constructor(
     private rxStompService: RxStompService) {
   }
 
   ngOnDestroy(): void {
-    if (this.stompQueueSubscription !== undefined) {
-      this.stompQueueSubscription.unsubscribe();
-    }
+    this.unsubsribeFromQueue();
+  }
+
+  get connectionActive$() {
+    return this.connectionActiveSubject.asObservable();
   }
 
   subsribeToQueue(gameId: string, playerId: string, websocketMessageHandler: (message: GameMessage) => void) {
@@ -42,13 +51,25 @@ export class GameWebsocketService implements OnDestroy {
       });
 
     this.rxStompService.connected$
-      .pipe(take(1))
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(() => {
         console.log('subscription to stomp queue established');
+        this.sendWebsocketGameMessage(Action.CLIENT_REQUEST_STATE);
+      });
+
+    this.rxStompService.connectionState$
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((state) => {
+        console.log('connection state changed to ' + state);
+        const connectionActive = state === RxStompState.OPEN;
+        if (this.connectionActiveSubject.getValue() !== connectionActive) {
+          this.connectionActiveSubject.next(connectionActive);
+        }
       });
   }
 
   unsubsribeFromQueue() {
+    this.unsubscribe.next();
     if (this.stompQueueSubscription !== undefined) {
       this.stompQueueSubscription.unsubscribe();
     }
