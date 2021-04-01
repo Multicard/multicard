@@ -25,11 +25,13 @@ export class ScoreBoardDialogComponent implements OnInit {
       .pipe(tap(game => {
         this.sortedPLayers = [...game.players].sort((p1, p2) => p1.position - p2.position);
 
-        const scoresWithSortedPlayers = game.scores?.map(roundScore => ({
-          ...roundScore,
-          playerScores: roundScore.playerScores.sort(
-            (ps1, ps2) => this.getIndexOfSortedPlayer(ps1.playerId) - this.getIndexOfSortedPlayer(ps2.playerId))
-        }));
+        const scoresWithSortedPlayers = game.scores?.filter(roundScore => roundScore?.playerScores?.length > 0)
+          .map(roundScore => ({
+            ...roundScore,
+            playerScores: roundScore.playerScores.sort(
+              (ps1, ps2) => this.getIndexOfSortedPlayer(ps1.playerId) - this.getIndexOfSortedPlayer(ps2.playerId))
+          }));
+
         scoresWithSortedPlayers?.forEach(roundScore => {
           this.scores.push({
             id: '',
