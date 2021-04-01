@@ -1,6 +1,6 @@
 <mat-dialog-content>
   <div class="board" *ngIf="game$ | async as game">
-    <h1 *ngIf="!hasScore()">Zu diesem Spiel wurden noch keine Resultate erfasst</h1>
+    <h1 *ngIf="!hasScore()">{{getNoScoreText(game)}}</h1>
     <div *ngIf="hasScore()" class="score-table">
       <div class="score-table-row score-table-header">
         <div class="score-table-cell first">Spieler</div>

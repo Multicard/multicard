@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/co
 import {GameService} from '../../../../services/game.service';
 import {Observable} from 'rxjs';
 import {GameDTO, Gamestate} from '../../../../../app-gen/generated-model';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {tap} from 'rxjs/operators';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatDialog, MatDialogRef, MatDialogState} from '@angular/material/dialog';
@@ -26,6 +26,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private gameService: GameService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog) {
@@ -44,6 +45,7 @@ export class GameComponent implements OnInit, OnDestroy {
           );
       } else {
         console.error('gameId or playerId is not set', this.route);
+        this.router.navigate(['/registration']);
       }
     });
   }
@@ -69,7 +71,7 @@ export class GameComponent implements OnInit, OnDestroy {
     return game?.state === Gamestate.STARTED;
   }
 
-  startGame() {
+  startRound() {
     this.gameService.startRound();
   }
 
@@ -81,9 +83,21 @@ export class GameComponent implements OnInit, OnDestroy {
     this.gameService.startNewRound();
   }
 
+  endGame() {
+    this.gameService.endGame();
+  }
+
   showScore() {
     this.dialog.open(ScoreBoardDialogComponent,
       {data: this.gameState$, hasBackdrop: true});
+  }
+
+  getRoundOrStateText(game: GameDTO) {
+    if (game.state !== Gamestate.GAME_ENDED) {
+      return 'Runde ' + game.currentRound;
+    } else  {
+      return '(Spiel ist beendet)';
+    }
   }
 
   private handleGameStateChanges(game: GameDTO) {
@@ -128,7 +142,7 @@ export class GameComponent implements OnInit, OnDestroy {
       && (this.scoreBoardDialogRef === undefined || this.scoreBoardDialogRef.getState() !== MatDialogState.OPEN)) {
 
       this.scoreBoardDialogRef = this.dialog.open(ScoreBoardDialogComponent,
-        {data: this.gameState$, hasBackdrop: false, disableClose: true});
+        {data: this.gameState$, hasBackdrop: true, disableClose: true});
     }
     // schliesse den Spieltafel Dialog, falls der GameState von einem anderen Spieler geändert wurde
     else if (game?.state !== Gamestate.GAME_ENDED && this.scoreBoardDialogRef !== undefined) {

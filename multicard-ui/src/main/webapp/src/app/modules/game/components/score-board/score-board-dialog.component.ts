@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {GameDTO, PlayerDTO, ScoreDTO} from '../../../../../app-gen/generated-model';
+import {GameDTO, Gamestate, PlayerDTO, ScoreDTO} from '../../../../../app-gen/generated-model';
 import {Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
 
@@ -43,5 +43,13 @@ export class ScoreBoardDialogComponent implements OnInit {
 
   hasScore() {
     return this.scores.length > 0;
+  }
+
+  getNoScoreText(game: GameDTO) {
+    if (game.state !== Gamestate.GAME_ENDED) {
+      return 'Zu diesem Spiel wurden noch keine Resultate erfasst';
+    } else {
+      return 'Das Spiel wurde ohne Resultate beendet';
+    }
   }
 }
