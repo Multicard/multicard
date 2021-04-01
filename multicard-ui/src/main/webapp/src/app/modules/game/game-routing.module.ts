@@ -5,6 +5,7 @@ import {GameComponent} from './components/game/game.component';
 
 const gameRoutes: Routes = [
     { path: ':gameId/:playerId', component: GameComponent},
+    { path: '**', component: GameComponent}
 ];
 
 @NgModule({

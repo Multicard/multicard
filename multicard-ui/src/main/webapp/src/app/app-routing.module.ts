@@ -5,7 +5,7 @@ const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'registration' },
   { path: 'registration', loadChildren: () => import('./modules/registration/registration.module').then(m => m.RegistrationModule) },
   { path: 'game', loadChildren: () => import('./modules/game/game.module').then(m => m.GameModule) },
-  { path: '**', pathMatch: 'full', redirectTo: 'registration' }
+  { path: '**', redirectTo: 'registration' }
 ];
 
 @NgModule({

@@ -2,7 +2,7 @@
   <div class="toolbar">
     <div class="toolbar-button-wrapper">
       <button *ngIf="isGameStarteable(gameState)" class="toolbar-button" color="primary" mat-raised-button
-              (click)="startGame()">
+              (click)="startRound()">
         <mat-icon>play_arrow</mat-icon>
         Runde starten
       </button>
@@ -12,7 +12,7 @@
         Karten zeigen
       </button>
     </div>
-    <div class="game-info">{{gameState.title}} Runde {{gameState.currentRound}}</div>
+    <div class="game-info">{{gameState.title}} {{getRoundOrStateText(gameState)}}</div>
     <mat-icon class="game-menu" [matMenuTriggerFor]="gameMenu">menu</mat-icon>
     <mat-menu #gameMenu="matMenu">
       <button mat-menu-item (click)="showScore()">
@@ -22,6 +22,10 @@
       <button mat-menu-item [disabled]="!isRoundAbortable(gameState)" (click)="abortRound()">
         <mat-icon>restart_alt</mat-icon>
         <span>Runde abbrechen</span>
+      </button>
+      <button mat-menu-item (click)="endGame()">
+        <mat-icon>stop</mat-icon>
+        <span>Spiel beenden</span>
       </button>
     </mat-menu>
   </div>
