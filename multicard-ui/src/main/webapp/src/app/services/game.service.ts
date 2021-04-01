@@ -1,40 +1,30 @@
-import {Injectable, OnDestroy} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {ActionType, DirectionType, StackAction} from '../model/game.model';
-import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
-import {RxStompService} from '@stomp/ng2-stompjs';
-import {Message} from '@stomp/stompjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {take} from 'rxjs/operators';
 import {
   Action,
-  ActionDTO,
   CardDTO,
   GameDTO,
   GameMessage,
   Gamestate,
   GameStateMessage,
-  PlayedCardMessage,
   PlayedCardsDTO,
   PlayerDTO,
-  PlayersPositionedMessage,
-  RevertLastPlayerActionMessage,
-  ScoreDTO,
-  SetScoreMessage
+  ScoreDTO
 } from '../../app-gen/generated-model';
+import {GameWebsocketService} from './game-websocket.service';
 
 const GAME_REST_API_URL = '/api/Games';
 
 @Injectable({providedIn: 'root'})
-export class GameService implements OnDestroy {
+export class GameService {
 
-  private gameId!: string;
   private playerId!: string;
-  private stompQueueSubscription!: Subscription;
   // @ts-ignore
   private gameSubject: BehaviorSubject<GameDTO> = new BehaviorSubject<GameDTO>(null);
   private stackSubject: Subject<StackAction> = new Subject();
   private gameStartedByThisClient = false;
-  private unsubscribe = new Subject();
   /*
    * Umgehungslösung, da bei ChangeDetection = OnPush beim drag and drop über Komponentengrenzen die Notifikation im cdkDropList
    * nicht mehr korrekt funktionierte.
@@ -46,7 +36,7 @@ export class GameService implements OnDestroy {
 
   constructor(
     private http: HttpClient,
-    private rxStompService: RxStompService) {
+    private gameWebsocketService: GameWebsocketService) {
   }
 
   createGame(gameName: string): Observable<GameDTO> {
@@ -68,25 +58,16 @@ export class GameService implements OnDestroy {
     });
   }
 
-  initWebsocketCommunication(gameId: string, playerId: string): Observable<GameDTO> {
-    this.gameId = gameId;
+  initGame(gameId: string, playerId: string): Observable<GameDTO> {
     this.playerId = playerId;
-    this.stompQueueSubscription = this.subscribeToTopic();
-    this.rxStompService.connected$
-      .pipe(take(1))
-      .subscribe(() => {
-        console.log('subscription to stomp queue established');
-      });
-
+    this.gameWebsocketService.subsribeToQueue(gameId, playerId,
+      (message) => this.handleWebsocketMessage(message));
 
     return this.gameSubject.asObservable();
   }
 
   closeGame() {
-    if (this.stompQueueSubscription !== undefined) {
-      this.stompQueueSubscription.unsubscribe();
-    }
-    this.unsubscribe.next();
+    this.gameWebsocketService.unsubsribeFromQueue();
   }
 
   getStackObservable() {
@@ -118,13 +99,8 @@ export class GameService implements OnDestroy {
         return;
       }
 
-      // if (!this.isUserGameOrganizer(game)) {
-      //   console.error('der Spieler ist nicht der Organisator des Spiels und kann das Spiel deshalb nicht starten');
-      //   return;
-      // }
-
       this.gameStartedByThisClient = true;
-      this.sendWebsocketGameMessage(Action.CLIENT_START_ROUND);
+      this.gameWebsocketService.sendWebsocketGameMessage(Action.CLIENT_START_ROUND);
     }
 
 
@@ -133,21 +109,20 @@ export class GameService implements OnDestroy {
   }
 
   endRound() {
-    this.sendWebsocketGameMessage(Action.CLIENT_END_ROUND);
+    this.gameWebsocketService.sendWebsocketGameMessage(Action.CLIENT_END_ROUND);
   }
 
   endGame() {
-    this.sendWebsocketGameMessage(Action.CLIENT_END_GAME);
-    // TODO Code löschen sobald GAME_ENDED im backend unterstützt ist
+    this.gameWebsocketService.sendWebsocketGameMessage(Action.CLIENT_END_GAME);
     this.gameSubject.next({...this.gameSubject.getValue(), state: Gamestate.GAME_ENDED});
   }
 
   setScore(score: ScoreDTO) {
-    this.sendWebsocketSetScoreMessage(score);
+    this.gameWebsocketService.sendWebsocketSetScoreMessage(score);
   }
 
   startNewRound() {
-    this.sendWebsocketGameMessage(Action.CLIENT_GAME_RESET);
+    this.gameWebsocketService.sendWebsocketGameMessage(Action.CLIENT_GAME_RESET);
   }
 
   cardPlayed(card: CardDTO) {
@@ -164,7 +139,7 @@ export class GameService implements OnDestroy {
     game = {...game, players: [{...game.players[0]}, ...game.players.slice(1)]};
     this.gameSubject.next(game);
 
-    this.sendWebsocketPlayedCardMessage(card);
+    this.gameWebsocketService.sendWebsocketPlayedCardMessage(card);
   }
 
   tableCardsTakenByUser(cards: CardDTO[]) {
@@ -183,11 +158,11 @@ export class GameService implements OnDestroy {
     game = {...game, players: [{...game.players[0]}, ...game.players.slice(1)]};
     this.gameSubject.next(game);
 
-    this.sendWebsocketGameMessage(Action.CLIENT_PLAYED_CARDS_TAKEN);
+    this.gameWebsocketService.sendWebsocketGameMessage(Action.CLIENT_PLAYED_CARDS_TAKEN);
   }
 
   revertLastAction() {
-    this.sendWebsocketRevertLastPlayerActionMessage(this.gameSubject.getValue().lastAction);
+    this.gameWebsocketService.sendWebsocketRevertLastPlayerActionMessage(this.gameSubject.getValue().lastAction);
   }
 
   changePlayerPosition(oldIndex: number, newIndex: number) {
@@ -195,7 +170,7 @@ export class GameService implements OnDestroy {
     game.players.splice(newIndex, 0, game.players.splice(oldIndex, 1)[0]);
     game.players.forEach((p, i) => p.position = i + 1);
 
-    this.sendWebsocketPlayersPositionedMessage(game.players);
+    this.gameWebsocketService.sendWebsocketPlayersPositionedMessage(game.players);
   }
 
   isLastCardPLayedByUser(playedCards: PlayedCardsDTO | undefined) {
@@ -214,20 +189,6 @@ export class GameService implements OnDestroy {
     return game.state === Gamestate.STARTED
       && game.lastAction?.action === Action.CLIENT_PLAYED_CARDS_TAKEN
       && game.lastAction.playerId === game.players[0].id;
-  }
-
-  ngOnDestroy(): void {
-    if (this.stompQueueSubscription !== undefined) {
-      this.stompQueueSubscription.unsubscribe();
-    }
-  }
-
-  private subscribeToTopic() {
-    return this.rxStompService
-      .watch(`/queue/${this.gameId}/${this.playerId}`)
-      .subscribe((message: Message) => {
-        this.handleWebsocketMessage(JSON.parse(message.body));
-      });
   }
 
   private handleWebsocketMessage(message: GameMessage) {
@@ -273,52 +234,7 @@ export class GameService implements OnDestroy {
         this.gameSubject.next({...game});
       }, 200);
     } else {
-      this.sendWebsocketGameMessage(Action.CLIENT_REQUEST_STATE);
+      this.gameWebsocketService.sendWebsocketGameMessage(Action.CLIENT_REQUEST_STATE);
     }
-  }
-
-  private isUserGameOrganizer(game: GameDTO) {
-    return game?.players[0]?.organizer;
-  }
-
-  private sendWebsocketGameMessage(command: Action) {
-    const message: GameMessage = {command, messageName: 'GameMessage'};
-    this.sendWebsocketMessage(message);
-  }
-
-  private sendWebsocketPlayersPositionedMessage(players: PlayerDTO[]) {
-    const message: PlayersPositionedMessage = {
-      command: Action.CLIENT_PLAYERS_POSITIONED,
-      players,
-      messageName: 'PlayersPositionedMessage'
-    };
-    this.sendWebsocketMessage(message);
-  }
-
-  private sendWebsocketPlayedCardMessage(card: CardDTO) {
-    const message: PlayedCardMessage = {command: Action.CLIENT_CARD_PLAYED, card, messageName: 'PlayedCardMessage'};
-    this.sendWebsocketMessage(message);
-  }
-
-  private sendWebsocketRevertLastPlayerActionMessage(lastAction: ActionDTO) {
-    const message: RevertLastPlayerActionMessage =
-      {
-        command: Action.CLIENT_REVERT_LAST_PLAYER_ACTION,
-        actionId: lastAction.id,
-        messageName: 'RevertLastPlayerActionMessage'
-      };
-    this.sendWebsocketMessage(message);
-  }
-
-  private sendWebsocketSetScoreMessage(score: ScoreDTO) {
-    const message: SetScoreMessage = {command: Action.CLIENT_SET_SCORE, score, messageName: 'SetScoreMessage'};
-    this.sendWebsocketMessage(message);
-  }
-
-  private sendWebsocketMessage(message: GameMessage) {
-    this.rxStompService.publish({
-      destination: `/app/${this.gameId}/${this.playerId}`,
-      body: JSON.stringify(message)
-    });
   }
 }
