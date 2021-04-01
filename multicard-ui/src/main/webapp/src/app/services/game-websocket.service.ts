@@ -1,6 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {RxStompService} from '@stomp/ng2-stompjs';
-import {BehaviorSubject, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, Subject, Subscription, timer} from 'rxjs';
 import {
   Action,
   ActionDTO,
@@ -26,6 +26,7 @@ export class GameWebsocketService implements OnDestroy {
   private playerId!: string;
   private stompQueueSubscription!: Subscription;
   private unsubscribe = new Subject();
+  private stopConnectingTimer = new Subject();
   private connectionActiveSubject = new BehaviorSubject<boolean>(false);
 
   constructor(
@@ -53,7 +54,7 @@ export class GameWebsocketService implements OnDestroy {
     this.rxStompService.connected$
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(() => {
-        console.log('subscription to stomp queue established');
+        console.log('subscription to stomp queue established => request game state from backend');
         this.sendWebsocketGameMessage(Action.CLIENT_REQUEST_STATE);
       });
 
@@ -64,6 +65,24 @@ export class GameWebsocketService implements OnDestroy {
         const connectionActive = state === RxStompState.OPEN;
         if (this.connectionActiveSubject.getValue() !== connectionActive) {
           this.connectionActiveSubject.next(connectionActive);
+        }
+
+        // timeout Überwachung und reconnect, falls der Server auf das connecting keine Antwort sendet und stompjs hängt
+        // (tritt während dem Starten des Backends auf)
+        // https://github.com/stomp-js/stompjs/issues/165
+        if (state === RxStompState.CONNECTING) {
+          timer(5000)
+            .pipe(takeUntil(this.stopConnectingTimer))
+            .subscribe(() => {
+                console.log('timeout during connecting to stomp queue => try a reconnect');
+                this.rxStompService.deactivate().then(() => {
+                  console.log('stomp connection disconnected => try to activate it');
+                  this.rxStompService.activate();
+                });
+              }
+            );
+        } else {
+          this.stopConnectingTimer.next();
         }
       });
   }
