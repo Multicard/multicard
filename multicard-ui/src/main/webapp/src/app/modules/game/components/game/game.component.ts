@@ -95,20 +95,20 @@ export class GameComponent implements OnInit, OnDestroy {
   getRoundOrStateText(game: GameDTO) {
     if (game.state !== Gamestate.GAME_ENDED) {
       return 'Runde ' + game.currentRound;
-    } else  {
+    } else {
       return '(Spiel ist beendet)';
     }
   }
 
   private handleGameStateChanges(game: GameDTO) {
     const oldNumberOfPlayers = this.numberOfPlayers;
-    const newNumberOfPlayer = game?.players ? game.players.length : 0;
+    this.numberOfPlayers = game?.players ? game.players.length : 0;
 
-    if (newNumberOfPlayer === 1) {
+    if (this.numberOfPlayers === 1) {
       this.showMessage('Es sind noch keine weiteren Spieler*innen registriert');
     }
 
-    if (oldNumberOfPlayers >= 1 && newNumberOfPlayer >= 2 && game.players.length > oldNumberOfPlayers) {
+    if (oldNumberOfPlayers >= 1 && this.numberOfPlayers >= 2 && this.numberOfPlayers > oldNumberOfPlayers) {
       const newPlayer = game.players.reduce((acc, cur) => acc.position > cur.position ? acc : cur);
       this.showMessage(`${newPlayer.name} hat sich im Spiel registriert`);
     }
@@ -137,19 +137,20 @@ export class GameComponent implements OnInit, OnDestroy {
       this.uncoveredCardsDialogRef.close();
     }
 
-    // öffne den Spieltafel Dialog (falls nicht bereits geöffnet)
-    if (game?.state === Gamestate.GAME_ENDED
-      && (this.scoreBoardDialogRef === undefined || this.scoreBoardDialogRef.getState() !== MatDialogState.OPEN)) {
+    // schliesse die Websocket Kommunikation und öffne den Spieltafel Dialog (falls nicht bereits geöffnet)
+    if (game?.state === Gamestate.GAME_ENDED) {
+      this.gameService.closeGame();
+      if (this.scoreBoardDialogRef === undefined || this.scoreBoardDialogRef.getState() !== MatDialogState.OPEN) {
 
-      this.scoreBoardDialogRef = this.dialog.open(ScoreBoardDialogComponent,
-        {data: this.gameState$, hasBackdrop: true, disableClose: true});
+        this.scoreBoardDialogRef = this.dialog.open(ScoreBoardDialogComponent,
+          {data: this.gameState$, hasBackdrop: true, disableClose: true});
+      }
     }
+
     // schliesse den Spieltafel Dialog, falls der GameState von einem anderen Spieler geändert wurde
-    else if (game?.state !== Gamestate.GAME_ENDED && this.scoreBoardDialogRef !== undefined) {
+    if (game?.state !== Gamestate.GAME_ENDED && this.scoreBoardDialogRef !== undefined) {
       this.scoreBoardDialogRef.close();
     }
-
-    this.numberOfPlayers = game?.players ? game.players.length : 0;
   }
 
   private showMessage(message: string, duration = 4000) {

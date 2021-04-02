@@ -4,7 +4,7 @@
   display: block;
 
   @include normal-size {
-    min-width: 800px;
+    min-width: min(70vw, 1000px);
   }
 
   @include small-size {

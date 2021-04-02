@@ -21,7 +21,7 @@
           <mat-form-field appearance="outline">
             <mat-label>Anzahl Punkte {{player.name}}</mat-label>
             <input matInput [name]="player.name" type="number" [ngModel]="playersScore.get(player.id)"
-                   (ngModelChange)="playersScore.set(player.id, $event)" required>
+                   (ngModelChange)="playersScore.set(player.id, $event)" [min]="0" [pattern]="'[0-9]*'" required>
           </mat-form-field>
         </div>
       </div>

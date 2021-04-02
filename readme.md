@@ -30,7 +30,8 @@ database:     http://localhost:8080/h2 (url: jdbc:h2:./db/h2_db; user: sa and pw
 
 ## running instance in Cloud - Heroku
 
-ATTENTION: Heroku stops all running instances after 30 minutes of inactivity. After each restart or wakeup all data will be lost.
+ATTENTION: Heroku stops all running instances after 30 minutes of inactivity. After each restart or wakeup all data will be lost. After a request that forces a wake-up, it takes several minutes until the application is ready
+
 
 URL:            https://multicardgame.herokuapp.com 
 
