@@ -200,9 +200,9 @@ export class GameService {
     switch (message.command) {
       case Action.GAME_STATE:
         const gameStateMessage = message as GameStateMessage;
+        // sortiere die Players so, dass der erste PLayer in der Liste dem current User entspricht
         const sortedPLayers = gameStateMessage.game.players.sort((p1, p2) => p1.position - p2.position);
         const indexCurrUser = sortedPLayers.findIndex(p => p.id === this.playerId);
-        // sortiere die Players so, dass der erste PLayer in der Liste dem current User entspricht
         gameStateMessage.game.players = [...gameStateMessage.game.players.slice(indexCurrUser),
           ...gameStateMessage.game.players.slice(0, indexCurrUser)];
 
@@ -220,11 +220,14 @@ export class GameService {
   private giveCards(i: number = 0, numberOfTotalCardsPerPlayer: number, numberOfPLayerCardsPerTurn: number, numberOfPLayers: number) {
     const directions = [DirectionType.left, DirectionType.up, DirectionType.right, DirectionType.down];
     if (i * numberOfPLayerCardsPerTurn < numberOfTotalCardsPerPlayer * numberOfPLayers) {
+      // Notifziere den Stappel, wieviele Karten abgehoben werden und in welcher Richtung zum Spieler fliegen
       this.stackSubject.next({
         action: ActionType.drawCard,
         direction: directions[i % numberOfPLayers],
         numberOfCards: numberOfPLayerCardsPerTurn
       });
+      // Die Karten in der Hand eines Spielers werden verzögert inkrementiert, damit die Karten vorher
+      // animiert vom Stappel Richtung Spieler fliegen können
       setTimeout(() => {
         const game = this.gameSubject.getValue();
         const currPlayer = game.players[i % numberOfPLayers] = {...game.players[i % numberOfPLayers]};
@@ -238,6 +241,8 @@ export class GameService {
         this.gameSubject.next({...game});
       }, 200);
     } else {
+      // erst nachdem alle Karten im UI verteilt sind, wird ein neuer Game Status vom Backend angefordert
+      // und die Karten angezeigt, welche der Spieler erhalten hat
       this.gameWebsocketService.sendWebsocketGameMessage(Action.CLIENT_REQUEST_STATE);
     }
   }

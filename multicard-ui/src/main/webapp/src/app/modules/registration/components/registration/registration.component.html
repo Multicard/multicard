@@ -1,4 +1,4 @@
-<header>
+<header xmlns="http://www.w3.org/1999/html">
   <mat-form-field appearance="outline" class="game-id">
     <mat-label>Spiel ID</mat-label>
     <input matInput [(ngModel)]="gameId">
@@ -21,6 +21,14 @@
 
   <button mat-raised-button color="primary" #createGameBtn="matButton" (click)="createGame()">neues Spiel erstellen</button>
 </main>
+
+<footer>
+  <div>Danke an Chris Aguilar für die in diesem Spiel verwendeten Karten:</div>
+  <div>Vectorized Playing Cards 3.2</div>
+  <a href="https://totalnonsense.com/open-source-vector-playing-cards/">https://totalnonsense.com/open-source-vector-playing-cards/</a>
+  <div>Copyright 2011,2020 – Chris Aguilar – conjurenation @gmail.com</div>
+  <div>Licensed under: LGPL 3.0 – https://www.gnu.org/licenses/lgpl-3.0.html</div>
+</footer>
 
 <ng-template #errorDialogTemplate let-data>
   <div>{{data.error}}</div>
