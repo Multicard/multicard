@@ -65,8 +65,8 @@ export class PlayerRegistrationComponent implements OnInit {
       }
 
       this.game = game;
-      this.gameEmail = `mailto:?subject=Einladung zum Spiel ${game.title}&body=Hallo%0D%0A%0D%0AAnbei die \
-Einladung zum Spiel ${game.title}:\
+      this.gameEmail = `mailto:?subject=Einladung zum Spiel ${game.title}&body=Hallo%0D%0A%0D%0A${this.player.playerName} hat dich \
+zum Kartenspiel ${game.title} eingeladen. Mit folgendem Link kannst du am Spiel teilnehmen:\
 %0D%0A%0D%0A${this.gameUrl}%0D%0A%0D%0ABis bald und liebe Grüsse`;
       this.playerIdOfGame = this.player.registeredGames?.find(rg => rg.gameId === game.id)?.playerId;
       if (!this.playerIdOfGame) {

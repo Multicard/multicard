@@ -44,8 +44,8 @@ export interface PlayerDTO {
     position: number;
     hand: HandDTO;
     stacks: StackDTO[];
-    alive: boolean;
     organizer: boolean;
+    alive: boolean;
 }
 
 export interface StackDTO {
@@ -117,8 +117,6 @@ export enum Action {
     CLIENT_CARD_PLAYED = "CLIENT_CARD_PLAYED",
     CLIENT_PLAYED_CARDS_TAKEN = "CLIENT_PLAYED_CARDS_TAKEN",
     CLIENT_REVERT_LAST_PLAYER_ACTION = "CLIENT_REVERT_LAST_PLAYER_ACTION",
-    CLIENT_REVERT_ACTION = "CLIENT_REVERT_ACTION",
-    CLIENT_IS_ALIVE = "CLIENT_IS_ALIVE",
     CLIENT_END_ROUND = "CLIENT_END_ROUND",
     CLIENT_END_GAME = "CLIENT_END_GAME",
     CLIENT_GAME_RESET = "CLIENT_GAME_RESET",
