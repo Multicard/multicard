@@ -102,8 +102,7 @@ export class PlayerRegistrationDialogComponent implements OnInit {
   }
 
   private addPlayerToGame() {
-    const playerPos = this.game.players ? this.game.players.length + 1 : 1;
-    this.gameService.addPlayer(this.game.id, this.organizerMode, this.player.playerName, playerPos, this.password)
+    this.gameService.addPlayer(this.game.id, this.organizerMode, this.player.playerName, this.password)
       .pipe(finalize(() => this.isRestCallInProgress = false))
       .subscribe(player => {
         this.savePlayerAndCloseDialog(player.id);

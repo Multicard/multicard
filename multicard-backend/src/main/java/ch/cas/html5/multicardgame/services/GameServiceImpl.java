@@ -30,29 +30,29 @@ public class GameServiceImpl {
         return optGame.orElse(null);
     }
 
-    public Game saveGame(String title){
+    public Game saveGame(String title) {
         Game game = new Game();
         game.setTitle(title);
         game.setState(Gamestate.INITIAL);
         return gameRepository.save(game);
     }
 
-    public void updateGame(Game game){
+    public void updateGame(Game game) {
         gameRepository.save(game);
     }
 
-    public Player addPlayer(String gameId, String name, Boolean isOrganizer, int position, String pwd){
+    public synchronized Player addPlayer(String gameId, String name, Boolean isOrganizer, String pwd) {
         Optional<Game> optGame = gameRepository.findById(gameId);
         if (optGame.isPresent()) {
             Player player = new Player();
             player.setName(name);
             player.setIsOrganizer(isOrganizer);
-            player.setPosition(position);
+            player.setPosition(optGame.get().getPlayers().stream().map(Player::getPosition).mapToInt(p -> p).map(p -> p + 1).max().orElse(1));
             player.setPwd(pwd);
             player.setGame(optGame.get());
             playerRepository.save(player);
             optGame.get().getPlayers().add(player);
-            return  player;
+            return player;
         }
         return null;
     }
