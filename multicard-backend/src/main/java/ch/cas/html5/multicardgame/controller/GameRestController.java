@@ -53,9 +53,8 @@ public class GameRestController {
     public PlayerDTO addPlayer(@PathVariable(name = "GameId") String gameId,
                             @RequestHeader(name = "name") String name,
                             @RequestHeader(name = "isOrganizer") Boolean isOrganizer,
-                            @RequestHeader(name = "position") int position,
                             @RequestHeader(name = "pwd") String pwd) {
-        Player p2 = gameService.addPlayer(gameId, name, isOrganizer, position, pwd);
+        Player p2 = gameService.addPlayer(gameId, name, isOrganizer, pwd);
         PlayerDTO playerdto = new PlayerDTO(p2.getId(), p2.getName(), p2.getIsOrganizer(), p2.getPosition(), false);
         return playerdto;
     }

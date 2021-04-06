@@ -47,12 +47,11 @@ export class GameService {
     return this.http.get<GameDTO>(`${GAME_REST_API_URL}/${gameId}`);
   }
 
-  addPlayer(gameId: string, isOrganizer: boolean, playerName: string, position: number, password: string): Observable<PlayerDTO> {
+  addPlayer(gameId: string, isOrganizer: boolean, playerName: string, password: string): Observable<PlayerDTO> {
     return this.http.put<PlayerDTO>(`${GAME_REST_API_URL}/${gameId}`, {}, {
       headers: {
         name: playerName,
         isOrganizer: JSON.stringify(isOrganizer),
-        position: JSON.stringify(position),
         pwd: password
       }
     });
