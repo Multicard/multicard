@@ -26,7 +26,6 @@ export class PlayerRegistrationComponent implements OnInit {
   playerIdOfGame?: string;
   gameId!: string;
   gameUrl = '';
-  gameEmail = '';
   game!: GameDTO;
 
   constructor(
@@ -56,6 +55,12 @@ export class PlayerRegistrationComponent implements OnInit {
     this.router.navigate([`/game/${this.gameId}/${this.playerIdOfGame}`]);
   }
 
+  getMailtoLink() {
+    return `mailto:?subject=Einladung zum Spiel ${this.game.title}&body=Hallo%0D%0A%0D%0A${this.player.playerName} hat dich \
+zum Kartenspiel ${this.game.title} eingeladen. Mit folgendem Link kannst du am Spiel teilnehmen:\
+%0D%0A%0D%0A${this.gameUrl}%0D%0A%0D%0ABis bald und liebe Grüsse`;
+  }
+
   private loadGameAndCreatePlayer() {
     this.gameService.loadGame(this.gameId).subscribe(game => {
       if (!game) {
@@ -65,9 +70,6 @@ export class PlayerRegistrationComponent implements OnInit {
       }
 
       this.game = game;
-      this.gameEmail = `mailto:?subject=Einladung zum Spiel ${game.title}&body=Hallo%0D%0A%0D%0A${this.player.playerName} hat dich \
-zum Kartenspiel ${game.title} eingeladen. Mit folgendem Link kannst du am Spiel teilnehmen:\
-%0D%0A%0D%0A${this.gameUrl}%0D%0A%0D%0ABis bald und liebe Grüsse`;
       this.playerIdOfGame = this.player.registeredGames?.find(rg => rg.gameId === game.id)?.playerId;
       if (!this.playerIdOfGame) {
         const hasGameAlreadyAnOrganizer = game.players && game.players.find(p => p.organizer);
